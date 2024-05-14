@@ -1,0 +1,756 @@
+Clarity for Bios & Prog
+2022-10-27 Thursday
+Clarity tool log in:  via the link  https://clarity.ppdi.com/niku/nu#action:homeActionId   Use my personal User ID:  yuanz (not my email address) and password at your earliest convenience. I have bookmarked this webpage for easily login.
+Clarity PPM is the product of Broadcom Inc
+There are “Help” button on the upper right of the screen. 
+Four Cards:   General ; Project Dashboard; Risk,Issues and Changes; Action Items
+On the InFront page, We can find the link of “Clarity” under the “tools” while scrolling down a little.Click it, will go to the webpage: https://ppdcentral.sharepoint.com/sites/Clarity729 , there are several red blocks of training info.
+Need to watch the training video: “New User Orientation Clinic” , last 1h30min. 先看这个视频，并做笔记，下次Lyon问起我就能让他知道我是有所了解的。
+了解Biopharma Pillar at the Biowiki.
+2022-10-28 Friday,
+上面的笔记没有记录training video: “New User Orientation Clinic”在何位置，一下没找到，但找到了PPT文件，先看此幻灯片。
+inFront-> Tools->Clarity->Training and Support
+The Clarity system provides entry,management,and reporting of the following three operational activity:
+1.	Resorcing 2. Project planning 3.Finance
+Business Management Organization(BMO): 
+Project stages: 1.pipeline 2. Pre-award 3. Award 4. Contract Signed 4. Closed 5. Loss
+There is a table with 3 columns: Stage,Owner, Description
+
+2022-10-31 Monday
+Watch the training video “Clarity Monthly New User Orientation Clinic”:
+Discussion Topics:
+BMO inFRONT Page Tour and Contents
+•	Clarity Overview and General Navigation
+•	Team Tab Basics
+•	Clarity Reporting
+•	Finance Entry and Reporting Screen Essentials
+•	Collaboration Tab / Clarity Tab
+To get help, there is role-based help. For example, Project manager/Functional Lead -> Team -> Three columns listed:” User Guides” ,”Simulations”, ”Standard View Annotation”
+Line manager perform account activation for new hires or dealing with the locked account.
+After login the Clarity website, you will notice the highlighted dates at the top left corner. These date are important scheduled date for the essential activities. There are two days in a month where certain screen are locked for editing. Unit actual screen, unit forecast screen. PM/FL Unit forecast lock on 22 sep, 2021, that means that users really need to aware of that , their updates to the unit forecast screen are completed by September 22end. Why lock? The reason is that finance is doing their month end activities, reconciling financial information, pulling it, analyzing it, slicing and dicing it, rolling it up to senior management for review, approval , and comments.
+We can access the clarity report via the homepage, two kind of reports: standard reports, customized reports.  Click the “Home” icon at the left upper corner -> “Reporting” -> Advance Reporting page-> “library”,different role has different level of access -> “PPD-Unit Grid Report Transactional DB” for example-> on left upper corner , check the “Populate Project?”,select a project name from “Project Name” down arrow by typing BC Number or Key word->”apply”-> show PPD Unit Grid Report, already formatted, can be exported to EXCEL.-> Click the export icon right above the title of the report ,select the exported format such as PDF, EXCEL.
+My project portlet: 
+“My projects” is a place where you can put the projects you were assigned to, or the projects that you frequently visit mor often than the others. Under the Project column, select the project you want to see. Column names: “Project”, ”Stage”, ”Start”, “Finish”, “Team”, “Gantt”, “Units Forecast”, “Unit Actuals”, “Financial Dashboard”.
+How to import the assigned project to this “Project ” portlet?  “Home” ->”Portfolio Managementb”->”Projects”-> main project page,list all the projects in the clarity, filter by sponsor, project manager, PPD division,indication, et al, most useful filter is BC number.-> select the right project -> click the “Actions” pull down menu, select “Add to my Projects”-> click the home sign above the “actions” to go back to home.
+Click the a project, go to the property screen,we can see protocol title, protocol number, PPD Division and so on, only a few people can modify these info. Look at the information to make sure it’s right.Send a email to BMO if info is not right or missing but you know the information.
+Go to the “Team” pull down menu-> “Staff”, see the first column of the bottom table,”Resource/Role”. Under the “Resourcing Status”, we can see different status like “Assigned”,”Requested”. -> Hover on the “Team”-> “Detail”->see more details.
+Go back to “Staff” view, click upper right corner setting sign->”Configure”-> “List Column Section” or “List Filter Section”-> Select the column you need-> Save and return
+“Task” pulldown menu:
+See a dashboard of the task: milestone, can get a format from BMO.
+“Collaboration” pulldown menu:
+Need to be listed in the Team to see this tab. you need to be allocated on the team tab first. You can see the clarity tab document listed, it is a excel document that has hours by resource from the budget by PPD unit, PPD tasks, declining information, screen mapping, blended position data. It has a lot of tabs and details, refer to the PPD BMO inFront to find the “Post Award Set up in Clarity Clinic” by val-> see “Clarity Tab Document Overview”. Resource manager can see different interface, can allocate the resource according to the requesting. 
+Click the “Unit forecast” of the task , go the unit forecast screen, filter. Select a unit, can modify the hours.save. You can create a new unit by submit the “New Units Request Form”  
+“Unit actuals”, Refer to BMO inFront page.
+The reporting screens are not editable.”Cost&Hours” is extremely popular in your analysis of hours.it displays the summary of the hours position on the study. Can slice the data by region, country, planned or hard allocation. -> BMO inFront -> Role-Based Help->Project Manager/Functional Lead ->cost hours
+“Unit Grids” tab:
+Can export to csv or excel document.
+“Financial Dashboard” tab:
+Go to the BMO page to see the “standard view annotation”
+Project standard naming convention: sponsor name-last 3 digits of protocol number-BC number- 
+
+2022-10-26 Wednesday
+I.	Getting started and sending an envelope for signatures
+1.	Go to the InFront page, Navigate to right below area to find the tools-> Docusign,or type the website link:https://account.docusign.com(以后记得要bookmark it).Enter my ppd email address, no password required, click “Continue”。If working remotely, we must connect to VPN to access docusign, can not do docusign locally.
+2.	There are two  docusign mode, one is PPD 21 CFR Part11 , the other is standard docusign. Looking at the middle top, if you see “PPD 21 CFR Part11”, the purple background of the top banner, then you are assigned the former mode. You can see your initial name at the top right corner, there is a message about the assigned mode also. If you see a black background of the top banner, you are at the side of standard docusign. I should be assigned at the side of 21 CFR Part11 compliant  mode.
+3.	From the home screen, click  the orange button “START”->”Send an Envelope” ->”UPLOAD”-> Browse my file folders to locate the document that need to be docusigned, select it (Or find my document on the sync onedrive, drag and drop it on the box)->”Open”-> Add Recipients to the Envelop( fill in the name and email address of the recipients), can add multiple recipients. -> We can set up a workflow by check the “Set signing order”, we can adjust the signing order-> In each recipient box, under the “NEEDS TO SIGN” menu, there are several options for selection; Under the “CUSTOMIZE” menu, there are three options -> Prepare the Email message in the “Message to All Recipients” box. Fill in the Email Subject and Email message. -> click the “NEXT” button at the right bottom corner. Then, a document looks like a word format will show up, with a “From:” “To:”,”Subject:” messages on the top. -> Drag the Yellow “Signature” icon at the left top of the screen to the bottom of the document, this yellow “sign” box is for the first recipient. Click the down arrow of the top left box, select the second recipient, the color of the “Signature” will be different, drag it to the bottom of the document right to the “Date Signed” icon too. -> Click “PREVIEW” button on the top right corner. A document for signing will pop out.Check if everything is right, click the left arrow at the top left to go back->”NEXT”-> click “Send” -> The document will be sent to the recipients.
+4.	When the document was signed by the recipients, “Manage”->”Inbox”,we can see it in the Inbox with the status labeled as”completed”. ->”DOWNLOAD”->Check “Combine all PDF’s into one file”,PPD’S SOP is to Combine all PDFs into one file.-> “DOWNLOAD”, choose the folder(local repository)  to save this PDF document ->”Save” -> submit it to sharepoint,EMTF,  Note: DocuSign will keep this signed document for only 90 days.
+II.	Creating a signature and signing a document
+1.	To create a signature, click your profile image -> “Manage profile”->”SIGNATURES” ->”Add New”-> We have three options,”Choose”,”DRAW”,”UPLOAD”-> select one signature, click“Create”-> Replace Existing Signature? “OK”
+2.	Receive the email, open it.->”REVIEW DOCUMENT” -> May be required to log in to access your document and sign. -> see message details above. Click “CONTINUE”-> “START” -> Click “Sign”,select option for “Reason for signing” -> Click “SIGN ” -> See the pop out titled “Authentication”, click  “CONTINUE”,log in again -> See the signature mark -> “Finish” -> Download the PDF(combines the signed) or print a copy of the document 
+
+                       How to upload my docusigned file to CRG file management website
+  Watch that “Onboarding New Hire CV Process” video, there is clear explanation of the steps, I believe that there should be clear introduction for “CLARITY” tool usage too.
+I tried to upload the signed CV via VPN Platform, however, I can not log in the veevevault.com website using zhenhua.yuan@ppd.com -> Yzle2010! Which should be right. So, I chose to log in from my local windows.
+1.	Go to Biowiki website, search “CV”, click the matched item “CV Information”, can see the follow:
+                   New Employees without a CV in the Veeva system
+•	Navigate to the Veeva Quality Docs page and follow steps in "Create New CV" guide.
+•	Follow the biowiki “CRG CV Template” steps below to create your CV.
+•	Have your people manager review your CV.
+•	Sign your final version of the CV using Docusign.
+•	Upload your final version of the signed CV into Veeva. Be sure to include the final word version of your CV as an attachment for future updates.
+•	Please review the following video for a demonstration of how to take the appropriate steps for your existing CV in the system. New Employee CV Workflow (Video)
+2.	Click the highlighted “Veeva Quality Docs”, go to website: Veeva QualityDocs CVs (sharepoint.com), Under a row of red blocks, there is “CV Guides with Videos” ->”Create New CV”, can see a pdf file named “VOD CV Guide-Create New CV”, follow the steps and refer to the video mentioned above, it’s pretty clear to do.
+Kymab KY1005ct05 ADaM Specs  阅读笔记
+1.	Analysis Dataset Metadata (“Datasets” tab)
+•	Dataset: SAS file name of the dataset
+•	Description: SAS label of the dataset
+•	Structure: The level of detail represented by individual records in the dataset (e.g. One record per subject, One record per subject per parameter per visit, One record per subjectper event)."
+•	Keys: A list of variable names that the dataset is sorted by that uniquely identifies each record in the dataset.
+•	Class: Identification of the general class of the dataset using the name of the ADaM structure, possible values are SUBJECT LEVEL ANALYSIS DATASET, BASIC DATA STRUCTURE, 
+•	OCCURRENCE DATA STRUCTURE and ADAM OTHER."
+•	Comment/Documentation: Comment is intended for high level submission comment for reviewer. It is not intended for instruction to programmer. It is not expected for every dataset.
+•	Program Name / Running Order: In this column indicate the order the dataset programs should be run.  The predecessor for each dataset may also be indicated.
+2.	Analysis Variable Metadata (one tab per dataset)
+For all the variables carried directly from SDTM with the same variable name follow one of the following two options depending on SDTM developer:
+•	If SDTM is developed by PPD as part of contracted services then only populate variable name, source, and parameter identifier columns. 
+•	 If SDTM (source data for ADaM) comes from an external client or vendor then in addition to populating the variable name, source and parameter identifier columns also populate the controlled terms, controlled term name columns. (Note that controlled terms column can initially be populated programmatically from source SDTM and then reviewed and maintained manually.)
+•	  Variable Name: SAS variable name
+•	  Variable Label: SAS variable label
+•	  Type: Display either ‘Char’ or ‘Num’, no other value should be displayed.
+•	  Length: SAS variable length. Put 8 for numeric variables.
+•	  Parameter identifier (BDS datasets only):
+     o   If variable metadata/derivation is used for all PARAMs set to *ALL*.  
+     o   If variable metadata/derivation is applied to one or a few PARAMs list the relevant PARAMCDs unquoted and separated by a comma
+     o   Set the column to *DEFAULT* for the variable metadata/derivation to cover the PARAMs that are not explicitly specified by name in the parameter identifier column.（看几个例子,对照着看）
+     o   For PARAMCD variable, set to ‘PARAMCD’.
+•	 Controlled Terms: A list of valid values or allowable codes and their corresponding decodes for the variable.  Separate the values using a semicolon (;) as a delimiter.  If date/time format   (e.g. date9., time5.) is applied to the variable specify the SAS format in this column.           
+ o   If the variable is subject to CDISC ADaM controlled terminology (CT) then only list extensible values if allowed and used. If only a subset of the CT is applicable, then list the values (separated by a semicolon).  If the variable is not subject to CDISC ADaM CT then list all possible values using a semicolon as a delimiter."
+ o   For PARAMCD / PARAM values that carried over directly or mapped from SDTM (for example, LB.LBTESTCD / LB.LBTEST), there is no need to populate the 'Controlled Terms' column.
+ The DoD tool will build the values from data to the corresponding name placed in the control term name column."
+•	  Controlled Term Name: If CT other than date/time is populated, then CT name column should also be populated. If the variable is subject to ADaM CT then prefix the CT name with 'CT: ' 
+(for example, CT: DTYPE). If only a subset of the CT is applicable then prefix the CT name with ""CT_S:"" (for example, CT_S: DTYPE). If there is no existing CDISC ADaM CT name, then you
+need to create the name for CT (with no prefix added)."
+•	 Source: Display SDTM/ADaM variable (XX.XXX) if variable is carried directly from SDTM/ADaM, in this case, leave derivation column blank; display ‘Assigned’ if the variable was assigned based on  another variable’s value. Display ‘Derived’ if the variable needs to be derived applying the algorithm listed under the Derivation column."
+•	 Derivation: If the Source column is indicated with “Derived” or “Assigned”, a derivation should be provided. It can be a simple description of a derivation and the variable used in the derivation or  a complex algorithm containing a complete description of the derivation. If there is a comment related to this variable/derivation that should be part of the define, then add the comment after the derivation using the prefix COMM with a colon - ""COMM:"" so it can be programmatically identified as a comment and not part of the derivation."
+•	Quality Check: This column is used to indicate data checks that should be performed in a program to identify data issues or unexpected results.  It should only contain info that is
+ not needed for the eCRT."
+•	 Common Variable Flag (ADSL only): There is a common variable flag column in ADSL indicating the common variables to be carried to all ADaM datasets, these variables are not repeated in the spec  for other datasets. The actual ADaM datasets will include all the common variables indicated in ADSL."
+  o   For ADSL variables needed in some but not all ADaM datasets (for example, subgroup variables), do not flag the variables in the common variable flag column in ADSL. Instead
+ include/list  these variables in the specific ADaM dataset specs where needed."。
+•	Optimized Length:  This column will be populated by the CDISC_Shrink macro when optimizing the datasets.  It will contain the optimized variable length for each analysis variable.
+3.	Multiple Rows per Analysis Variable
+•	The following attributes for all rows must be the same:  Label, Type, & Length.
+•	All rows must have a parameter identifier populated.
+•	None of the rows can have the parameter identifier “*ALL*”.
+The addition of multiple rows for an analysis variable is acceptable for all variables excluding PARAMCD and must follow the rules noted below. ?
+
+
+
+Tab datasets:
+Dataset	Description	Structure	Class
+ADSL	Subject-Level Analysis Dataset	One record per subject	SUBJECT LEVEL ANALYSIS DATASET
+ADAE	Adverse Events Analysis Data	One record per subject per occurrence assessment	OCCURRENCE DATA STRUCTURE
+ADCM	Concomitant Medication Analysis Data	One record per subject per occurrence assessment	OCCURRENCE DATA STRUCTURE
+ADDV	Protocol Deviations Analysis Data	One record per subject per occurrence assessment	OCCURRENCE DATA STRUCTURE
+ADEG	Electrocardiogram Analysis Data	One or more records per subject, per analysis parameter, per visit	BASIC DATA STRUCTURE
+ADEX	Exposure Analysis Data	One or more records per subject, per analysis parameter, per visit	BASIC DATA STRUCTURE
+ADLB	Laboratory Tests Results Analysis Data	One or more records per subject, per analysis parameter, per visit	BASIC DATA STRUCTURE
+ADISR	Injection Site Reactions Analysis Data	One record per subject, per injection, per visit	OCCURRENCE DATA STRUCTURE
+ADMH	Medical History Analysis Data	One record per subject per occurrence assessment	OCCURRENCE DATA STRUCTURE
+ADPE	Physical Examination Data	One record per subject per parameter per visit 	BASIC DATA STRUCTURE
+ADVS	Vital Signs Data	One record per subject per parameter per analysis visit per timepoint	BASIC DATA STRUCTURE
+ADQS	Questionnaire Data	One record per subject per parameter per visit 	BASIC DATA STRUCTURE
+
+Description	Keys
+Subject-Level Analysis Dataset	STUDYID, USUBJID
+Adverse Events Analysis Data	STUDYID, USUBJID, AEDECOD, AESTDTC, AESEQ
+Concomitant Medication Analysis Data	STUDYID, USUBJID, CMDECOD, CMSTDTC, CMSEQ
+Protocol Deviations Analysis Data	STUDYID, USUBJID, DVTERM, ADT, DVSEQ
+Electrocardiogram Analysis Data	STUDYID, USUBJID, PARAMCD, AVISIT, ADT
+Exposure Analysis Data	STUDYID, USUBJID, PARAMCD, EXCAT, ADT
+Laboratory Tests Results Analysis Data	STUDYID, USUBJID, PARAMCD, AVISIT, ADT, LBSEQ
+Injection Site Reactions Analysis Data	STUDYID, USUBJID, PARAMCD, AVISIT, ADT
+Medical History Analysis Data	STUDYID, USUBJID, MHTERM, ADT, MHSEQ
+Physical Examination Data	STUDYID, USUBJID, PARAMCD, AVISIT, ADT, PESEQ
+Vital Signs Data	STUDYID, USUBJID, PARAMCD, AVISIT, ADT, VSSEQ
+Questionnaire Data	STUDYID, USUBJID, PARAMCD, AVISIT, ADT, QSSEQ
+
+仔细看ADQS Specs
+第29行  PARCAT2 why Variable label is : “Parameter Code”
+*************************************************************************
+*        CLIENT: SponsorXYZ
+*      PROTOCOL: Prot001
+*  PROGRAM NAME: vt14030201.SAS
+*       PURPOSE: Summary Statistics and Change from Baseline
+*                in Hematology Safety Analysis Set
+
+*   INPUT FILES: ADAE
+*  OUTPUT FILES: 
+*   USAGE NOTES:  
+************************************************************************* 
+* Copyright 2017 PPD
+* All Rights Reserved. 
+*************************************************************************;
+
+%let g_deliverableid = t14030201 ;
+%let g_pgmname = vt14030201 ;
+%let GET_TF_ID = t14030201 ;
+
+** Include Study Defaults;
+%include "C773_defaults.sas";
+
+proc format;
+  value trtpl
+    1='1'
+    2='2'
+    3='3'
+    ;
+value $trtdspH
+    '1'= "Active Dose 1"
+    '2'= "Active Dose 2"
+    '3' = "Placebo";
+
+run;
+
+
+*************************************************************************************;
+**                     SETUP AND/OR OVERRIDE TABLE DEFAULTS                        **;
+*************************************************************************************;
+
+%let _default_trtvar = TRT01PN;
+%let _default_bign_in_where = %str(saffl='Y');
+%let _default_below_bign = ;
+%let _DEFAULT_TRTVAR_PRELOADFMT = TRTPL.;
+%let _DEFAULT_DISPLAY_FMT = $trtdspH.;
+%let _default_interleave_trt_sequence = 1 2 3 ;
+%let _DEFAULT_DEFINE_TOTAL_GROUPS = 1 2 3 ;
+
+** overrides **;
+%let _default_debug = N; 
+%let _default_help = N; 
+
+** parameters for this table **;
+%Let Where = PARCAT1 = 'HEMATOLOGY' and PARAMCD in ('HCT','HGB','MCV','PLAT','RBCH', 'BASO', 'EOS', 'LYM', 'MONO', 'NEUT')
+       and SAFFL = 'Y' and (ABLFL = 'Y' or (ANL01FL = 'Y' and AVISITN >= 4)) ;
+
+%let _default_in_data = adlb; 
+
+*************************************************************************************;
+**                              MANIPULATE DATA                                    **;
+*************************************************************************************;
+
+libname adb "\\wilbtib\wilbtia10\PPD DummyStudy\ADaM Programming\Databases\Analysis Database\Output" ;
+
+data &_default_in_data.;
+  set adb.&_default_in_data. (where = (&where.)) ;
+  if ablfl = "Y" then do;
+     avisit = 'Baseline';
+     avisitn = 0;
+   end;
+run ;
+
+proc sort ; by usubjid avisitn ;
+
+data &_default_in_data.;
+  set &_default_in_data. ;
+ /* if avisitn lt 0 then delete ;
+    if avisitn > 99 then avisitn = 99 ;
+ */
+
+
+   **** Client keeps changing their mind ***;
+   if paramcd = "BASO" then paramn = 1 ;
+   if paramcd = "EOS" then paramn = 2 ;
+      if paramcd = "MCV" then paramn = 3 ;
+   if paramcd = "RBCH" then paramn = 4 ;
+ if paramcd = "HCT" then paramn = 5 ;
+   if paramcd = "HGB" then paramn = 6 ;
+   if paramcd = "LYM" then paramn = 7 ;
+   if paramcd = "MONO" then paramn = 8 ;
+   if paramcd = "NEUT" then paramn = 9 ; 
+   if paramcd = "PLAT" then paramn = 10 ; 
+
+a = input(substr(lbdtc, 1, 10), ?? yymmdd10.) ;
+
+
+proc sort data = &_default_in_data. nodupkey ;     by usubjid paramn avisitn ;   run ;
+
+
+. . .
+
+*************************************************************************************;
+**                                PAGEBY VARIABLE                                  **;
+** This variable will be used in the macros ma_summ_stats, ma_summ_stats_rules,    **; 
+** ma_summ_stats_display, mr_subgroup_tile, mr_pagebreak_table and mr_report_basic **; 
+** PAGEBYs categorize the analysis data and control the pagination in the output.  **;
+*************************************************************************************;
+** Pageby variable. e.g., paramcd;
+        %let pageby_var = paramn; 
+        %let pageby_title = %str(Parameter: ); 
+
+** Format that will be used to PRELOAD values of PAGEBY variable in the report.;
+** Used when not all of the values that are to be displayed are available in the data (unusual);
+** If no preloading is needed, enter BLANK;
+        %let pageby_preloadfmt = BLANK; 
+
+** Sort order;
+  ** I(internal) or F(ormatted) value;
+        %let pageby_var_sort_order = I; 
+  ** A(scending) or D(escending) order;
+        %let pageby_var_sort_asc_or_desc = ASCENDING; 
+
+
+. . .
+
+*!*!*!*!*!*!*!*!*!*!*!*!*! MODIFY BELOW WITH CAUTION *!*!*!*!*!*!*!*!*!*!;
+
+** BIG N;
+%ma_bign
+(in_data                = &_DEFAULT_BIGN_IN_DATA.
+,in_where               = &_DEFAULT_BIGN_IN_WHERE.
+,subgroup               = &subgroup.
+,trigger_bign_in_colhead = YES /* Set to NO if you DO NOT want to display the N= in the column header */ 
+,trigger_split_bign     = YES  /* insert a prcode_split into the column header so that the (N=xxx) is forced to the next line*/
+,trigger_parentheses    = &_DEFAULT_TRIGGER_PARENTHESES /* surround N=xxx with parentheses i.e, (N=xxx) */
+,help                   = &_DEFAULT_HELP
+,debug                  = &_DEFAULT_DEBUG
+) ;
+
+. . .
+
+
+** Get Titles and Footnotes, Count usuable lines per page;
+%get_tf
+(tlf_progname           = &get_tf_id. /* keyword in the .TF file which identifies titles and footnotes for this report */
+,escapechar             = &_default_escapechar /* the ODS escape character */
+,use_parse_char         = yes /* yes/no to add 'a0'x at the end of titles and footnotes. 
+                                Invisiible character used for DEL_SUBSTR in RTF_PARSE */
+,write_titles           = yes /* indicates whether or not SAS TITLE statements should be exectued using the titles from the TF file */
+,write_footnotes        = yes /* indicates whether or not SAS FOOTNOTE statements should be exectued using the footnotes from the TF file */
+,out_tf_dataset         = yes /* indicates whether or not you want an output data set created */
+);      
+
+. . . 
+
+** this macro uses the dataset produced by get_tf
+** if using spanning headers and/or subgroup titles, enter the total
+** number of these extra lines into SPANNER_SUBGROUP_LINES;
+%mu_lines_per_page
+(metadata_filepath      = &get_tf_id._tf  /* the data set that GET_TF produced */
+,tlf_progname           = &get_tf_id.
+,spanner_lines          = &_extra_lines /* the number of extra lines that will be taken up by the Actual and CFB column headers */
+,linesperpage           = &_default_page_length_lines. /* the number of lines that will fit on a page - 
+                                                        - this should have been set in the DEFAULTS */
+,in_data                = SUMM_PACK
+,escapechar             = &_default_escapechar.
+,prcode_split           = &_default_prcode_split.
+,rtfwidth               = &_default_page_width_chars./* the width of the page in characters 
+                                                        - this should have been set in the DEFAULTS */
+,subgroup_var           = &subgroup.
+,debug                  = &_default_debug
+);
+
+%let G_LINESLEFT = 20 ;
+
+** Apply page break;
+%mu_get_sort_order(summ_pack);
+%mu_wordscan(string=&byvar, root=bv, numw=numbv, delim=%str() )
+**bv&numbv will resolve to the last variable listed in the BYVAR string;
+
+%mr_pagebreak_table
+(vartx                  = pack_stat_label 
+,lines_left_on_page     = 20 /* the number of lines left on the page was derived in MU_LINES_PER_PAGE */
+,in_data                = SUMM_PACK
+,out_data               = SUMM_PAGEBRK
+,escapechar             = &_default_escapechar.
+,orderby                = &sort_order /* the sort order of the input data set was obtained from the call to MU_GET_SORT_ORDER above*/
+,subgrp                 = &pageby_var /* new pages at each FIRST.SUBGRP value */
+,section                = &&bv&numbv /* lines will be skipped at FIRST.BYVAR */
+,lineskip               = 1 /* how many lines to skip when BYVAR changes - use 0, 0.5 or 1 */
+,section_protection     = y /* keep sections together on the page */
+);
+
+
+/*
+data SUMM_PAGEBRK;
+	set SUMM_PAGEBRK;
+	if AVISITN=0 and STAT_LABEL='n' then call missing(STAT_VALUE_1_2,STAT_VALUE_2_2,STAT_VALUE_3_2);
+run;
+
+proc sort data=SUMM_PAGEBRK;
+	by &SORT_ORDER;
+run;
+*/
+
+** Call ODSOUT macro to create RTF file and select ODS style;
+
+%mr_odsout;
+
+** Basic proc report ;
+%mr_report_basic
+(in_data                = FINAL
+
+,original_in_data       = &_default_in_data. /* in case the original subsetted data was zero obs */
+,original_where         = &where.
+
+,subgroup               = &subgroup
+,show_blank_subgroup    = no
+,subgroup_order_data_set= subgroup_order_data_set /* data set that controls the order of the subgroups.  
+                                                        If no data set is provided, then the subgroups will be presented 
+                                                        in default ascending sort order */
+,nosubgroups_subgroup_title = &nodata_subgroup_title  /* subgroup subtitle for reports when there is no data */
+,no_subjects_text       = &_default_no_subjects_table. /* text to use when there are no subjects in the subset for this table */
+,un_interleave          = yes /* in case there are no subjects and this table was to be interleaved, 
+                                do you want to compress it down to one page */
+
+,bygroup                = &pageby_var /* The variable in the PAGEBY position */
+
+,pagenum                = pagenum /* name of the variable containing the page numbers */
+,interleave_trt_sequence= &_default_interleave_trt_sequence. /* how to display the treatments across the page(s) */
+,column1                = pack_stat_label /* the variable to use in the first column */
+,col1_width_pcnt        = &_default_col1_width_pcnt. /* width of the first column */
+
+,trt_col_root           = stat_value_ /* root or prefix of the variables to use for the rest of the columns */
+,trt_colhead_macvars    = colhead_ /* root of the macro variable names that will be used for the column headers (except column 1) */
+
+,skip_var               = &&bv&numbv /* when to skip a line */
+,prcode_split           = &_default_prcode_split.
+
+,catvar                 = DUMMY /* DUMMY placeholder to tell the macro that there will be a categorical variable displayed 
+                               as subcolumns beneath each treatment */
+,catvar_sequence        = &_DEFAULT_STAT_SEQUENCE /* sequence of the categories (1=Actual 2=CFB) */ 
+,catvar_dsp_fmt         = &_DEFAULT_ACT_CFB_LABEL_FMT /*format to control the text in the subheaders for the categories */
+
+
+,skip_line_cell_height  = &_DEFAULT_SKIP_LINE_CELL_HEIGHT /*height of a skipped line */
+,help                   = &_default_help
+,debug                  = &_default_debug
+);
+
+** Call ODSCLOSE macro to close RTF session ;
+%mr_odsclose;
+
+** read main and validation side outputs and compare - this will only run when validation_yn = Y;
+   %mr_rtf_parse
+   ( validation_yn    = &validation_yn            /* Yes/No flag for validation */
+   , val_path         = &val_path                  /* output path for validation rtf */
+   , scan_delim       = "*"
+   , del_substr_1     = &_default_substr1.                     /* what lines to ignore when reading RTF files */
+   , del_substr_2     = "(N="    /* what lines to ignore when reading RTF files*/
+   , report_comp      = N
+   , report_base      = N
+   ) *;
+
+                                                 MULTIPLE IMPUTATION IN SAS PART 1
+https://stats.oarc.ucla.edu/sas/seminars/multiple-imputation-in-sas/mi_new_1/
+Goals of statistical analysis with missing data:
+	a. Minimize bias
+	b. Maximize use of available information
+	c. Obtain appropriate estimates of uncertainty
+Exploring missing data mechanisms: 1. Missing completely at random(MCAR)   2. Missing at random(MAR) 3. Missing not at random(MNAR).data are said to be missing not at random if the value of the unobserved variable itself predicts missingness. 
+analyzing only complete cases for data that are either missing at random, or missing not at random can lead to biased parameter estimates. Multiple imputation and other modern methods such as direct maximum likelihood generally assumes that the data are at least MAR, meaning that this procedure can also be used on data that are missing completely at random. 
+
+Common techniques for dealing with missing data: 
+	a. Complete case analysis (listwise deletion)
+	b. Available case analysis (pairwise deletion)
+	c. Mean Imputation(Unconditional Mean Imputation)
+	d. Single Imputation
+	e. Stochastic Imputation
+
+A common misconception of missing data methods is the assumption that imputed values should represent “real” values. The purpose when addressing missing data is to correctly reproduce the variance/covariance matrix we would have observed had our data not had any missing information.
+
+SAS Certification Prep Guide:Advanced Programming for SAS 9>
+2022-10-24：                                                                                    阅读笔记
+Part2 chapter9: Introducing Macro Variables
+Section 5: Displaying Macro Variable Values in the SAS log
+Since the %PUT statement resolves macro references in text before writing text to the SAS log, you can use it to show the stored value of city.
+%put The value of the macro variable CITY is: &city;
+Table 9.3: SAS Log
+120 %put The value of the macro variable CITY is: &city;
+The value of the macro variable CITY is: Dallas
+YZ: &city is the macro reference.
+Section 6: Using Macro Functions to Mask Special Characters
+Macro quoting functions: The %STR Function
+create a macro variable named prog with data new; x=1; run; stored as its value.
+options symbolgen;
+%let prog=data new; x=1; run;;
+&prog
+proc print;
+run;
+according to the SYMBOLGEN statement in the log, the macro variable prog has been assigned a value of data new. SAS interpreted the first semicolon as the end of the macro assignment statement.
+The %STR function is used to mask (or write quotation marks around) tokens during compilation so that the macro processor does not interpret them as macro-level syntax. Special tokens and mnemonic equivalents include:
+; + - * / , < > = blank ^ ~ # |
+LT EQ GT AND OR NOT LE GE NE IN
+The %STR function also ：enables macro triggers to work normally, and preserves leading and trailing blanks in its argument.
+Method One
+You could quote all text. %let prog=%str(data new; x=1; run;);
+Method Two
+You could quote only the semicolons. %let prog=data new%str(;) x=1%str(;)run%str(;);
+Method Three
+You could create an additional macro variable, assign a quoted value to it, and reference it in the assignment statement for the prog macro variable. %let s= %str(;); %let prog=data new&s x=1&s run&s;
+Each of these methods accomplishes the same thing: they all assign the value data=new; x=1; run; to the macro variable prog.
+The %STR function can also be used to quote tokens that typically occur in pairs:
+' " ) (
+To perform this quoting, you precede the token that you want to quote with a percent sign (%) within the %STR function argument.
+%let text=%str(Joan%'s Report);
+%let text=Joan%str(%')s Report;
+The value of text is Joan's Report in both cases.
+The %NRSTR function performs the same quoting function as %STR, except it also masks macro triggers (& and %). The NR in the name %NRSTR stands for No Resolution. %NRSTR has the same syntax as %STR.
+%let Period=%str(May&Jun);
+%put Period resolves to: &period;
+%let Period=%nrstr(May&Jun);
+%put Period resolves to: &period;
+Table 9.7: SAS Log
+1    %let Period=%str(May&Jun);
+WARNING: Apparent symbolic reference JUN not resolved.
+2    %put Period resolves to &period:
+WARNING: Apparent symbolic reference JUN not resolved.
+Period resolves to: May&Jun
+3
+4    %let Period=%nrstr(May&Jun);
+5    %put Period resolves to &period;
+Period resolves to: May&Jun
+The %BQUOTE Function:
+Like the %STR function, the %BQUOTE function is used to mask (or write quotation marks around) special characters and mnemonic operators. The %STR function performs during compilation, and the %BQUOTE function performs during execution.
+%let text=%str(Joan%'s Report);
+%let text=Joan%str(%')s Report;
+You can accomplish this task using the %BQUOTE function. The %BQUOTE function does not require that unmatched quotation marks be marked, so the title that contains an apostrophe(撇号，省略符号，所有格符号) requires no special syntax.
+%let text=%bquote(Joan's Report);
+YZ: %bquote 看来功能更加强大。
+Section 7: Using Macro Functions to Manipulate Character Strings:
+With macro character functions, you can do the following:
+a. change lowercase letters to uppercase
+b. produce a substring of a character string
+c. extract a word from a character string
+d. determine the length of a character string, and more.
+Macro character functions have the same basic syntax as the corresponding DATA step functions, and they yield similar results. It is important to remember that although they might be similar, macro character functions are distinct from DATA step functions. As part of the macro language, macro functions enable you to communicate with the macro processor in order to manipulate text strings that you insert into your SAS programs.
+The %UPCASE function enables you to change the value of a macro variable from lowercase to uppercase before substituting that value in a SAS program.
+%let paidval=n;
+proc means data=sasuser.all sum maxdec=0;
+   where paid="%upcase(&paidval)";
+   var fee;
+   class course_title;
+title "Uncollected Fees for Each Course";
+run;
+If the argument contains a special character, a mnemonic operator, or a macro trigger, you need to use the %QUPCASE function. %QUPCASE has the same syntax as the %UPCASE function, and it works the same as %UPCASE except that it also masks mnemonic operators and special characters (including macro triggers) in the function result.
+%let a=begin;
+%let b=%nrstr(&a);
+%put UPCASE produces: %upcase(&b);
+%put QUPCASE produces: %qupcase(&b);
+9    %put UPCASE produces: %upcase(&b);
+UPCASE produces: begin
+10   %put QUPCASE produces: %qupcase(&b);
+QUPCASE produces: &A
+The %SUBSTR Function:The %SUBSTR function enables you to extract part of a character string from the value of a macro variable.
+For example, assume that the macro variable date has the value 05JAN2002.
+The code %substr(&date,3) returns the value JAN2002.
+The code %substr(&date,3,3) returns the value JAN.
+The code %substr(&date,3,9) returns the value JAN2002 and produces a warning message.
+%substr(&var,%length(&var)-1) returns the last two characters of the value of the macro variable var.
+YZ: &var is a text expression 
+* Print a list of courses that started this month;
+proc print data=update_schedule;
+     where begin_date between
+         "01%substr(&sysdate9,3)"d and
+         "&sysdate9"d;
+   title "All Courses Held So Far This Month";
+   title2 "(as of &sysdate9)";
+run;
+If the argument contains a special character, a mnemonic operator, or a macro trigger, you need to use the %QSUBSTR function.
+%let a=one;
+%let b=two;
+%let c=%nrstr(&a &b);
+%put C: &c;
+%put With SUBSTR: %substr(&c,1,2);
+%put With QSUBSTR: %qsubstr(&c,1,2);
+YZ: C: &a &b With SUBSTR: on                With QSUBSTR:&a 我理解错误了，但从错误中我加深了理解。
+15   %put C: &c;
+C: &a &b
+16   %put With SUBSTR: %substr(&c,1,2);
+With SUBSTR: one
+17   %put With QSUBSTR: %qsubstr(&c,1,2);
+With QSUBSTR: &a
+YZ: %qsubstr(&c,1,2);     &c先solve to &a &b, 然后取&a, 但不进一步solve to : one
+The %INDEX function enables you to determine the position of the first character of a string within another string.
+%let a=a very long value;
+%let b=%index(&a,v);
+%put The character v appears at position &b.;
+YZ: 3
+The %SCAN function enables you to extract words from the value of a macro variable.
+SAS treats the following characters as default delimiters:
+ASCII systems: blank . < ( + & ! $ * ) ; ^ - / , % |
+EBCDIC systems: blank . < ( + | & ! $ * ) ; ¬ - / , % ¦ ¢
+data work.thisyear;
+   set sasuser.schedule;
+    where year(begin_date) =
+          year("&sysdate9"d);
+run;
+
+%let libref=%scan(&syslast,1,.);
+%let dsname=%scan(&syslast,2,.);
+proc datasets lib=&libref nolist;
+title "Contents of the Data Set &syslast";
+   contents data=&dsname;
+run;
+quit;
+If the argument contains a special character, a mnemonic operator, or a macro trigger, you need to use the %QSCAN function.
+%let a=one;
+%let b=two;
+%let c=%nrstr(&a*&b);
+%put C: &c;
+%put With SCAN: %scan(&c,1,*);
+%put With QSCAN: %qscan(&c,1,*);
+YZ: C: &a*&b           With SCAN:one   With QSCAN:&a  这次我完全理解正确，这就是一个小小的进步。
+Section 8: Using SAS Functions with Macro Variables 
+ The %SYSFUNC Function: You can use the %SYSFUNC function to execute other SAS functions as part of the macro facility. All SAS functions can be used with %SYSFUNC except a list of functions.
+Suppose the following code was submitted on Friday, November 4, 2011:
+    title "%sysfunc(today(),weekdate.) - SALES REPORT";
+The title on the next report would be Friday, November 4, 2011 - SALES REPORT.
+YZ: 此处有疑惑。“on the next report”是不是指姐下来的图或表？
+
+2022-10-25 Tuesday
+
+title "Report Produced on
+              %sysfunc(left(%sysfunc(today(),worddate.)))";
+ERROR: The function LEFT referenced by the %SYSFUNC or
+       %QSYSFUNC macro function has too many arguments.
+You can mask the comma by using the %QSYSFUNC function instead, as follows:
+ title "Report Produced on
+               %sysfunc(left(%qsysfunc(today(),worddate.)))";
+The modified statement generates the following title:
+   Report Produced on November 4, 2011
+Section 9. Combining Macro Variable References with Text
+Some applications might require placing a macro variable reference adjacent to leading text (text&variable) or trailing text (&variabletext) or referencing adjacent macro variables (&variable&variable) in order to build a new token.
+%let year=02;
+%let month=jan;
+%let var=sale;
+proc chart data=sasuser.y&year&month;
+   hbar week / sumvar=&var;
+run;
+proc plot data=sasuser.y&year&month;
+   plot &var*day;
+run;
+Table 9.16: Code after Substitution
+proc chart data=sasuser.y02jan;
+    hbar week / sumvar=sale;
+run;
+proc plot data=sasuser.y02jan;
+    plot sale*day
+run;
+YZ: &year is a macro variable reference.
+a period (.) is a special character that is treated as part of the macro variable reference and that does not appear when the macro variable is resolved.
+%let graphics=g;
+ %let year=02;
+ %let month=jan;
+ %let var=sale;
+ proc &graphics.chart data=sasuser.y&year&month;
+   hbar week / sumvar=&var;
+run;
+proc &graphics.plot data=sasuser.y&year&month;
+   plot &var*day;
+run;
+Table 9.18: Code after Substitution
+proc gchart data=sasuser.y02jan;
+   hbar week / sumvar=sale;
+run;
+proc gplot data=sasuser.y02jan;
+   plot sale*day;
+run;
+Include a macro variable that is used to define the libref:
+%let lib=sasuser;
+%let graphics=g;
+%let year=02;
+%let month=jan;
+%let var=sale;
+libname &lib 'SAS-data-library';
+proc &graphics.chart data=&lib.y&year&month;
+   hbar week / sumvar=&var;
+run;
+proc &graphics.plot data=&lib.y&year&month;
+   plot &var*day;
+run;
+The period after &lib is interpreted as a delimiter. You need to use a second period after the delimiter period to supply the necessary token:
+Section 10.  Summary
+Processing Macro Variables
+When submitted, a SAS program goes to an area of memory called the input stack. From there, the word scanner divides the program into small chunks called tokens and passes them to the appropriate compiler for eventual execution. Certain token sequences are macro triggers, which are sent to the macro processor for resolution. Once a macro variable has been resolved by the macro processor, the stored value is substituted back into the program in the input stack, and word scanning continues.
+Using Macro Functions to Mask Special Characters
+The %STR function enables you to quote tokens during compilation in order to mask them from the macro processor. The %NRSTR function enables you to quote tokens that include macro triggers from the macro processor. The %BQUOTE function enables you to quote a character string or resolved value of a text expression during execution of a macro or macro language statement.
+Using Automatic Macro Variables
+footnote1 "Created &systime &sysday, &sysdate9";
+footnote2 "on the &sysscp system using Release &sysver";
+title "REVENUES FOR DALLAS TRAINING CENTER";
+proc tabulate data=sasuser.all(keep=location course_title fee);
+   where upcase(location)="DALLAS";
+        class course_title;
+        var fee;
+        table course_title=" " all="TOTALS",
+              fee=" "*(n*f=3. sum*f=dollar10.)
+              / rts=30 box="COURSE";
+run;
+YZ: rts=30 是什么意思？
+Points to Remember
+Macro variables can make your programs more reusable and dynamic.
+
+When you submit code to SAS, macro variable references are resolved by the macro processor, and their values are substituted into your program.
+You can use the %PUT statement to write any text, including resolved macro variables, to the SAS log.
+If you reference a macro variable within quotation marks, you must use double quotation marks. Macro variable references that are enclosed in single quotation marks cannot be resolved.
+Most macro character functions have corresponding functions (such as %QSUBSTR and %QSCAN) that also mask special characters and mnemonic operators in the function result.
+You can also include references to other macro variables within %LET statements.
+Section 11. Summary 
+Assuming that you began your SAS session today, which of the following statements correctly sets the macro variable currdate to today's date:
+%let currdate = %sysfunc(today(), worddate.);
+%let currdate = &sysdate9;
+%let currdate = %sysfunc(date());
+all of the above
+Answer:
+Correct answer: d
+SYSDATE9 is an automatic macro variable that stores the date that your SAS session began in ddmmmyyyy format. You can use the %SYSFUNC function along with any DATA step function, so both the TODAY() function and the DATE() function will result in the current date.
+YZ: 我误以为正确答案是a, 其实应该是d, 错误使人印象深刻。
+The four types of tokens that SAS recognizes are
+expressions, literals, names, and special characters.
+literals, names, numbers, and special characters.
+expressions, names, numbers, and special characters.
+expressions, literals, numbers, and special characters.
+Answer:
+Correct answer: b
+The word scanner recognizes four types of tokens. Expressions are not a type of token.
+YZ: 我不知道expression 不是SCANNER所认识的TOKEN 类型。如华罗庚之言，读数学书而不做练习题，就如入宝山空手而归。
+Chapter 10: Processing Macro Variables at Execution Time
+Section 1. Overview
+There are several methods that enable the macro facility to create or access macro variables at execution time. A. DATA step, b. PROC SQL step, c. SCL program.
+Section 2. Creating a Macro Variable during DATA Step Execution
+The SYMPUT Routine
+The DATA step provides functions and a CALL routine that enable you to transfer information between an executing DATA step and the macro processor. You can use the SYMPUT routine to create a macro variable and to assign to that variable any value that is available in the DATA step.
+Using SYMPUT with a Literal:  CALL SYMPUT('macro-variable', 'text');
+if paidup<total then do;
+      call symput('foot','Some Fees Are Unpaid');
+   end;
+   else do;
+      call symput('foot','All Students Have Paid');
+   end;
+This time, the value assigned to foot is either Some Fees Are Unpaid or All Students Have Paid, depending on the value of the DATA step variable Paidup, because the value is assigned during the execution of the DATA step.
+Using SYMPUT with a DATA Step Variable
+CALL SYMPUT('macro-variable',DATA-step-variable);
+Using CALL SYMPUT with DATA Step Expressions  CALL SYMPUT('macro-variable',expression);
+To remove trailing blanks from crsname, you can use the TRIM function. To remove leading and trailing blanks from the macro variables numstu and numpaid, you can use the STRIP function.
+PUT Function
+The PUT function returns a character string that is formed by writing a value with a specified format.
+You can use the PUT function to do the following:
+perform explicit numeric-to-character conversions
+format the result of a numeric expression.
+PUT(source,format.)
+
+The SYMPUTX Routine
+The SYMPUTX routine is very similar to the SYMPUT routine. In addition to creating a macro variable and assigning a value to it, the SYMPUTX routine also automatically removes leading and trailing blanks from both arguments. CALL SYMPUTX(macro-variable,expression);
+if final then do;
+      call symputx('crsname',course_title);
+      call symputx('date',put(begin_date,mmddyy10.));
+      call symputx('due',put(fee*(total-paidup),dollar8.));
+   end;
+Section 3：Creating Multiple Macro Variables during DATA Step Execution
+Creating Multiple Macro Variables with CALL SYMPUT
+data _null_;
+   set sasuser.courses;
+   call symput(course_code, trim(course_title));
+run;
+%put _user_;
+YZ: 给同一个macro variable 重复赋值也无碍。
+%let crsid=C005;
+proc print data=sasuser.schedule noobs label;
+   where course_code="&crsid";
+   var location begin_date teacher;
+   title1 "Schedule for &c005";
+run;
+Section 3：Referencing Macro Variables Indirectly
+If the value of the macro variable crsid is C002, then you need to proceed in several steps:
+Resolve the macro variable crsid to the value C002.
+Attach an ampersand (&) to the front of the resolved value in order to create a new reference (&C002).
+Resolve the resulting macro variable reference to the value Structured Query Language.
+                                                      SAS Environment Setup Notes
+                                                                  2022-11-17  
+ SAS Environment Setup also provides the infrastructure that makes other Global Bios Library utilities available to programming staff. Without the benefit of start.sas to enable utilities project-wide, the study team would have to enable a call to every macro suite in every program that uses it. Imagine if every TLF program had to include a reference to ARTZ, CDISC SDTM Macros, PackText, the Automated Validation Utility, and more, not to mention any utilities that are used indirectly, and trying to ensure that these calls all consistently reference the same version to avoid differences in results.
+To use SAS Environment Setup on a study, the Lead Programmer must copy files from the Global Bios Library into the project area and configure them with study-specific information. Once this has been done, programs will automatically employ SES when executed in batch mode. To use SES in interactive mode, staff should follow the steps listed in the Job Aid.
+SAS Environment Setup (SES) v4 provides programmers with a simple approach to set up the programming environment for Biostatistics projects.
+SES establishes a standard set of libnames using the given directory structure, creates needed global macro variables, and generates a format catalog for programming use. The expectation is that only a small amount of modification will be needed to customize the solution for a specific project.
+SES creates dynamic information based on the location of the Autoexec.sas file when it is executed. When working in an interactive session, the Autoexec.sas file must be executed prior to any other program. Any additional programs opened into this existing SAS session will have libnames and macros assigned as if it were opened from the Autoexec.sas file location. Multiple SAS programs should only be opened in a single SAS session if those programs reside in the same folder location.
+SAS Environment Setup comprises the following key macros and templates:
+
+Macros (do NOT copy from the Global Bios Library)
+•	setup.sas
+•	AddLibraryFolder.sas
+•	isetup.sas
+Templates (copy from the Global Bios Library)
+•	autoexec.sas
+•	start.sas
+•	irun.sas
+I need to figure out the relationship between the above programs.
