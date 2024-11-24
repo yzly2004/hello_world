@@ -4541,6 +4541,228 @@ run;
 %end;
 %mend gm_init;
 
+22AUG2023 Changes:
+
+TRMETHOD: “The Visit value in Central lesion data mentions the method used. CT, MRI, or CT/MRI. If the CRF imaging collection says CT/MRI and the vendor only says one of them, then we use the Vendor value. If the Vendor says both and the CRF dates for either mri or ct align, then we chose the CRF method where the date matches. If the CRF and vendor match methods, no change. if the vendor does not mention a method, then we use the method from the CRF if the date matches with vendor (i.e. if CT scan date matches vendor date, method is CT. if MRI date matches with vendor date, we use MRI)”
+
+ECTRT: we are making ECTRT=’Nirogacestat’ if ECCAT=’MODIFICATIONS TO PRESCRIBED DOSE - OPEN-LABEL EXTENSION’ or ECCAT=’ON-SITE DOSE ADMINISTRATION’ and the raw studyevent value indicates OLE. Previously only EPOCH was being used to determine ECTRT. In cases where DBL end date is equal to OLE start date, EPOCH will prioritize DBL. Therefore we needed to adjust to make sure the correct ECTRT value was being displayed on the records described above.
+
+New EPOCH:
+For full dates, we used the date part of –DTC in the logic below. For month and year only dates, we used First 7 characters of the dates in the below derivation. For year only dates, we used only the first 4 characters of the dates in the derivation below.
+
+   if --DTC<Screening SE.SESTDTC or Screening SE.SESTDTC=’’ or –DTC is missing    then EPOCH=''; 
+   else if –DTC<Double Blind SE.SESTDTC then EPOCH='SCREENING'; 
+   else if --DTC<= Screening SE.SEENDTC and Double Blind SE.SESTDTC is missing then EPOCH='SCREENING'; 
+   else if --DTC<= Double Blind SE.SEENDTC and Open Label SE.SESTDTC= xds_eot.LSTDOSDBL_DSDATC (last dose of double-blind) then EPOCH='BLINDED TREATMENT';
+   else if --DTC< Double Blind SE.SEENDTC    then EPOCH='BLINDED TREATMENT';
+   else if --DTC<= Double Blind SE.SEENDTC and OLE SE.SESTDTC is missing  then EPOCH='BLINDED TREATMENT'; 
+   else if --DTC<=OLE SE.SEENDTC  then EPOCH='OPEN-LABEL TREATMENT';
+   else if --DTC<=Follow-Up SE.SEENDTC then EPOCH='FOLLOW-UP';
+   else if –DTC is > Follow-Up SE.SEENDTC then EPOCH=’’;
+
+TULAT and TULOC:
+Using the source variables below, TULOC and TULAT were mapped to controlled terminology. If the source variables indicated the location was on the left or the right then TULAT was set to LEFT or RIGHT respectively. The laterality was then removed from the TULOC unless the laterality would remove important context, then we left it in the TULOC value. If the location value indicates the tumor link ID, we also removed that in TULOC (i.e. 'T01 DISTAL THIGH MUSCLE THIGH RIGHT' would map to tuloc='DISTAL THIGH MUSCLE THIGH' and tulat='RIGHT'.)
+
+Micl_recist1_1_ld.location for tucat ='CENTRAL: LESION DATA'
+Xtl.TLLOC for for tucat = 'LOCAL: TARGET LESION DATA'
+Xntl.NTLLOC for tucat = 'LOCAL: NON-TARGET LESION DATA'
+xnew_vis.NEWLOC_VIS for tucat = 'LOCAL: NEW LESION DATA'
+
+
+*--------------Previous ---------------------------------------;
+EPOCH Derivation below: 
+If --DTC is missing then EPOCH is set to missing.
+else if missing DM.RFXSTDTC and not missing DM.RFICDTC then set to 'SCREENING'.
+else if missing DM.RFXSTDTC and missing DM.RFICDTC then set to missing.
+
+Else do the following:
+
+OLEYN is set to XDS_OLE.OLEYN
+OLE_Start is set to character version of XPC.OSDA_PCDATN where STUDYEVENT='C1D1_OLE'
+DB_End is set to  character version of XDS_EOT.LSTDOSDBL_DSDATN
+
+For complete dates:
+  If --DTC < DM.RFXSDTC  then set to "SCREENING".
+  else if OLEYN='YES' and DM.RFXSDTC <= --DTC  <  OLE_Start and OLE_Start ^= DB_End  then set to 'BLINDED TREATMENT'.
+  Else if OLEYN='YES' and DM.RFXSTDTC<= --DTC  <= DB_End then set to 'BLINDED TREATMENT'.
+  Else if OLEYN='YES' and DB_End<= --DTC  <= RFXENDTC then set to 'OPEN-LABEL TREATMENT'.
+  Else if OLEYN='NO' and DM.RFXSTDTC<= --DTC  <= DB_End then set to 'BLINDED TREATMENT'.
+  Else if OLEYN='NO' and DM.RFXSTDTC<= --DTC  <= RFXENDTC then set to 'BLINDED TREATMENT'.
+  Else if OLEYN='' and DM.RFXSTDTC<= --DTC  <= RFXENDTC then set to 'BLINDED TREATMENT'.
+  Else if RFXENDTC <= --DTC then set to 'FOLLOW-UP'
+
+For partial dates with Month and Year:
+If --DTC < Month and Year of RFXSDTC then set to 'SCREENING'. 
+  Else if OLEYN='YES' and Substr(DM.RFXSDTC,1,7) <= --DTC  <  Substr(OLE_Start,1,7) and OLE_Start ^= DB_End  then set to 'BLINDED TREATMENT'.
+  Else if OLEYN='YES' and Substr(DM.RFXSTDTC,1,7)<= --DTC  <= Substr(DB_End,1,7) then set to 'BLINDED TREATMENT'.
+  Else if OLEYN='YES' and Substr(DB_End,1,7)<= --DTC  <= Substr(RFXENDTC,1,7) then set to 'OPEN-LABEL TREATMENT'.
+  Else if OLEYN='NO' and Substr(DM.RFXSTDTC,1,7)<= --DTC  <= Substr(DB_End,1,7) then set to 'BLINDED TREATMENT'.
+  Else if OLEYN='NO' and Substr(DM.RFXSTDTC,1,7)<= --DTC  <= Substr(RFXENDTC,1,7) then set to 'BLINDED TREATMENT'.
+  Else if OLEYN='' and Substr(DM.RFXSTDTC,1,7)<= --DTC  <= Substr(RFXENDTC,1,7) then set to 'BLINDED TREATMENT'.
+  Else if Substr(RFXENDTC,1,7) <= --DTC then set to 'FOLLOW-UP'
+
+For partial dates with only Year:
+If --DTC < Month and Year of RFXSDTC then set to 'SCREENING'. 
+  Else if OLEYN='YES' and Substr(DM.RFXSDTC,1,4) <= --DTC  <  Substr(OLE_Start,1,4) and OLE_Start ^= DB_End  then set to 'BLINDED TREATMENT'.
+  Else if OLEYN='YES' and Substr(DM.RFXSTDTC,1,4)<= --DTC  <= Substr(DB_End,1,4) then set to 'BLINDED TREATMENT'.
+  Else if OLEYN='YES' and Substr(DB_End,1,4)<= --DTC  <= Substr(RFXENDTC,1,4) then set to 'OPEN-LABEL TREATMENT'.
+  Else if OLEYN='NO' and Substr(DM.RFXSTDTC,1,4)<= --DTC  <= Substr(DB_End,1,4) then set to 'BLINDED TREATMENT'.
+  Else if OLEYN='NO' and Substr(DM.RFXSTDTC,1,4)<= --DTC  <= Substr(RFXENDTC,1,4) then set to 'BLINDED TREATMENT'.
+  Else if OLEYN='' and Substr(DM.RFXSTDTC,1,4)<= --DTC  <= Substr(RFXENDTC,1,4) then set to 'BLINDED TREATMENT'.
+  Else if Substr(RFXENDTC,1,4) <= --DTC then set to 'FOLLOW-UP'
+
+List of dates considered in SV-
+xlbyn_locl.LBDATN
+xlb_biop.LBDATN (BIOP_LBDATN)
+xlb_blood.BLOOD_LBDATN
+xlb_chem.LBDTN
+xlb_geno.GENO_LBDATN
+xlb_hema.LBDTN
+xlb_horm.LBDTN
+xlb_locl.LBDATN (VISDATN)
+xlb_preg.PREG_LBDATN
+xlb_sero.SERO_LBDATN
+xlb_uri.LBDTN
+xlb_urine.URINE_LBDATN
+xlb_locl_oth.LBDT_LOCL_OTHN
+xdiary.visdatn
+xeg.VSDATN EGDATN
+xeg_post.POST_EGDATN
+xeg_pre.PRE_EGDATN
+xvs.VSDATN
+mrl.VISITDT
+xda.RETAMT_DADATC 
+xda.DISPAMT_DADATC
+xds_cont.VISDATN
+xpg.VISDATN
+xpr_imaging.IMAGE_PRDATN
+xqs_ecog.ECOG_QSDATN
+xpe.PEDATN
+xpc.OSDA_PCDATN
+xpc.VISDATN
+Micl_recist1_1_rd.COLLDT
+Micl_recist1_1_ld.COLLDT
+Micl_recist1_1_se.DATEPROGRESSION	
+Micl_recist1_1_se.DATEFIRSTRESPONSE	
+Micl_volumetric.COLLDT
+xds_sf.SF_DSSTDATN
+xds_ole.eotVISDATN
+xntl_vis.NTLDT_VISN
+xtl_vis.TLDT_VISN
+xresponse.RESPDTN
+nir_dt_301_pk.Collection_Date
+16May2024 : Issue raised during review by Sheik.
+raw.XCLINPROG dataset is not considered for the mapping. Subject "006-008" does not have EOT visit
+Response :
+PP specifically omitted inclusion of raw.XCLINPROG from SV derivation logic.Need to revisit during PMDA delivery to include after a team discussion.
+
+
+Here are the sorts for the --SEQ variables:
+AE keys= STUDYID USUBJID AETERM AEDECOD AESTDTC AEREFID 
+CM keys= STUDYID USUBJID CMCAT CMTRT CMSTDTC CMENDTC CMDTC 
+DA keys= STUDYID USUBJID DATESTCD VISITNUM DADTC DAORRES 
+DD keys= STUDYID USUBJID DDTESTCD 
+DS keys= STUDYID USUBJID DSSTDTC DSCAT DSSCAT DSDECOD 
+DV keys= STUDYID USUBJID DVTERM DVDECOD DVSTDTC 
+EC keys= STUDYID USUBJID ECSTDTC ECENDTC ECTRT ECTPTNUM ECCAT 
+EG keys= STUDYID USUBJID EGTESTCD VISITNUM EGTPTNUM 
+EX keys= STUDYID USUBJID EXCAT EXSTDTC EXENDTC EXTRT 
+FA keys= STUDYID USUBJID FATESTCD FAOBJ VISITNUM FADTC 
+IE keys= STUDYID USUBJID IETESTCD 
+LB keys= STUDYID USUBJID LBCAT LBTEST VISITNUM LBDTC LBORRES LBORRESU LBNAM LBORNRLO 
+MH keys= STUDYID USUBJID MHCAT MHTERM MHDECOD MHENRTPT MHSTDTC MHENDTC 
+PC keys= STUDYIDUSUBJID PCTESTCD PCDTC VISITNUM PCTPTNUM PCORRES 
+PF keys= STUDYID USUBJID PFTESTCD PFGENRI PFDTC PFSTAT 
+PR keys= STUDYID USUBJID PRCAT PRSCAT PRTRT PRSTDTC PRENDTC 
+QS keys= STUDYID USUBJID QSCAT QSTESTCD QSDTC QSGRPID QSORRES 
+RP keys= STUDYID USUBJID RPCAT RPTESTCD RPDTC 
+RS keys= STUDYID USUBJID RSCAT RSTEST RSTESTCD RSDTC RSGRPID RSORRES RSEVAL 
+SE keys= STUDYID USUBJID TAETORD ETCD 
+TR keys= STUDYID USUBJID TRCAT TRLNKID TRTESTCD VISITNUM TRDTC TREVAL TRORRES TRREASND 
+TU keys= STUDYID USUBJID TUCAT TULNKID TUTESTCD VISITNUM TUDTC TULOC TUEVAL 
+VE keys= STUDYID USUBJID VISITNUM VETERM 
+VS keys= STUDYID USUBJID VSTESTCD VISITNUM 
+
+RFSTDTC and RFENDTC. 
+We are creating dates for Diary based on the following algorithm: 
+1.	Find date of first dose using XPC.OSDA_PCDATC where STUDYEVENT=’C1D1’ and PCPERF=’YES’ 
+2.	Take the numeric portion XQS_DIARY.STUDYEVENT which should correspond to the diary entry day, i.e. ‘DD001’, ‘DD002’ becomes 1, 2, and subtract 1 from that value. 
+3.	Diary dosing date is equal to First dosing date + the value formed in step 2. i.e. DD001 dosing date should be equal to First dosing date and each successive entry into the diary is a day after the last diary entry.
+
+So for RFSTDTC and RFENDTC we set together all the CRF dosing dates and the date created in the steps above. Then by USUBJID and Dosing date we select the first date for RFSTDTC and the last date for RFENDTC.
+
+RFPENDTC
+
+Populated RFPENDTC for all subjects that were not screen failures. 
+
+A compiled list of dates used when deriving the date of last participation. Select the last value out this pool of dates.
+
+RFENDTC 
+DTHDTC
+XPC
+xds_eos.EOS_DSSTDATN
+xlbyn_locl.LBDATN
+xlb_biop.LBDATN where BIOP_LBPERF='YES'
+xlb_blood.BLOOD_LBDATN where BLOOD_LBPERF='YES'
+xlb_chem.LBDTN
+xlb_geno.GENO_LBDATN where GENO_LBPERF='YES' 
+xlb_hema.LBDTN
+xlb_horm.LBDTN
+xlb_locl.LBDATN (VISDATN?)
+xlb_preg.PREG_LBDATN where PREG_LBPERF='YES' 
+xlb_sero.SERO_LBDATN where SERO_LBPERF='YES' 
+xlb_uri.LBDTN
+xlb_urine.URINE_LBDATN  where URINE_LBPERF='YES' 
+xlb_locl_oth.LBDT_LOCL_OTHN
+xeg.egdatn  where egperf='YES' 
+xeg_pre.egdatn  where egperf='YES' 
+xeg_post.egdatn  where egperf='YES' 
+xvs.VSDATN  where vsperf='YES' 
+mrl.VISITDT
+xcp.CPSTDATN
+xcp_ole.CPDT_OLEN
+xpg.PGDATN where pgperf 'YES' 
+xpg.VISDATN where pgperf 'YES' 
+xpe.PEDATN where peperf 'YES' 
+xpe.VISDATN where peperf 'YES' 
+xpr_imaging.IMAGE_PRDATN where image_prperf='YES' 
+xpr_imaging.IMAGE_CTDATN where image_prperf='YES' 
+xda.RETAMT_DADATN where RETAMT_DAPERF='YES'
+xda.DISPAMT_DADATN where DISPAMT_DAPERF='YES'
+xds_cont.VISDATN
+xds_mwc.MWC_DSDATN
+xds_olemwc.DSDT_OLEMWCN
+xds_ole.VISDATN
+xds_olecont.VISDATN
+xqs_ecog.VISDATN where ECOG_QSPERF='YES' 
+xae.AESTDATN
+xae.AEENDATN
+xae_ole.AESTDT_OLEN
+xae_ole.AEENDT_OLEN
+xcm.CMSTDATN
+xcm.CMENDATN
+xcm_ole.CMSTDT_OLEN
+xcm_ole.CMENDT_OLEN
+xcm_prdtrad.PRDTRAD_CMSTDATN
+xcm_prdtrad.PRDTRAD_CMENDATN
+xcm_prdtsurg.PRDTSURG_CMDATN
+xcm_prdtsurg.VISDATN
+xcm_prdtthreg.PRDTTHREG_CMSTDATN
+xcm_prdtthreg.PRDTTHREG_CMENDATN
+Micl_recist1_1_rd.colldt
+Micl_recist1_1_ld.colldt
+Micl_recist1_1_se. DATEPROGRESSION
+Micl_recist1_1_se. DATEFIRSTRESPONSE
+Micl_volumetric.colldt
+xdiary.visdatn
+xqs_bpi_sf.FirstLocalSaveTime if FirstLocalSaveTime is on or after RFICDTC. otherwise, use FormFirstUpdated.
+xqs_dtis.FirstLocalSaveTime if FirstLocalSaveTime is on or after RFICDTC. otherwise, use FormFirstUpdated.
+xqs_dtss.FirstLocalSaveTime if FirstLocalSaveTime is on or after RFICDTC. otherwise, use FormFirstUpdated.
+xqs_qlq_c30.FirstLocalSaveTime if FirstLocalSaveTime is on or after RFICDTC. otherwise, use FormFirstUpdated.
+xqs_pgis.FirstLocalSaveTime if FirstLocalSaveTime is on or after RFICDTC. otherwise, use FormFirstUpdated.
+xqs_pgic.FirstLocalSaveTime if FirstLocalSaveTime is on or after RFICDTC. otherwise, use FormFirstUpdated.
+xqs_promis_sf10a.FirstLocalSaveTime if FirstLocalSaveTime is on or after RFICDTC. otherwise, use FormFirstUpdated.
+
 
 
 
