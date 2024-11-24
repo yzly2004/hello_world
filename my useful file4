@@ -4204,7 +4204,342 @@ run;
 /*run;*/
 ******End of Program******;
 
+*************************************************************************;
+*macro Name: GM_INIT.SAS
+*purpose: Initialization of SAS, creation of libraries, autocalling macros,logchk, setup ods path, standard macro variables
+*Created by: Varun Debbeti
+*macro parameters;
+*1
+*2
+*3
+*4
+*5
+*n
+**************************************************************************;
+*Modification History;
+*date (mm/dd/yyyy)		Name				Description of changes;
+*02/27/2023				Varun Debbeti		gm_Init creation date
+*03.13.2023				Varun Debbeti		updated libname tlfds to tlfdata, fixed bugs
+*04.27.2023				Varun Debbeti		added libname "lookup"
+*08.25.2023				Varun Debbeti		added libname for qc_sdtm and qc_adam
+***************************************************************************;
 
+
+%macro gm_init;
+
+
+	%*------------------------------------------------------------;
+    %*--- STANDARD; 
+	%*--- global macro variables and path assignments;
+    %*------------------------------------------------------------;
+    %SYSMSTORECLEAR;
+
+    %global ExecMode TaskDir Path Pgm ExecFileName ExecFilePath 
+			share dept taskhome product study tasktype /*rfi_dir agency_dir*/ analysis_path analysis_docs /*s_analysis_path*/
+			datadir /*sdatadir odatadir*/ vdatadir m0dir m1dir m2dir logdir outdir /*OUTPRODC OUTPRODT voutdir*/;
+
+    options
+            missing=''
+            nodate nonumber nobyline center formchar="|____|||___+=|_/\<>*"
+            validvarname=upcase noquotelenmax mergenoby=error
+            notes NOmprint NOmlogic NOsymbolgen
+            noxwait xsync
+            minoperator
+            ExtendObsCounter=NO
+            papersize=letter
+            orientation=landscape 
+            ls=max
+            ps=max         
+            ;
+
+	options nonotes nosource;
+    %*--- clean-up existing temporary datasets/objects;
+    proc datasets memtype=data kill nodetails nolist; run; quit;
+    title; footnote;
+    ods path reset;
+    libname  _all_ clear;
+    filename _all_ clear;
+
+
+	options notes source;
+
+
+    %*--- to identify whether batch or interactive mode is currently used;
+    %*--- to define default path/pgm name;
+    %if "%sysfunc(getoption(SysIn))" eq "" %then %do;
+        %let ExecMode     =INTERACTIVE;
+	%*--- *this macro variable _clientapp is specific to EG helps in identifying if user is using EG or Not;;
+		%if %symexist(_clientapp)  %then %do; 
+			%if &_clientapp = 'SAS Enterprise Guide' %then %do;
+			data _null_;	
+				Var1=%unquote(&_CLIENTTASKLABEL);
+				Var2=%unquote(&_SASprogramFILE);
+				call symput('ExecFileName',Var1);
+				call symput('ExecFilePath',Var2);
+			run;
+			%end;
+			%else %do;
+			%put "ER" "ROR: EG System Macro Variable not Resolved";
+			%end;
+		%end;
+		%else %do;
+		%let ExecFileName =%upCase(%sysget(SAS_EXECFILENAME));
+		%let ExecFilePath =%upCase(%sysget(SAS_EXECFILEPATH));
+		%end;
+    %end;
+    %else %do;
+        %let ExecMode     =BATCH;
+        %let ExecFileName =%upCase(%scan(%sysfunc(getoption(SysIn)),-1,'\/'));
+        %let ExecFilePath =%upCase(%SysFunc(tranwrd(%SysFunc(tranwrd(%sysfunc(getoption(SysIn)),&ExecFileName.,)) ,\\,\\)));
+	%end;
+
+	%*- dynamic definition of the standard macro-variables storing path/pgm names;
+		%let path=%lowcase(%qsubstr(&ExecFilePath,1,%length(&ExecFilePath)-%length(&ExecFileName)));
+    	%let pgm =%lowcase(%substr(%lowcase(&ExecFileName.),1,%length(%lowcase(&ExecFileName.))-4));
+
+/*        %put 	 EXECFILENAME =  &ExecFileName ;*/
+/*		%put	 EXECFILEPATH =  &ExecFilePath;*/
+/*		%put	 PATH =  &path ;*/
+/*		%put	 PGM =   &pgm ;*/
+/*		%put	 EXECMODE =  &ExecMode;*/
+
+
+
+
+    
+	%*--- assign macro variables to each level of path;
+
+	%let share 			= 	%scan(&path,1,'\');
+	%let dept 			=  	%scan(&path,2,'\');
+	%let taskhome		=	&share.\&dept.;*it is usually f:\biometrics;
+	%let product		=	%scan(&path,3,'\');
+	%let study			=	%scan(&path,4,'\');
+	%let tasktype		= 	%scan(&path,5,'\');
+	%let taskdir		=	&taskhome.\&product.\&study.\&tasktype;*taskdir should resolve path to one of these. analysis, medicalaffairs, sourcedata;
+
+
+	%let m0dir			=	&taskhome.\global\macro;
+
+	%*----Derive datadir. and macro directory(to call sas autos) based on scan of execfilepath from top of path;
+	%*----then assign libnames for all standard data folders under the above data directory.;
+
+
+	%if %index(&path,\analysis\)>0 or %index(&path,\medicalaffairs\)>0 %then %do;
+	
+			%let datadir = &taskdir.\%scan(&ExecFilePath.,6,'\/')\data;
+			%let outdir = &taskdir.\%scan(&ExecFilePath.,6,'\/')\output;
+			%let m1dir = &taskdir.\%scan(&ExecFilePath.,6,'\/')\macro;
+/*			%let m2dir = &taskdir.\%scan(&ExecFilePath.,6,'\/')\%scan(&ExecFilePath.,7,'\/')\macro;*/
+			%let analysis_path = &taskdir.\%scan(&ExecFilePath.,6,'\/');
+			%let analysis_docs = &taskdir.\%scan(&ExecFilePath.,6,'\/')\docs;
+
+				%if  %index(&path,\valid\)>0 %then %do;
+/*					%let vdatadir = &taskdir.\%scan(&ExecFilePath.,6,'\/')\%scan(&ExecFilePath.,7,'\/')\%scan(&ExecFilePath.,8,'\/')\%scan(&ExecFilePath.,9,'\/')\vdat;*/
+/*					%let voutdir = &taskdir.\%scan(&ExecFilePath.,6,'\/')\%scan(&ExecFilePath.,7,'\/')\%scan(&ExecFilePath.,8,'\/')\%scan(&ExecFilePath.,9,'\/')\vout;*/
+					%let logdir = &taskdir.\%scan(&ExecFilePath.,6,'\/')\%scan(&ExecFilePath.,7,'\/')\%scan(&ExecFilePath.,8,'\/');
+				%end;
+				%if %index(&path,\prod\)>0 or %index(&path,\stat\)>0 or %index(&path,\utility\)>0  %then %do;
+					%let logdir = &taskdir.\%scan(&ExecFilePath.,6,'\/')\%scan(&ExecFilePath.,7,'\/')\%scan(&ExecFilePath.,8,'\/');
+				%end;
+		
+	%end;
+	%if %index(&path,\sourcedata\)>0 %then %do;
+	
+			%let datadir = &taskdir.\data;
+			%let outdir = &taskdir.\output;
+			%let m1dir = &taskdir.\macro;
+/*			%let m2dir = &taskdir.\%scan(&ExecFilePath.,6,'\/')\%scan(&ExecFilePath.,7,'\/')\macro;*/
+			%let analysis_path = &taskdir.;
+			%let analysis_docs = &taskdir.\docs;
+
+				%if %index(&path,\valid\)>0 %then %do;
+/*					%let vdatadir = &taskdir.\%scan(&ExecFilePath.,6,'\/')\%scan(&ExecFilePath.,7,'\/')\%scan(&ExecFilePath.,8,'\/')\%scan(&ExecFilePath.,9,'\/')\vdat;*/
+/*					%let voutdir = &taskdir.\%scan(&ExecFilePath.,6,'\/')\%scan(&ExecFilePath.,7,'\/')\%scan(&ExecFilePath.,8,'\/')\%scan(&ExecFilePath.,9,'\/')\vout;*/
+					%let logdir = &taskdir.\%scan(&ExecFilePath.,6,'\/')\%scan(&ExecFilePath.,7,'\/')\;
+				%end;
+				%if %index(&path,\prod\)>0 or %index(&path,\stat\)>0 or %index(&path,\utility\)>0 %then %do;
+					%let logdir = &taskdir.\%scan(&ExecFilePath.,6,'\/')\%scan(&ExecFilePath.,7,'\/')\;
+				%end;
+		
+	%end;
+
+%*--- to identify the server used to executed the pgm;
+
+ 	%put > GM_INIT.SAS - Session Desktop Used: &SYSHOSTNAME.;
+	%put > GM_INIT.SAS - User name: &SYSUSERID.;
+	
+	%if %index(&path,\prod\)>0 or %index(&path,\valid\)>0 or %index(&path,\stat\)>0 or %index(&path,\utility\)>0   %then %do;
+
+		    %*--- message displayed to user:;
+		    %Put > GM_INIT.SAS - Execution mode: &ExecMode.;
+		/*	%Put > GM_INIT.SAS - Global macro-variable 'TASKHOME' set to: &taskhome.;*/
+		    %Put > GM_INIT.SAS - Global macro-variable 'PGM' set to: &pgm.;
+		    %Put > GM_INIT.SAS - Global macro-variable 'PATH' set to: &path.;
+		/*	%Put > GM_INIT.SAS - Global macro-variable 'PRODUCT' set to: &product.;*/
+		/*	%Put > GM_INIT.SAS - Global macro-variable 'STUDY' set to: &study.;*/
+		/*	%Put > GM_INIT.SAS - Global macro-variable 'TASKTYPE' set to: &tasktype.;*/
+		    %Put > GM_INIT.SAS - Global macro-variable 'TaskDir' set to: &TaskDir.;
+			
+			%if (%symexist(analysis_path) and %length(&analysis_path)>0) %then %do;
+			%Put > GM_INIT.SAS - Global macro-variable for analysis Path - 'analysis_path' set to: &analysis_path.;
+			%end;
+			%if (%symexist(analysis_docs) and %length(&analysis_docs)>0) %then %do;
+			%Put > GM_INIT.SAS - Global macro-variable for analysis docs path - 'analysis_docs' set to: &analysis_docs.;
+			%end;
+		/*	%if (%symexist(s_analysis_path) and %length(&s_analysis_path)>0) %then %do;*/
+		/*	%Put > GM_INIT.SAS - Global macro-variable 'Sub-analysis Path - s_analysis_path' set to: &s_analysis_path.;*/
+		/*	%end;*/
+			%if (%symexist(datadir) and %length(&datadir)>0) %then %do;
+			%Put > GM_INIT.SAS - Global macro-variable for Snapshot data Directory - 'datadir' set to: &dataDir.;
+			%end;
+		/*	%if (%symexist(odatadir) and %length(&odatadir)>0) %then %do;*/
+		/*	%Put > GM_INIT.SAS - Global macro-variable 'data Directory - Odatadir' set to: &odataDir.;*/
+		/*	%end;*/
+			%Put > GM_INIT.SAS - Global macro-variable for Log Directory - 'LogDir' set to: &LogDir.;
+			%Put > GM_INIT.SAS - Global macro-variable for Standard macro Directory - 'm0dir' set to: &m0dir.;
+			%Put > GM_INIT.SAS - Global macro-variable for analysis macro Directory - 'm1dir' set to: &m1dir.;
+
+			%if (%symexist(m2dir) and %length(&m2dir)>0) %then %do;
+				%Put > GM_INIT.SAS - Global macro-variable for sublevel macros macro Directory - 'm2dir' set to: &m2dir.;
+			%end;
+			%if (%symexist(outdir) and %length(&outdir)>0) %then %do;
+				%Put > GM_INIT.SAS - Global macro-variable for Production clinical output Directory - 'outdir' set to: &outdir.;
+			%end;
+		/**/
+		/*	%if (%symexist(vdatadir) and %length(&vdatadir)>0) %then %do;*/
+		/*	%Put > GM_INIT.SAS - Global macro-variable 'validation data Directory - vdataDir' set to: &vdataDir.;*/
+		/*	%end;*/
+		/*	%if (%symexist(voutdir) and %length(&voutdir)>0) %then %do;*/
+		/*	%Put > GM_INIT.SAS - Global macro-variable 'validation/ Compare Report Directory - voutDir' set to: &voutDir.;*/
+		/*	%end;*/
+
+	%end;
+
+	%else %if %index(&path,\prod\)=0  and %index(&path,\valid\)=0 and %index(&path,\stat\)=0 and %index(&path,\utility\)=0  %then %do;
+			%Put %Str(ERR)OR: GM_INIT.SAS - The current directory is not recommended for running programs, hence no Librefs or macro variables are assigned;
+			%Put %Str(ERR)OR: GM_INIT.SAS - Please move your program under one of (sdtm, adam, tlf, stat,  utility) following directories. \prod or \valid\ or stat\ or utility\;
+	%end;
+
+
+	%*------------------------------------------------------------;
+	%*--- libnames definition;
+    %*- ref: 'Guidance on SWTX Good programming Practice'  internal document;
+    %*assign libraries for raw sdtm, adam, tlfdata, utility ;
+	*these are default data libraries referring to data folders under all corresponding planned/adhoc/exploratory folders.;
+    %*------------------------------------------------------------;
+	%if %index(&path,\prod\)>0 or  %index(&path,\valid\)>0 or  %index(&path,\stat\)>0 or  %index(&path,\utility\)>0 %then %do;
+
+/*		libname saslive		"S:\gxp\Clin Data Management\&product_.\&study_.\SASlive" ACCESS=READONLY;*SASLIVE should be accessible from all locations;*/
+
+	%if (%symexist(datadir) and %length(&datadir) > 0) %then %do; 
+		libname raw   		"&datadir\raw"   			ACCESS=READONLY;
+	%if %index(&path,\sourcedata\)>0  %then %do;
+		libname miscdat   		"&datadir\misc"   			%if %index(&path,\prod\misc)=0 %then %do; ACCESS=READONLY;%end;;
+	%end;
+		libname sdtm   		"&datadir\sdtm"   			%if %index(&path,\prod\sdtm)=0 %then %do; ACCESS=READONLY;%end;;
+		libname adam   		"&datadir\adam"				%if %index(&path,\prod\adam)=0 %then %do; ACCESS=READONLY;%end;;
+
+		libname qc_sdtm   	"&datadir\qc_sdtm"   		%if %index(&path,\valid\sdtm)=0 %then %do; ACCESS=READONLY;%end;;
+		libname qc_adam   	"&datadir\qc_adam"			%if %index(&path,\valid\adam)=0 %then %do; ACCESS=READONLY;%end;;
+
+	%if %index(&path,\sourcedata\)=0  %then %do;
+		libname tlfdata   	"&datadir\tlfdata"			%if %index(&path,\prod\tlf)=0 %then %do; ACCESS=READONLY;%end;;
+	%end;
+/*		libname utilds   	"&datadir\utildata"			%if %index(&path,\prod\utility)=0 %then %do; ACCESS=READONLY;%end;;*/
+		libname lookup   	"&datadir\lookup"			%if %index(&path,\prod\lookup)=0 %then %do; ACCESS=READONLY;%end;;
+	%end;
+
+
+/*	%if (%symexist(vdatadir) and %length(&vdatadir) > 0) %then %do; */
+/*		libname vdat   		"&vdatadir";*/
+/*	%end;*/
+/**/
+/*	*the below data libname associated with qc2, SASEDITCK, NARRATIVES etc under activity data folder;*/
+/*	%if (%symexist(odatadir) and %length(&odatadir) > 0) %then %do;*/
+/*		libname data		"&odatadir";*/
+/*	%end;*/
+
+	%end;
+
+	%*------------------------------------------------------------;
+    %*----define macro programs directory and call sas autos*; 
+    %*------------------------------------------------------------;
+	* when a macro has same name under _macro (from analysis) and macro (for eg., from planned) then m1dir takes priority;
+	options sasautos = ("&m0dir." "&m1dir." %if (%symexist(m2dir) and %length(&m2dir)>0) %then %do; "&m2dir." %end;) mautosource;
+
+	 %macro chkmdir(mlevel=);
+		data _m&mlevel. (keep=fname);
+		rc=filename("DIR","&&m&mlevel.dir.");
+		did=dopen("DIR");
+		if did > 0 then do;
+		  num=dnum(did);
+		  do i=1 to num;
+		  fname=dread(did,i); 
+		  output;
+		  end;
+		end;
+		run; 
+
+		data _m&mlevel.;
+		 set _m&mlevel.;
+		 fname&mlevel. = fname;
+		 macroname=fname;
+		 if index(fname,".sas")>0;;
+		run;
+		proc sort data = _m&mlevel; by fname; run;
+	%mend chkmdir;
+
+	options nonotes nosource;
+
+	%chkmdir(mlevel=0);
+	%chkmdir(mlevel=1);
+	%if (%symexist(m2dir) and %length(&m2dir)>0) %then %do;
+	%chkmdir(mlevel=2);
+	%end;
+	data _mchk;
+	 merge _m0 (in = a) _m1 (in = b) %if (%symexist(m2dir) and %length(&m2dir)>0) %then %do; _m2 (in = c) %end;;
+	 by fname;
+	 if a and b then put "WAR" "NING: macro name collision in two macro directories (M0dir and M1dir), But M0dir takes priority " macroname=;
+	 %if (%symexist(m2dir) and %length(&m2dir)>0) %then %do;
+	 if b and c then put "WAR" "NING: macro name collision in two macro directories (M1dir and M2dir), But M1dir takes priority " macroname=;
+	 if a and c then put "WAR" "NING: macro name collision in two macro directories (M0dir and M2dir), But M0dir takes priority " macroname=;
+	 %end;
+	run;
+    %*--- clean-up existing temporary datasets/objects;
+    proc datasets memtype=data kill nodetails nolist; run; quit;
+
+	
+	%SYSMSTORECLEAR;
+
+    %*------------------------------------------------------------;
+    %*--- ODS path setup and styles reading;
+    %*------------------------------------------------------------;
+	options notes source;
+    libname SWTXS  "&Taskhome.\global\utility\";
+	
+
+    %*- read-access to existing customized styles stored within XXXXX;*yet to be updated;
+    ods path work.templat(update) sashelp.tmplmst(read) SWTXS.swstyles(read);  
+
+    %*--- validity checks: SWTX file naming convention;
+
+	%if  %index(&path,\valid\) %then %do;
+
+        %if  %index(%substr(&pgm,1,1),v) ne 1 %then %do;
+				%if %index(%substr(&pgm,1,2),qc) ne 1 %then %do;
+            %Put %Str(WAR)NING:- In the validation context, sas program name should be prefixed by 'v' or 'qc' as per SWTX file naming convention.;
+        %end;	%end;
+	
+    %end;
+
+*---Setup.sas--;
+%let _setup=m_analysis_setup;
+%if %sysfunc(fileexist(%sysfunc(compress(&m1dir,'"'))\&_setup..sas))%then %do;
+%put ------NOTES FROM M_ANALYSIS_SETUP.SAS------- ;
+ %&_setup;
+%put --------------------------------- ;
+%end;
+%mend gm_init;
 
 
 
