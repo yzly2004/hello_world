@@ -754,3 +754,3466 @@ Templates (copy from the Global Bios Library)
 •	start.sas
 •	irun.sas
 I need to figure out the relationship between the above programs.
+
+dm 'log; clear; lst; clear;';
+/************************************************************************************************
+**
+**  PROJECT PATH\PROGRAM NAME: F:\Biometrics\nirogacestat\nir-dt-301\analysis\2024-06-nda-ole-dev\prod\sdtm\lb.sas 
+**  PURPOSE: To generate LB and SUPPLB domains
+**  SOFTWARE VERSION: SAS v9.4 
+**  INPUT FILE: raw.xlb_chem,raw.xlb_hema,raw.xlb_horm,raw.xlbyn_locl,raw.xlb_locl,raw.xlb_locl_oth,raw.xlb_preg,raw.xlb_blood,raw.xlb_sero,raw.xlb_uri,raw.xlb_urine,raw.xdm,raw.mrl,raw.xds_eot
+**  OUTPUT FILE: lb.sas7bdat, supplb.sas7bdat, lb.log  
+*************************************************************************************************
+**  MODIFICATION HISTORY:
+*------------------------------------------------------------------------------------------------
+**  DATE (mm/dd/yyyy)       				USERNAME        		DESCRIPTION OF CHANGES
+**   Mon 01/30/2024 						Suresh.Velineni			      Program Created
+**   Mon 02/05/2024 						Sudhakar.Yalagandula			Program Created  
+**   Thurs 03/14/2024           Sheik.ibrahim             Updated for QC mismatches on SUPPLB and log issues
+**   Thurs 04/04/2024           Sheik.ibrahim             Reran for 2APR datacut(DBL-Final)
+**   Thurs 06/20/2024           Sheik.ibrahim             Reran for NDA-OLE
+************************************************************************************************/
+
+
+******Initialize autoexec******;
+*it assigns data libraries and macro libraries, DO NOT REMOVE this macro call;
+%gm_Init;
+
+/* To save work datasets */
+libname temp "F:\Biometrics\nirogacestat\nir-dt-301\analysis\2024-06-nda-ole-dev\data\lookup";
+
+proc datasets library=work kill noprint;
+run;
+
+proc format ;
+	value $lbtest
+	"LIPASE", "LIPASET" = "Lipase"
+	"ALB","ALBUMIN" = "Albumin" 
+	"ALB/GLOBULIN RATIO","ALBGLOB" = "Albumin/Globulin" 
+	"ALT/SGPT","ALT" = "Alanine Aminotransferase" 
+	"AMH" = "Anti-Mullerian Hormone" 
+	"AMYLASE" = "Amylase" 
+	"ANA TITER","ANA" = "Antinuclear Antibodies" 
+	"ANION GAP","ANIONG" = "Anion Gap" 
+	"UA APPEARANCE","APPEAR" = "Specimen Appearance" 
+	"AST/SGOT","AST" = "Aspartate Aminotransferase" 
+	"BACTERIA, URINE","BACTERIA","URINE","BACT","URINALYSIS - BACTERIA"= "Bacteria" 
+	"CDF","FAECES/" ="Clostridium difficile"
+	"CYCAPHOS"="Calcium Phosphate Crystals"
+	"ALKALINE PHOSPHATASE","ALK","ALP","ALKALINE" = "Alkaline Phosphatase"  
+	"ABC","BASA","BASO" = "Basophils" 
+	"BASD","BASOLE","BASOPHILS" = "Basophils/Leukocytes" 
+	"CARBON DIOXIDE","BICARBONATE","CO2","BICARB" = "Bicarbonate" 
+	"D-BIL (BLOOD)","DBILI","BILDIR" = "Direct Bilirubin" 
+	"TBIL (BLOOD)","BILIRUBIN (URINE)","BILIU","BILIRUBIN","TBILI","BILI" = "Bilirubin" 
+	"NT-PROBNP","BNPPRONT" = "N-Terminal ProB-type Natriuretic Peptide" 
+	"CALCIUM","CA" = "Calcium" 
+	"CPK","CK" = "Creatine Kinase" 
+	"CHLORIDE","CHL","CL" = "Chloride" 
+	"URINE (COLOR)","COLOR" = "Color" 
+	"CREATININE","CREA","CREAT" = "Creatinine" 
+	"CREATCLR" = "Creatinine Clearance" 
+	"C REACTIVE PROTEIN","CRP" = "C Reactive Protein" 
+	"CSGRAN" = "Granular Casts" 
+	"CSHYAL" = "Hyaline Casts" 
+	"CYAMORPH" = "Amorphous Crystals" 
+	"CYCACAR" = "Calcium Carbonate Crystals" 
+	"CYCAOXA" = "Calcium Oxalate Crystals" 
+	"CYTRPHOS" = "Triple Phosphate Crystals" 
+	"CYURIAC" = "Uric Acid Crystals" 
+	"D/DIMER","DDIMER" = "D-Dimer" 
+	"EOSINOPHILS","AEC","EOSA","EOS" = "Eosinophils" 
+	"EOSD","EOSLE" = "Eosinophils/Leukocytes" 
+	"EPITUCE","EPIRCE" = "Renal Epithelial Cells" 
+	"EPISQCE" = "Squamous Epithelial Cells" 
+	"EPITCE" = "Transitional Epithelial Cells" 
+	"ESCHERICHIA COLI RECTAL SWAB","ESSWAB" = "Escherichia Coli Rectal Swab" 
+	"EST","ESTRDIOL","ESTRADIOL" = "Estradiol" 
+	"FSH" = "Follicle Stimulating Hormone" 
+	"GFR-AA","GFR-NAA","GFR" = "Glomerular Filtration Rate" 
+	"ESTIMATED GLOMERULAR FILTRATION RATE","ESTIMATED GLOMERULAR FILT","EGFR","GFRE" = "Glomerular Filtration Rate, Estimated" 
+	"GGT" = "Gamma Glutamyl Transferase" 
+	"GLOBULIN","GLOBUL" = "Globulin" 
+	"GLUCOSE (BLOOD, NON-FASTING)","GLUU","GLU","GLUC" = "Glucose" 
+	"HBSAG" = "Hepatitis B Virus Surface Antigen" 
+	"HCAB" = "Hepatitis C Virus Antibody" 
+	"HCG" = "Choriogonadotropin Beta" 
+	"HEMA","HCT" = "Hematocrit" 
+	"HCVVLD" = "HCV Viral Load" 
+	"HB","HEMO","HGB" = "Hemoglobin" 
+	"HIV12AB" = "HIV-1/2 Antibody" 
+	"HIV1MONA" = "HIV-1 Group M and O Nucleic Acid" 
+	"PT-INR","INR" = "Prothrombin Intl. Normalized Ratio" 
+	"IRON" = "Iron" 
+	"POTASSIUM","POT","K" = "Potassium" 
+	"KET","KETONES" = "Ketones" 
+	"KLEBSIELLA PNEUMONIAE RECTAL SWAB","KLSWAB" = "Klebsiella Pneumoniae Rectal Swab" 
+	"LBALL" = "LBALL" 
+	"LDH" = "Lactate Dehydrogenase" 
+	"LEUKOCYTE ESTERASE","LEUKASE","LEUK" = "Leukocyte Esterase" 
+	"LH" = "Luteinizing Hormone" 
+	"LYMPHOCYTES","ALC","LYMA","LYM" = "Lymphocytes" 
+	"LYMAT" = "Lymphocytes Atypical" 
+	"LYMATLE" = "Lymphocytes Atypical/Leukocytes" 
+	"LYMD","LYMLE" = "Lymphocytes/Leukocytes" 
+	"MCH (RBC)","MCH" = "Ery. Mean Corpuscular Hemoglobin" 
+	"MCHC" = "Ery. Mean Corpuscular HGB Concentration" 
+	"MCV (RBC)","MCV" = "Ery. Mean Corpuscular Volume" 
+	"METAMY" = "Metamyelocytes" 
+	"METAMYLE" = "Metamyelocytes/Leukocytes" 
+	"MAGNESIUM","MG" = "Magnesium" 
+	"MICROSC","MICROSCOPY" = "Microscopy" 
+	"MONOCYTES","AMC","MONA","MONO" = "Monocytes" 
+	"MOND","MONOLE" = "Monocytes/Leukocytes" 
+	"MPV" = "Mean Platelet Volume" 
+	"UA MUCOUS","MUCTHR" = "Mucous Threads" 
+	"MYCY" = "Myelocytes" 
+	"MYCYLE" = "Myelocytes/Leukocytes" 
+	"NEUTROPHILS","ANC","NEUA","NEUT" = "Neutrophils" 
+	"NEUTB" = "Neutrophils Band Form" 
+	"NEUTBLE" = "Neutrophils Band Form/Leukocytes" 
+	"NEUD","NEUTLE" = "Neutrophils/Leukocytes" 
+	"NEUTSG" = "Neutrophils, Segmented" 
+	"NEUTSGLE" = "Neutrophils, Segmented/Leukocytes" 
+	"NIT","NITRITE" = "Nitrite" 
+	"BLOOD (URINE)","BLD","OCCBLD" = "Occult Blood" 
+	"PROCALCITONIN","PCT" = "Procalcitonin" 
+	"PDW" = "Platelet Distribution Width" 
+	"PH" = "pH" 
+	"INORGANIC PHOSPHOROUS","INORGANIC PHOSPHORUS","PHOSPHATE","PHOS" "PHOSPHOROUS SERUM"= "Phosphate" 
+	"PLT COUNT","PLAT" = "Platelets" 
+	"PLATEST" = "Platelets, Estimated" 
+	"PLATHCT" = "Platelet Hematocrit" 
+	"PROG","PROGESTERONE","PROGEST" = "Progesterone" 
+	"PROLACTIN","PROL","PROLCTN" = "Prolactin" 
+	"TOTAL PROTEIN (BLOOD)","PROU","TPRO","PROT" = "Protein" 
+	"RBC COUNT","RBC" = "Erythrocytes" 
+	"NUCLEATED RBC","RBCNUCLE" = "Nucleated Erythrocytes/Leukocytes" 
+	"RDW","RDW %" = "Erythrocytes Distribution Width" 
+	"% RETICULOCYTES","RETI" = "Reticulocytes" 
+	"RETIRBC" = "Reticulocytes/Erythrocytes" 
+	"SHBG" = "Sex Hormone Binding Globulin" 
+	"SOD","SODIUM" = "Sodium" 
+	"SPERM" = "Spermatozoa" 
+	"SPECIFIC GRAVITY","SPGRAV","GRAV" = "Specific Gravity" 
+	"TTES","TESTOS" = "Testosterone" 
+	"TES","TESTOSFR" = "Testosterone, Free" 
+	"TGLOB","THYROGLOBULIN" = "Thyroglobulin" 
+	"TSH" = "Thyrotropin" 
+	"UGLUC","GLUCOSE (URINE)" = "Urine Glucose" 
+	"PROTEIN (URINE)","UPROT" = "Urine Protein" 
+	"URIC ACID","URIC","URATE" = "Urate" 
+	"URINALYSIS (RBC)","URBC" = "Urine Erythrocytes" 
+	"UREA" = "Urea" 
+	"BUN","UREAN" = "Urea Nitrogen" 
+	"UROBILINOGEN","URO","UROBIL" = "Urobilinogen" 
+	"URINALYSIS (WBC)","UWBC" = "Urine Leukocytes" 
+	"FOLIC ACID","VITB9" = "Vitamin B9" 
+	"VITD","VITAMIN D" = "Vitamin D" 
+	"VITAMIN D25-HYDROXY","VITDIT" = "25-Hydroxyvitamin D" 
+	"WHITE BLOOD CELLS","WBC" = "Leukocytes" 
+	"WBC Est","WBC EST","WBCEST" = "Leukocytes, Estimated" 
+	"YEAST" = "Yeast Cells" 
+	;
+
+	value $lbtestcd
+	"Lipase" = "LIPASET"
+	"Albumin" = "ALB" 
+	"Albumin/Globulin" = "ALBGLOB" 
+	"Alkaline Phosphatase" = "ALP" 
+	"Alanine Aminotransferase" = "ALT" 
+	"Anti-Mullerian Hormone" = "AMH" 
+	"Amylase" = "AMYLASE" 
+	"Antinuclear Antibodies" = "ANA" 
+	"Anion Gap" = "ANIONG" 
+	"Specimen Appearance" = "APPEAR" 
+	"Aspartate Aminotransferase" = "AST" 
+	"Bacteria" = "BACT" 
+	"Basophils" = "BASO" 
+	"Basophils/Leukocytes" = "BASOLE" 
+	"Bicarbonate" = "BICARB" 
+	"Direct Bilirubin" = "BILDIR" 
+	"Bilirubin" = "BILI" 
+	"N-Terminal ProB-type Natriuretic Peptide" = "BNPPRONT" 
+	"Calcium" = "CA" 
+	"Creatine Kinase" = "CK" 
+	"Chloride" = "CL" 
+	"Color" = "COLOR" 
+	"Creatinine" = "CREAT" 
+	"Creatinine Clearance" = "CREATCLR" 
+	"Clostridium difficile" = "CDF"
+	"C Reactive Protein" = "CRP" 
+	"Calcium Phosphate Crystals" = "CYCAPHOS"
+	"Granular Casts" = "CSGRAN" 
+	"Hyaline Casts" = "CSHYAL" 
+	"Amorphous Crystals" = "CYAMORPH" 
+	"Calcium Carbonate Crystals" = "CYCACAR" 
+	"Calcium Oxalate Crystals" = "CYCAOXA" 
+	"Triple Phosphate Crystals" = "CYTRPHOS" 
+	"Uric Acid Crystals" = "CYURIAC" 
+	"D-Dimer" = "DDIMER" 
+	"Eosinophils" = "EOS" 
+	"Eosinophils/Leukocytes" = "EOSLE" 
+	"Renal Epithelial Cells" = "EPIRCE" 
+	"Squamous Epithelial Cells" = "EPISQCE" 
+	"Transitional Epithelial Cells" = "EPITCE" 
+	"Escherichia Coli Rectal Swab" = "ESSWAB" 
+	"Estradiol" = "ESTRDIOL" 
+	"Follicle Stimulating Hormone" = "FSH" 
+	"Glomerular Filtration Rate" = "GFR" 
+	"Glomerular Filtration Rate, Estimated" = "GFRE" 
+	"Gamma Glutamyl Transferase" = "GGT" 
+	"Globulin" = "GLOBUL" 
+	"Glucose" = "GLUC" 
+	"Hepatitis B Virus Surface Antigen" = "HBSAG" 
+	"Hepatitis C Virus Antibody" = "HCAB" 
+	"Choriogonadotropin Beta" = "HCG" 
+	"Hematocrit" = "HCT" 
+	"HCV Viral Load" = "HCVVLD" 
+	"Hemoglobin" = "HGB" 
+	"HIV-1/2 Antibody" = "HIV12AB" 
+	"HIV-1 Group M and O Nucleic Acid" = "HIV1MONA" 
+	"Prothrombin Intl. Normalized Ratio" = "INR" 
+	"Iron" = "IRON" 
+	"Potassium" = "K" 
+	"Ketones" = "KETONES" 
+	"Klebsiella Pneumoniae Rectal Swab" = "KLSWAB" 
+	"LBALL" = "LBALL" 
+	"Lactate Dehydrogenase" = "LDH" 
+	"Leukocyte Esterase" = "LEUKASE" 
+	"Luteinizing Hormone" = "LH" 
+	"Lymphocytes" = "LYM" 
+	"Lymphocytes Atypical" = "LYMAT" 
+	"Lymphocytes Atypical/Leukocytes" = "LYMATLE" 
+	"Lymphocytes/Leukocytes" = "LYMLE" 
+	"Ery. Mean Corpuscular Hemoglobin" = "MCH" 
+	"Ery. Mean Corpuscular HGB Concentration" = "MCHC" 
+	"Ery. Mean Corpuscular Volume" = "MCV" 
+	"Metamyelocytes" = "METAMY" 
+	"Metamyelocytes/Leukocytes" = "METAMYLE" 
+	"Magnesium" = "MG" 
+	"Microscopy" = "MICROSC" 
+	"Monocytes" = "MONO" 
+	"Monocytes/Leukocytes" = "MONOLE" 
+	"Mean Platelet Volume" = "MPV" 
+	"Mucous Threads" = "MUCTHR" 
+	"Myelocytes" = "MYCY" 
+	"Myelocytes/Leukocytes" = "MYCYLE" 
+	"Neutrophils" = "NEUT" 
+	"Neutrophils Band Form" = "NEUTB" 
+	"Neutrophils Band Form/Leukocytes" = "NEUTBLE" 
+	"Neutrophils/Leukocytes" = "NEUTLE" 
+	"Neutrophils, Segmented" = "NEUTSG" 
+	"Neutrophils, Segmented/Leukocytes" = "NEUTSGLE" 
+	"Nitrite" = "NITRITE" 
+	"Occult Blood" = "OCCBLD" 
+	"Procalcitonin" = "PCT" 
+	"Platelet Distribution Width" = "PDW" 
+	"pH" = "PH" 
+	"Phosphate" = "PHOS" 
+	"Platelets" = "PLAT" 
+	"Platelets, Estimated" = "PLATEST" 
+	"Platelet Hematocrit" = "PLATHCT" 
+	"Progesterone" = "PROGEST" 
+	"Prolactin" = "PROLCTN" 
+	"Protein" = "PROT" 
+	"Erythrocytes" = "RBC" 
+	"Nucleated Erythrocytes/Leukocytes" = "RBCNUCLE" 
+	"Erythrocytes Distribution Width" = "RDW" 
+	"Reticulocytes" = "RETI" 
+	"Reticulocytes/Erythrocytes" = "RETIRBC" 
+	"Sex Hormone Binding Globulin" = "SHBG" 
+	"Sodium" = "SODIUM" 
+	"Spermatozoa" = "SPERM" 
+	"Specific Gravity" = "SPGRAV" 
+	"Testosterone" = "TESTOS" 
+	"Testosterone, Free" = "TESTOSFR" 
+	"Thyroglobulin" = "TGLOB" 
+	"Thyrotropin" = "TSH" 
+	"Urine Glucose" = "UGLUC" 
+	"Urine Protein" = "UPROT" 
+	"Urate" = "URATE" 
+	"Urine Erythrocytes" = "URBC" 
+	"Urea" = "UREA" 
+	"Urea Nitrogen" = "UREAN" 
+	"Urobilinogen" = "UROBIL" 
+	"Urine Leukocytes" = "UWBC" 
+	"Vitamin B9" = "VITB9" 
+	"Vitamin D" = "VITD" 
+	"25-Hydroxyvitamin D" = "VITDIT" 
+	"Leukocytes" = "WBC" 
+	"Leukocytes, Estimated" = "WBCEST" 
+	"Yeast Cells" = "YEAST";
+run;
+
+
+******Start of Program******;
+data temp.dm;
+	set sdtm.dm;
+	rfstdt=input(rfstdtc,yymmdd10.);
+	rfxstdt=input(rfxstdtc,yymmdd10.);
+	rfendt=input(rfendtc,yymmdd10.);
+	format rfstdt rfendt rfxstdt date9.;
+	keep usubjid rfstdt rfendt rfxstdt;
+run;
+
+proc sort;
+	by usubjid;
+run;
+
+proc contents data=raw.xlb_chem out=chem_cont noprint;run;
+
+proc sql noprint;
+	create table chemcd as
+	select distinct(scan(name,2,'_')) as testcd from chem_cont
+	where index(name,'LBORRES');
+
+	select distinct testcd into: prm separated by ' ' from chemcd;
+	select count(distinct testcd) into :chem_cnt from chemcd;
+quit;
+
+%put &prm &chem_cnt;
+
+**CHEMISTRY**;
+%macro chk;
+data temp.chem;
+length lbtestcd $25. usubjid $18. lbtest lbcat LBORRES $100. lbornrlo lbornrhi clinsig  $200.;
+	set raw.xlb_chem(rename=(lbdtc=lbdtc_) drop=usubjid);
+	usubjid='NIR-DT-301-'||catx('-',scan(subjectkeylabel,1),scan(subjectkeylabel,2));
+	subject=substr(usubjid,12);
+	if LBPHASE_CHEM='OPEN LABEL EXTENSION' then folder=strip(lbvis_chem)||'_OLE';
+	else folder=strip(lbvis_chem);
+	if LBTM_CHEMC^='' then lbdtc=put(lbdtn,e8601da.)||'T'||strip(LBTM_CHEMC);
+	else if LBTM_CHEMC='' then lbdtc=put(lbdtn,e8601da.); 
+	lbnam=strip(lbnam_local);
+	lbcat='CHEMISTRY';
+
+	%do i=1 %to &chem_cnt.;
+	%let prcd=%scan(&prm.,&i.);
+	if compress(LBND_&prcd.)='1' then LBSTAT='NOT DONE';else LBSTAT='';
+	lbtestcd="&prcd.";
+	lbtest=put(lbtestcd,$lbtest.);
+
+	LBORRES='';
+	LBSTRESN=.;
+	LBORNRLO='';
+	LBORNRHI='';
+	LBSTNRLO=.;
+	LBSTNRHI=.;
+
+
+	if LBORRES_&prcd.^=. then LBORRES=strip(put(LBORRES_&prcd.,best.));else lborres='';
+	LBSTRESC=LBORRES;
+	if LBORRES_&prcd.^=. then LBSTRESN=input(LBSTRESC,best.);
+	LBORRESU=LBORRESU_&prcd.;
+
+	
+	LBSTRESU=lborres_&prcd._labref_unit;
+	if LBORRES_&prcd._LABREF_LOWER^='' and compress(LBND_&prcd.)^='1' then LBORNRLO=strip(put(input(LBORRES_&prcd._LABREF_LOWER,best.),best.));
+	if LBORRES_&prcd._LABREF_UPPER^='' and compress(LBND_&prcd.)^='1' then LBORNRHI=strip(put(input(LBORRES_&prcd._LABREF_UPPER,best.),best.));
+
+	if lbornrlo='' then lbornrlo=strip(put(LBORNRLO_&prcd.,best.));
+	if lbornrhi='' then lbornrhi=strip(put(LBORNRHI_&prcd.,best.));
+
+/*	if LBORNRLO_&prcd.^='' then LBSTNRLO=input(LBORNRLO_&prcd.,best.);*/
+/*	if LBORNRHI_&prcd.^='' then LBSTNRHI=input(LBORNRHI_&prcd.,best.);*/
+
+	if LBORNRLO_&prcd.^=. then LBSTNRLO=LBORNRLO_&prcd.;
+	if LBORNRHI_&prcd.^=. then LBSTNRHI=LBORNRHI_&prcd.;
+/*	LBCLINSIG=LBCLSIG_&prcd.;*/
+
+	if lbstnrlo=. then lbstnrlo=input(lbornrlo,best.);
+	if lbstnrhi=. then lbstnrhi=input(lbornrhi,best.);
+
+
+	if strip(upcase(LBCLSIG_&prcd.))="YES" then clinsig="Clinically Significant";
+	else if strip(upcase(LBCLSIG_&prcd.))="NO" then clinsig="Not Clinically Significant";
+	else clinsig="";
+
+	drop LBND_&prcd.;
+
+	output;
+	%end;
+run;
+
+proc sort data=temp.chem;by usubjid lbcat lbtestcd lbdtc ;run;
+
+%mend;
+%chk;
+
+data temp.chem;
+	set temp.chem;
+		if index(folder,'UNSCHEDULED') and lbstat^='' then delete;
+		if lborres='' and lbstat='' then delete;
+/*	keep usubjid subject folder lbdtc lbtestcd lbtest lborres lborresu lbornrlo lbornrhi*/
+/*		 lbstnrlo lbstnrhi LBCLINSIG LBSTRESC lbstat LBSTRESN lbstresu lbnam lbdtn ;*/
+run;
+proc freq data=temp.chem noprint;
+	tables lbcat*lbtest*lbtestcd /out=chj;
+run;
+
+
+**HEMATOLOGY**;
+
+%macro chk1;
+proc contents data=raw.xlb_hema out=hem_cont noprint ;run;
+
+proc sql noprint;
+	create table hemcd as
+	select distinct(scan(name,2,'_')) as testcd from hem_cont
+	where index(name,'LBORRES') and type=1;
+
+	select distinct testcd into: prm separated by ' ' from hemcd;
+	select count(distinct testcd) into :hem_cnt from hemcd;
+quit;
+
+%put &prm &hem_cnt;
+
+**Process ND records differently later as anot all records have ND variables in raw dataset**;
+%let ndvarlist=%str("LBND_BASA" "LBND_BASD" "LBND_EOSA" "LBND_EOSD" "LBND_LYMA" "LBND_LYMD" "LBND_MONA" "LBND_MOND" "LBND_NEUA" "LBND_NEUD");
+
+data temp.hem;
+	set raw.xlb_hema(rename=(lbdtc=lbdtc_) drop=usubjid);
+	length usubjid $18. lbtestcd $25. lbtest lbcat LBORRES $100. lbornrlo lbornrhi clinsig $200.;
+	usubjid='NIR-DT-301-'||catx('-',scan(subjectkeylabel,1),scan(subjectkeylabel,2));
+	subject=substr(usubjid,12);
+	if LBPHASE_HEMA='OPEN LABEL EXTENSION' then folder=strip(lbvis_hema)||'_OLE';
+	else folder=strip(lbvis_hema);
+	if LBTM_HEMAC^='' then lbdtc=put(lbdtn,e8601da.)||'T'||strip(LBTM_HEMAC);
+	else if LBTM_HEMAC='' then lbdtc=put(lbdtn,e8601da.); 
+	lbnam=strip(lbnam_local);
+	lbcat='HEMATOLOGY';
+
+	%do i=1 %to &hem_cnt.;
+	%let prcd=%scan(&prm.,&i.);
+/*	%if &prcd not in (&ndvarlist.) %then %do;*/
+/*	if compress(LBND_&prcd.)='1' then LBSTAT='NOT DONE';else LBSTAT='';*/
+	if (compress(LBND_HEMO)='1'  or compress(LBND_MCH)='1'   or compress(LBND_MCV)='1'  or  
+		compress(LBND_PLAT)='1'   or compress(LBND_RBC)='1'   or compress(LBND_RETI)='1'  or 
+		compress(LBND_WBC)='1')  then LBSTAT='NOT DONE';else LBSTAT='';
+/*	%end;*/
+
+ 
+	lbtestcd="&prcd.";
+	lbtest=put(lbtestcd,$lbtest.);
+
+	LBORRES='';
+	LBSTRESN=.;
+	LBORNRLO='';
+	LBORNRHI='';
+	LBSTNRLO=.;
+	LBSTNRHI=.;
+
+	LBORRES=strip(put(LBORRES_&prcd.,best.));
+	LBORRESU=LBORRESU_&prcd.;
+	LBSTRESU=lborres_&prcd._labref_unit;
+	if LBORRES_&prcd._LABREF_LOWER^='' then LBORNRLO=strip(put(input(LBORRES_&prcd._LABREF_LOWER,best.),best.));
+	if LBORRES_&prcd._LABREF_UPPER^='' then LBORNRHI=strip(put(input(LBORRES_&prcd._LABREF_UPPER,best.),best.));
+
+/*	if LBORNRLO_&prcd.^='' then LBSTNRLO=input(LBORNRLO_&prcd.,best.);*/
+/*	if LBORNRHI_&prcd.^='' then LBSTNRHI=input(LBORNRHI_&prcd.,best.);*/
+
+	if LBORNRLO_&prcd.^=. then LBSTNRLO=LBORNRLO_&prcd.;
+	if LBORNRHI_&prcd.^=. then LBSTNRHI=LBORNRHI_&prcd.;
+
+	LBCLINSIG=LBCLSIG_&prcd.;
+	LBSTRESC=LBORRES;
+	if LBSTRESC^='' then LBSTRESN=input(LBSTRESC,best.);
+
+	if lborres^='' then lbstat='';
+	if strip(upcase(LBCLSIG_&prcd.))="YES" then clinsig="Clinically Significant";
+	else if strip(upcase(LBCLSIG_&prcd.))="NO" then clinsig="Not Clinically Significant";
+	else clinsig="";
+/*	drop LBND_&prcd.;*/
+
+	output;
+	%end;
+run;
+
+proc sort data=temp.hem;by usubjid lbcat lbtestcd lbdtc ;run;
+
+%mend;
+%chk1;
+
+
+data temp.hem;
+	set temp.hem;
+		if index(folder,'UNSCHEDULED') and (lbstat^='' or lborres='') then delete;
+		if lborres='' and lbstat='' then delete;
+		
+		if lbornrlo='' and lbstnrlo^=. then lbornrlo=strip(put(lbstnrlo,best.));
+		if lbornrhi='' and lbstnrhi^=. then lbornrhi=strip(put(lbstnrhi,best.));
+run;
+
+
+proc freq data=temp.hem noprint;
+	tables lbcat*lbtest*lbtestcd /out=chj;
+run;
+
+
+**HARMONES**;
+
+proc contents data=raw.xlb_horm out=horm_cont noprint;run;
+
+proc sql noprint;
+	create table hormcd as
+	select distinct(scan(name,2,'_')) as testcd from horm_cont
+	where index(name,'LBORRES') and type=1;
+
+	select distinct testcd into: prm separated by ' ' from hormcd;
+	select count(distinct testcd) into :horm_cnt from hormcd;
+quit;
+
+%put &prm &horm_cnt;
+
+
+%macro chk2;
+data temp.horm;
+	set raw.xlb_horm(rename=(lbdtc=lbdtc_) drop=usubjid);
+	length usubjid $18. lbtestcd $25. lbtest lbcat LBORRES $100. lbornrlo lbornrhi clinsig $200.;
+	usubjid='NIR-DT-301-'||catx('-',scan(subjectkeylabel,1),scan(subjectkeylabel,2));
+	subject=substr(usubjid,12);
+	if LBPHASE_HORM='OPEN LABEL EXTENSION' then folder=strip(lbvis_horm)||'_OLE';
+	else folder=strip(lbvis_horm);
+	if LBTM_HORMC^='' then lbdtc=put(lbdtn,e8601da.)||'T'||strip(LBTM_HORMC);
+	else if LBTM_HORMC='' then lbdtc=put(lbdtn,e8601da.);
+	lbnam=strip(lbnam_local);
+	lbcat='HORMONES';
+
+	%do i=1 %to &horm_cnt.;
+	%let prcd=%scan(&prm.,&i.);
+	if compress(LBND_FSH)='1' and "&prcd." eq "FSH" then LBSTAT='NOT DONE';
+        else if compress(LBND_LH)='1' and "&prcd." eq "LH" then LBSTAT='NOT DONE';
+        else LBSTAT='';
+/*	if compress(LBND_&prcd.)='1' then LBSTAT='NOT DONE';else LBSTAT='';*/
+	lbtestcd="&prcd.";
+	lbtest=put(lbtestcd,$lbtest.);
+
+	LBORRES='';
+	LBSTRESN=.;
+	LBORNRLO='';
+	LBORNRHI='';
+	LBSTNRLO=.;
+	LBSTNRHI=.;
+
+
+	LBORRES=strip(put(LBORRES_&prcd.,best.));
+	if lborres^='' and lbstat^='' then lbstat='';
+	LBORRESU=LBORRESU_&prcd.;
+	LBSTRESU=lborres_&prcd._labref_unit;
+	if lbstresu='' then LBSTRESU=lborresu_&prcd.;
+	if LBORRES_&prcd._LABREF_LOWER^='' then LBORNRLO=strip(put(input(LBORRES_&prcd._LABREF_LOWER,best.),best.));
+	if LBORRES_&prcd._LABREF_UPPER^='' then LBORNRHI=strip(put(input(LBORRES_&prcd._LABREF_UPPER,best.),best.));
+
+/*	if LBORNRLO_&prcd.^='' then LBSTNRLO=input(LBORNRLO_&prcd.,best.);*/
+/*	if LBORNRHI_&prcd.^='' then LBSTNRHI=input(LBORNRHI_&prcd.,best.);*/
+
+	if LBORNRLO_&prcd.^=. then LBSTNRLO=LBORNRLO_&prcd.;
+	if LBORNRHI_&prcd.^=. then LBSTNRHI=LBORNRHI_&prcd.;
+
+	LBCLINSIG=LBCLSIG_&prcd.;
+	LBSTRESC=LBORRES;
+	if LBSTRESC^='' then LBSTRESN=input(LBSTRESC,best.);
+
+	if lborres^='' then lbstat='';
+	if strip(upcase(LBCLSIG_&prcd.))="YES" then clinsig="Clinically Significant";
+	else if strip(upcase(LBCLSIG_&prcd.))="NO" then clinsig="Not Clinically Significant";
+	else clinsig="";
+	output;
+	%end;
+run;
+
+proc sort data=temp.horm;by usubjid lbcat lbtestcd lbdtc ;run;
+
+%mend;
+%chk2;
+
+data temp.horm;
+	set temp.horm;
+		if index(folder,'UNSCHEDULED') and lbstat^='' then delete;
+		if  lborres='' and lbstat='' then delete;
+/*	keep usubjid subject folder lbdtc lbtestcd lbtest lborres lborresu lbornrlo lbornrhi*/
+/*		 lbstnrlo lbstnrhi LBCLINSIG LBSTRESC lbstat LBSTRESN lbstresu lbnam lbdtn ;*/
+
+		if lbornrlo='' and lbstnrlo^=. then lbornrlo=strip(put(lbstnrlo,best.));
+		if lbornrhi='' and lbstnrhi^=. then lbornrhi=strip(put(lbstnrhi,best.));
+run;
+
+proc freq data=temp.horm noprint;
+	tables lbcat*lbtest*lbtestcd /out=chj;
+	run;
+**Process XLB_LOCL**;
+**Merge both YN and regular datasets to get date info **;
+
+proc sort data=raw.XLBYN_LOCL out=XLBYN_LOCL;by USUBJID STUDYEVENT visdatn;run;
+proc sort data=raw.XLB_LOCL out=XLB_LOCL;by USUBJID STUDYEVENT visdatn;run;
+
+data temp.locl(drop=lbtestcd);
+	merge XLBYN_LOCL(in=a) XLB_LOCL(in=b rename=(lbtest=lbtestr));
+	by USUBJID STUDYEVENT visdatn;
+	if a and b;
+	length lbtest  lbtestcd $50. lbstnrc lbspec clinsig $200.;
+	if lbtestsp^='' then lbtestr=lbtestsp;
+	else if LBTEST_HORMONESP^='' then lbtestr=LBTEST_HORMONESP;
+
+	if lbclsig="YES" then clinsig="Clinically Significant";
+	else if lbclsig="NO" then clinsig="Not Clinically Significant";
+	else clinsig="";
+	lbtestcd=lbtestr;
+	LBSTRESC=LBORRES;
+	lbstresu=lborresu;
+	if lborres^='' then lbstresn=input(lborres,??best.);
+	if lbornrlo^='' then lbstnrlo=input(lbornrlo,??best.);
+	if lbornrhi^='' then lbstnrhi=input(lbornrhi,??best.);
+	if LBTIMC^='' then lbdtc=put(VISDATN,e8601da.)||'T'||strip(LBTIMC);
+	else if LBTIMC='' then lbdtc=put(VISDATN,e8601da.);
+	if anypunct(lbornrlo)>0 and index(lbornrlo,".")=0 then lbstnrc=lbornrlo;
+
+	folder=strip(studyevent);
+
+	lbtest=put(lbtestcd,$lbtest.);
+	locl_lbtestcd=lbtestcd;
+
+	if index(LOCL_LBTESTCD,'BLOOD') and LOCL_LBTESTCD^='WHITE BLOOD CELLS' then lbspec='BLOOD';
+	if index(LOCL_LBTESTCD,'URINE')  then lbspec='URINE';
+	if index(LOCL_LBTESTCD,'SERUM') then lbspec='SERUM';
+	if LOCL_LBTESTCD='BLOOD (URINE)' then lbspec='URINE';
+	if LOCL_LBTESTCD='URINE (COLOR)' then lbspec='';
+run;
+
+proc sql noprint;
+	alter table temp.locl 
+	modify lbornrlo char(200) modify lbornrhi char(200);
+quit;
+
+proc freq data=temp.locl noprint;
+	tables locl_lbtestcd*lbtest /out=chj;
+run;
+
+ 
+**Process RAW.XLB_LOCL_OTH**;
+proc sort data=raw.xlb_locl_oth out=xlb_locl_oth;by USUBJID STUDYEVENT visdatn;run;
+
+data temp.locl_oth;
+	set xlb_locl_oth;
+	by USUBJID STUDYEVENT visdatn;
+	if lbphase_locl_oth='OPEN LABEL EXTENSION' then folder=strip(LBAVISIT_LOCL_OTH)||'_OLE';
+	else folder=strip(LBAVISIT_LOCL_OTH);
+	length lbtest $100. lbcat $50. lbornrlo lbornrhi lbstnrc clinsig $200.;
+		lbcat ="OTHER";
+    if LBTEST_LOCL_OTH^='' then lbtestr=LBTEST_LOCL_OTH;
+	if lbtestr eq "PHOSPHOROUS SERUM" then lbspec = "SERUM";
+	else lbspec = "";
+
+	if LBCLSIG_LOCL_OTH="YES" then clinsig="Clinically Significant";
+	else if LBCLSIG_LOCL_OTH="NO" then clinsig="Not Clinically Significant";
+	else clinsig="";
+	lbtest=put(lbtestr,$lbtest.);
+	lborres=LBORRES_LOCL_OTH;
+	lborresu=LBORRESU_LOCL_OTH;
+	lbstresc=LBORRES_LOCL_OTH;
+	lbstresu=LBORRESU_LOCL_OTH;
+	lbornrlo=lbrlo_locl_oth;
+	lbornrhi=lbrhi_locl_oth;
+	lbornrhi=tranwrd(lbornrhi,'0,5','0.5');
+	if anypunct(lbrhi_locl_oth)>0 and index(lbrhi_locl_oth,".")=0 then lbstnrc=lbrhi_locl_oth;
+	if lborres^='' then lbstresn=input(lborres,??best.);
+	if lbornrlo^='' then lbstnrlo=input(lbornrlo,??best.);
+	if lbornrhi^='' then lbstnrhi=input(lbornrhi,??best.);
+	if LBTM_LOCL_OTHC^='' then lbdtc=put(LBDT_LOCL_OTHN,e8601da.)||'T'||strip(LBTM_LOCL_OTHC);
+	else if LBTM_LOCL_OTHC='' then lbdtc=put(LBDT_LOCL_OTHN,e8601da.);
+run;
+
+proc freq data=temp.locl_oth noprint;
+	tables lbtestr*lbtest /out=chk;
+run;
+**Process RAW.XLB_PREG**;
+proc sort data=raw.xlb_preg out=xlb_preg;by USUBJID STUDYEVENT visdatn;run;
+
+data temp.preg;
+	length lbcat lbtest LBORRES $100. lbtestcd $25. lbreasndx $600. lbreasnd lbreasn1 $200.  ;
+	set xlb_preg;
+	by USUBJID STUDYEVENT visdatn;
+    folder=strip(PREG_VISIT);
+		lborres=strip(preg_lborres);
+		LBSTRESC=LBORRES;
+		lbspec=strip(preg_lbmethod);
+	if PREG_LBTIMC^='' then lbdtc=put(PREG_LBDATN,e8601da.)||'T'||strip(PREG_LBTIMC);
+	else if PREG_LBTIMC='' then lbdtc=put(PREG_LBDATN,e8601da.);
+	if lbdtc='' and PREG_LBDATC^='' then lbdtc=compress(scan(PREG_LBDATC,3,'/'))||'-'||compress(scan(PREG_LBDATC,1));
+
+	if strip(preg_lbperf)="NO" then do;
+		lbstat="NOT DONE";
+		lbreasndx=catx(": ",PREG_LBREASND,PREG_LBREASNDSP);
+		lbreasnd=substr(lbreasndx,1,200);
+		lbreasn1=substr(lbreasndx,201);
+	end;
+
+	lbcat ="CHEMISTRY";
+	lbtest ="Choriogonadotropin Beta";
+	lbtestcd="HCG";
+
+	**SUPP VARIABLES**;
+	covid=strip(pregcovid_lbreas);
+	covidsp=strip(pregcovid_lbreassp);
+	assescom=strip(assesscomp_lborres);
+	if assesscovid_lborres="1" then covasses="Y";else if assesscovid_lborres="0" then covasses="N";
+	if strip(window_lboccur)="YES" then covwind="Y";else if strip(window_lboccur)="NO" then covwind="N";
+
+	if index(folder,'UNSCHEDULED') and lbstat^='' then delete;
+run;
+
+proc freq data=temp.preg noprint;
+	tables lbtestcd*lbtest /out=chk;
+run;
+
+**Process RAW.XLB_BLOOD**;
+proc sort data=raw.xlb_blood out=xlb_blood;by USUBJID STUDYEVENT visdatn;run;
+
+data temp.blood;
+	length lbcat lbtest $100. lbtestcd $25. lbreasndx $600. lbreasnd lbreasn1 $200.;
+	call missing(lbcat);
+	set xlb_blood;
+	by USUBJID STUDYEVENT visdatn;
+    folder=strip(STUDYEVENT);
+		lbspec='BLOOD';
+		if blood_LBTIMC^='' then lbdtc=put(VISDATN,e8601da.)||'T'||strip(blood_LBTIMC);
+		else lbdtc=put(VISDATN,e8601da.);
+
+	if strip(blood_lbperf)="NO" then do;
+		lbstat="NOT DONE";
+		lbreasndx=catx(": ",blood_LBREASND,blood_LBREASNDSP);
+		lbreasnd=substr(lbreasndx,1,200);
+		lbreasn1=substr(lbreasndx,201);
+	end;
+
+/*	lbcat ="HEMATOLOGY";*/
+	lbtest ="";
+	lbtestcd="";
+
+	if index(folder,'UNSCHEDULED') and lbstat^='' then delete;
+
+	**SUPP VARIABLES**;
+	covid=strip(BLOODCOVID_LBREAS);
+	covidsp=strip(BLOODCOVID_LBREASSP);
+	assescom=strip(BLOODAC_LBORRES);
+	if BLOODAICOVID_LBORRES="1" then covasses="Y";else if BLOODAICOVID_LBORRES="0" then covasses="N";
+	if strip(BLOODWNDW_LBORRES)="YES" then covwind="Y";else if strip(BLOODWNDW_LBORRES)="NO" then covwind="N";
+run;
+
+data temp.blood;
+	length lbcat $100.;
+	set temp.blood;
+	lbcat ="HEMATOLOGY";
+	output;
+		lbcat ="CHEMISTRY";
+	output;
+		lbcat ="HORMONE LEVELS";
+	output;
+run;
+
+**Process RAW.XLB_SERO**;
+proc sort data=raw.xlb_sero out=xlb_sero;by USUBJID STUDYEVENT visdatn;run;
+
+data temp.sero;
+	length lbcat lbtest LBORRES $100. lbtestcd $25. lbreasndx $600. lbreasnd lbreasn1 $200.;
+	lborres=" ";
+	set xlb_sero;
+	by USUBJID STUDYEVENT visdatn;
+    folder=strip(studyevent);
+		lbspec='BLOOD';
+		lbdtc=put(SERO_LBDATN,e8601da.);
+
+	if strip(SERO_LBPERF)="NO" then do;
+		lbstat="NOT DONE";
+		lbreasndx=catx(": ",SERO_LBREASND,SERO_LBREASNDSP);
+		lbreasnd=substr(lbreasndx,1,200);
+		lbreasn1=substr(lbreasndx,201);
+	end;
+
+	lbcat ="SEROLOGY";
+	lbtest ="";
+	lbtestcd="";
+
+	if index(folder,'UNSCHEDULED') and lbstat^='' then delete;
+
+	**SUPP VARIABLES**;
+	covid=strip(SEROCOVID_LBREAS);
+	covidsp=strip(SEROCOVID_LBREASSP);
+	assescom=strip(SEROAC_LBORRES);
+	if SEROAICOVID_LBORRES="1" then covasses="Y";
+	else if SEROAICOVID_LBORRES="0" then covasses="N";
+	if strip(SEROWNDW_LBORRES)="YES" then covwind="Y";
+	else if strip(SEROWNDW_LBORRES)="NO" then covwind="N";
+run;
+
+**Process XLB_URI**;
+proc contents data=raw.xlb_uri out=uri_cont noprint;run;
+
+proc sql noprint;
+	create table uricd as
+	select distinct(scan(name,2,'_')) as testcd from uri_cont
+	where index(name,'LBORRES');
+
+	select distinct testcd into: prm separated by ' ' from uricd;
+	select count(distinct testcd) into :uri_cnt from uricd;
+quit;
+
+%put &prm &uri_cnt;
+
+**URI**;
+%macro chk;
+data temp.uri;
+	set raw.xlb_uri(rename=(lbdtc=lbdtc_) drop=usubjid);
+	length usubjid $18. lbtest LBORRES $100. lbtestcd $25. lbornrlo lbornrhi clinsig $200.;
+	usubjid='NIR-DT-301-'||catx('-',scan(subjectkeylabel,1),scan(subjectkeylabel,2));
+	subject=substr(usubjid,12);
+	if LBPHASE_URI='OPEN LABEL EXTENSION' then folder=strip(lbvis_uri)||'_OLE';
+	else folder=strip(lbvis_uri);
+	if LBTM_URIC^='' then lbdtc=put(lbdtn,e8601da.)||'T'||strip(LBTM_URIC);
+	else if LBTM_URIC='' then lbdtc=put(lbdtn,e8601da.);
+	lbnam=strip(lbnam_local);
+	lbcat='URINALYSIS';
+	lbspec="URINE";
+
+	%do i=1 %to &uri_cnt.;
+	%let prcd=%scan(&prm.,&i.);
+	lbtestcd="&prcd.";
+	lbtest=put(lbtestcd,$lbtest.);
+
+	LBORRES='';
+	LBSTRESN=.;
+	LBORNRLO='';
+	LBORNRHI='';
+	LBSTNRLO=.;
+	LBSTNRHI=.;
+	LBORRESU='';
+	LBSTRESU='';
+
+	LBORRES=LBORRES_&prcd.;
+	if LBORRES_&prcd. ^='' and not anyalpha(LBORRES_&prcd.) then  lbstresn=input(LBORRES_&prcd.,??best.);
+	LBSTRESC=LBORRES;
+
+	%if &prcd. in(GRAV KET LEUK NIT PH URO) %then %do;
+	if LBORRES_&prcd._LABREF_LOWER^='' then LBORNRLO=strip(put(input(LBORRES_&prcd._LABREF_LOWER,best.),best.));
+	if LBORRES_&prcd._LABREF_UPPER^='' then LBORNRHI=strip(put(input(LBORRES_&prcd._LABREF_UPPER,best.),best.));
+	%end;
+
+	%if &prcd. in(GRAV PH) %then %do;
+	if lbornrlo='' then lbornrlo=strip(lbornrlo_&prcd.);
+	if lbornrhi='' then lbornrhi=strip(lbornrhi_&prcd.);
+	%end;
+
+	%if &prcd. in (PH,GRAV) %then %do;
+	if LBORRES_&prcd. ^='' then  lbstresn=input(LBORRES_&prcd.,best.);
+	LBORRESU=LBORRESU_&prcd.;
+	if LBSTRESC^='' then LBSTRESN=input(LBSTRESC,best.);
+	%end;
+
+	%if &prcd. in(BILIU BLD GLUU KET LEUK NIT PROU URO) %then %do;
+	if strip(upcase(LBCLSIG_&prcd.))="YES" then clinsig="Clinically Significant";
+	else if strip(upcase(LBCLSIG_&prcd.))="NO" then clinsig="Not Clinically Significant";
+	else clinsig="";
+	%end;
+
+	if lbtestcd in("PH","GRAV") then call missing(clinsig); 
+
+	output;
+
+	%end;
+run;
+
+proc sort data=temp.uri;by usubjid lbcat lbtestcd lbdtc ;run;
+
+%mend;
+%chk;
+
+data temp.uri;
+	set temp.uri;
+	**remove records with no lborres**;
+	if lborres='' then delete;
+run;
+
+
+proc freq data=temp.uri noprint;
+	tables lbtestcd*lbtest /out=chk;
+run;
+
+**Process RAW.XLB_URINE**;
+proc sort data=raw.xlb_urine out=xlb_urine;by USUBJID STUDYEVENT visdatn;run;
+
+data temp.urine;
+	length lbcat lbtest $100. lbtestcd $25. lbreasndx $600. lbreasnd lbreasn1 $200.;
+	set xlb_urine;
+	by USUBJID STUDYEVENT visdatn;
+    folder=strip(studyevent);
+		lbspec='URINE';
+	if URINE_LBTIMC^='' then lbdtc=put(VISDATN,e8601da.)||'T'||strip(URINE_LBTIMC);
+	else if URINE_LBTIMC='' then lbdtc=put(VISDATN,e8601da.);
+
+	if strip(URINE_LBPERF)="NO" then do;
+		lbstat="NOT DONE";
+		lbreasndx=catx(": ",URINE_LBREASND,URINE_LBREASNDSP);
+		lbreasnd=substr(lbreasndx,1,200);
+		lbreasn1=substr(lbreasndx,201);
+	end;
+
+	lbcat ="URINALYSIS";
+	lbtest ="";
+	lbtestcd="";
+
+	if index(folder,'UNSCHEDULED') and lbstat^='' then delete;
+
+	**SUPP VARIABLES**;
+
+	covid=strip(URINECOVID_LBREAS);
+	covidsp=strip(URINECOVID_LBREASSP);
+	assescom=strip(URINEAC_LBORRES);
+	if URINEAICOVID_LBORRES="1" then covasses="Y";else if URINEAICOVID_LBORRES="0" then covasses="N";
+	if strip(URINEWNDW_LBORRES)="YES" then covwind="Y";else if strip(URINEWNDW_LBORRES)="NO" then covwind="N";
+run;
+
+
+**Process External Lab Data**;
+
+data temp.mrl;	
+	length usubjid lbtestcd $25. lbtest lborres lbstresc lbornrlo lbornrhi lbstnrc assescom $200.;
+	call missing(assescom);
+	set raw.mrl(rename=(age=age_));
+	usubjid="NIR-DT-301-"||strip(subjid);
+	if index(visitlbl,'Cycle') and index(visitlbl,'Open')  then folder='C'|| scan(visitlbl,2)||'D'|| scan(visitlbl,4)||'_OLE';
+	else if index(visitlbl,'Cycle') then folder='C'|| scan(visitlbl,2)||'D'|| scan(visitlbl,4);
+	else if index(visitlbl,'Screen') then folder='SCRN';
+	else if index(visitlbl,'EOT') and index(visitlbl,'Open')  then folder='EOT_OLE';
+	else if index(visitlbl,'EOT') then folder='EOT';
+	else if index(visitlbl,'Foll') and index(visitlbl,'Open')  then folder='FUP_OLE';
+	else if index(visitlbl,'Foll') then folder='FUP';
+	else if index(visitlbl,'Uns') then folder='UNS';
+
+	lbgrpid=BARCODE;
+	lbcat=strip(upcase(labtype));
+	lbnam=labid;
+	lbtestcd=coalescec(tstcd,saslabnm);
+	lbtest=coalescec(tstnam,labtest);
+	lborres=siresult;
+	LBSTRESC=resultc;
+	lbstresn=result;
+	lbornrlo=sinormlo;
+	lbornrhi=sinormhi;
+	lborresu=siunit;
+	lbstresu=unit;
+	lbstnrlo=input(normallo,??best.);
+	lbstnrhi=input(normalhi,??best.);
+	if (anyalpha(normallo)>0 or index(normallo,"<>=")>0) and missing(normalhi) then LBSTNRC=normallo;
+	if (anyalpha(normalhi)>0 or index(normalhi,"<>=")>0) and missing(normallo) then LBSTNRC=normalhi;
+	if upcase(lbcat)="ARUP LABORATORIES" then lbcat='HORMONE LEVELS';
+	age1=input(age_,best.);
+
+	if samptype="SER" then lbspec="SERUM";
+	else if samptype="UR" then lbspec="URINE";
+	else if samptype="WHBLD" then lbspec="BLOOD";
+
+	if VISITTM^=. then lbdtc=put(VISITDT,e8601da.)||'T'||put(VISITTM,tod5.);
+	else lbdtc=put(VISITDT,e8601da.);
+
+		length lbnrind $6. ;
+	if nmiss(lbstresn,lbstnrlo,lbstnrhi)=0 then do;
+		if .< lbstresn < lbstnrlo then LBNRIND='LOW';
+		else if lbstresn > lbstnrhi then LBNRIND='HIGH';
+		else if lbstnrlo <= lbstresn <= lbstnrhi then LBNRIND='NORMAL';
+	end;
+
+	if lbnrind='' then do;
+		if flaghilo^='' then lbnrind=substr(flaghilo,2,1);
+	if lbnrind='H' then lbnrind='HIGH';
+	else if lbnrind='L' then lbnrind='LOW';
+	else if sinormlo^='' or sinormhi='' then lbnrind="NORMAL";
+	end;
+
+	if lbdtc^='' then lbdtc1=input(lbdtc,is8601da.);
+	format lbdtc1 date9.;
+	if lbstat^='' and lborres='' then lbstat='';
+run;
+
+proc freq data=temp.mrl noprint;
+	tables lbcat*lbtestcd*lbtest*lbspec /out=chk;
+run;
+
+proc sql noprint;alter table temp.chem modify usubjid char(18) modify folder char(100) modify lbstresu char(200) modify lbspec char(200);quit;
+proc sql noprint;alter table temp.hem modify usubjid char(18) modify folder char(100) modify lbstresu char(200) modify lbspec char(200);quit;
+proc sql noprint;alter table temp.horm modify usubjid char(18) modify folder char(100) modify lbstresu char(200) modify lbspec char(200);quit;
+proc sql noprint;alter table temp.uri modify usubjid char(18) modify folder char(100) modify lbstresu char(200) modify lbspec char(200);quit;
+proc sql noprint;alter table temp.preg modify usubjid char(18) modify folder char(100) modify lbstresu char(200) modify lbspec char(200);quit;
+proc sql noprint;alter table temp.locl modify usubjid char(18) modify folder char(100) modify lbstresu char(200) modify lbspec char(200);quit;
+proc sql noprint;alter table temp.locl_oth modify usubjid char(18) modify folder char(100) modify lbstresu char(200) modify lbspec char(200);quit;
+
+data temp.lab1;
+	set temp.chem temp.hem temp.horm temp.uri(in=a) temp.preg temp.locl(in=b) temp.locl_oth(in=c);
+	if index(locl_lbtestcd,'URINE') and lbcat='' then lbcat='URINALYSIS';
+	if a then lbspec_blk='Y';
+	if b then lbspec_locl='Y';
+run;
+
+proc sql noprint;alter table temp.sero modify usubjid char(18) modify folder char(100) modify lbstresu char(200) modify lbspec char(200) modify lbdtc char(200);quit;
+proc sql noprint;alter table temp.blood modify usubjid char(18) modify folder char(100) modify lbstresu char(200) modify lbspec char(200) modify lbdtc char(200);quit;
+proc sql noprint;alter table temp.urine modify usubjid char(18) modify folder char(100) modify lbstresu char(200) modify lbspec char(200) modify lbdtc char(200);quit;
+
+**LBALL Records**;
+data temp.lab2;
+	set temp.sero temp.blood temp.urine;
+	where lbstat^='';
+	lbtestcd='LBALL';
+	lbtest='LBALL';
+	keep usubjid lbcat lbtestcd lbtest lbstat lbreasnd lbreasn1 folder lbdtc;
+	if index(upcase(folder),'UNSCHEDULED') then delete;
+run;
+
+data temp.lab3;
+	set temp.lab1 temp.lab2;
+	lbtestcd=strip(put(lbtest,$lbtestcd.));
+	if lbdtc^='' then lbdtc1=input(lbdtc,??is8601da.);
+	format lbdtc1 date9.;
+run;
+
+data temp.lab2_supp1;
+	set temp.sero temp.blood temp.urine ;
+	if index(upcase(folder),'UNS') then folder='UNS';
+	perf = coalescec(sero_lbperf,blood_lbperf,urine_lbperf);
+	keep usubjid lbcat folder lbdtc assescom covasses covid covidsp covwind perf;
+run;
+
+proc sort data=temp.lab3;by usubjid lbcat  lbtestcd lbdtc1 folder lbnam ;run;
+proc sort data=temp.mrl;by usubjid lbcat  lbtestcd lbdtc1 folder lbnam;run;
+
+proc sql noprint;alter table temp.mrl  modify folder char(100) modify lborres char(200) modify lbstresc char(200) modify lbtest char(200);quit;
+proc sql noprint;alter table temp.lab3 modify usubjid char(18) modify folder char(100) modify lborres char(200) modify lbstresc char(200) modify lbtest char(200);quit;
+
+proc sql noprint;
+	create table temp.mrl_check1 as
+	select distinct usubjid,lbcat,"LBALL" as lbtestcd,lbdtc1,folder,lbnam
+	from temp.mrl order by usubjid,lbcat,lbtestcd,lbdtc1,folder,lbnam;
+quit;
+
+proc sql noprint;
+	create table temp.mrl_check2 as
+	select distinct usubjid,lbcat,lbtestcd,lbdtc1,folder,lbnam
+	from temp.mrl order by usubjid,lbcat,lbtestcd,lbdtc1,folder,lbnam;
+quit;
+
+data temp.mrl_alla;
+	length usubjid $200.;
+	merge temp.lab3(in=a) temp.mrl(in=b);
+	by usubjid lbcat lbtestcd lbdtc1 folder lbnam;
+
+	if a and not b then crf_mrl_fl = "crf";
+	else if b and not a then crf_mrl_fl = "mrl";
+	else if a and b then crf_mrl_fl = "all";
+	else crf_mrl_fl = "";
+
+	**Create visit from folder varaible**;
+	length visitx $25.;
+	if substr(folder,1,1)='C' and folder not in ('SCRN','SCREENING','SCR')
+			then visitx=tranwrd(tranwrd(tranwrd(folder,"C","Cycle "),"D"," Day "),'_OLE',' OLE');
+	else if folder in ('SCRN','SCREENING','SCR') then visitx='Screening';
+	else if folder='EOT' then visitx='End of Treatment';
+	else if folder='EOT_OLE' then visitx='End of Treatment OLE';
+	else if folder in ('FUP','FOLLOW-UP') then visitx='Follow-Up';
+	else if folder in ('FUP_OLE','FOLLOW-UP_OLE') then visitx='Follow-Up OLE';
+	else if index(upcase(folder),'UNS') then visitx='Unscheduled';
+	if not missing(lbdtc) and length(lbdtc)>=10 then lbdt=input(substr(lbdtc,1,10),yymmdd10.);
+
+	 lbtest=put(lbtestcd,$lbtest.);
+	 if lbstat^='' then lbnam='';
+run;
+
+proc sql noprint;
+	create table temp.mrl_allb as
+	select a.*,b.usubjid as val_subj,b1.usubjid as val_subj1
+	from temp.mrl_alla a
+	left join temp.mrl_check1 b
+	on a.usubjid eq b.usubjid and a.lbcat eq b.lbcat and a.folder eq b.folder 
+	and a.lbdtc1 eq b.lbdtc1 and a.lbtestcd eq b.lbtestcd
+	left join temp.mrl_check2 b1
+	on a.usubjid eq b1.usubjid and a.lbcat eq b1.lbcat and a.folder eq b1.folder 
+	and a.lbdtc1 eq b1.lbdtc1 and a.lbtestcd eq b1.lbtestcd;
+
+	delete from temp.mrl_allb where not missing(val_subj) and lbtestcd eq "LBALL";
+	delete from temp.mrl_allb where not missing(val_subj1) and lbstat='NOT DONE' and LBTESTCD in ('EOS','MONO','NEUT','BASO','LYM') and 
+	LBCAT='HEMATOLOGY' and lbornrlo='';
+/*USUBJID='NIR-DT-301-022-004' and LBCAT='HEMATOLOGY' and  */
+/*LBTESTCD in ('EOS','MONO','NEUT','BASO','LYM') and visitnum=8 and lbstat^='' then delete;*/
+/**/
+quit;
+
+
+/**/
+
+/*proc sort data=temp.mrl_all;	by  usubjid lbcat lbtestcd lbdtc1 folder lbnam;run;*/
+
+data temp.mrl_all;
+	set temp.mrl_allb(drop=lbtestcd);
+	lbtestcd=put(lbtest,$lbtestcd.);
+
+	**Adjust lborres units**;
+	lborresu1=upcase(lborresu);
+	lborresu_orig=lborresu;
+
+	if lborresu='µmol/L' then lborresu='umol/L';
+	if lborresu='per HPF' then lborresu='/HPF';
+	if lborresu='per LPF' then lborresu='/LPF';
+	if lborresu='(None)' then lborresu='';
+	if lborresu='MMOL/L' then lborresu='mmol/L';
+	if lborresu='µIU/mL' then lborresu='uIU/mL';
+
+	if strip(upcase(lborresu)) in ("NA","N/A","NO UNIT","(NONE)","1","(SEE COMMENTS)") then lborresu="";
+	if not anyalpha(lbstresc) then lbstresc=strip(put(input(lbstresc,??best.),??best.));
+run;
+
+proc freq data=temp.mrl_all noprint;
+	tables folder*visitx /out=chk;
+	tables lbtestcd*lbtest /out=chkv;
+run;
+
+data temp.mrl_all;
+	set temp.mrl_all;
+		if strip(upcase(lborresu)) in ("G/DL") then lborresu="g/dL";
+		if strip(upcase(lbstresu)) in ("G/DL") then lbstresu="g/dL";
+		if strip(upcase(lborresu)) in ("G/L") then lborresu="g/L";
+		if strip(upcase(lbstresu)) in ("G/L") then lbstresu="g/L";
+		if strip(upcase(lborresu)) in ("PER HPF") then lborresu="/HPF";
+		if strip(upcase(lbstresu)) in ("PER HPF") then lbstresu="/HPF";
+		if strip(upcase(lborresu)) in ("PER LPF") then lborresu="/LPF";
+		if strip(upcase(lbstresu)) in ("PER LPF") then lbstresu="/LPF";
+		if strip(upcase(lborresu)) in ("MG/DL") then lborresu="mg/dL";
+		if strip(upcase(lbstresu)) in ("MG/DL") then lbstresu="mg/dL";
+		if strip(upcase(lborresu)) in ("MMOL/L") then lborresu="mmol/L";
+		if strip(upcase(lbstresu)) in ("MMOL/L") then lbstresu="mmol/L";
+		if strip(upcase(lborresu)) in ("?IU/ML" 'µIU/ML' 'MCIU/ML' 'UIU/ML') then lborresu="uIU/mL";
+		if strip(upcase(lbstresu)) in ("?IU/ML" 'µIU/ML' 'MCIU/ML' 'UIU/ML') then lbstresu="uIU/mL";
+		if strip(upcase(lborresu)) in ("10^6/µL" "X 10^6/MM^3" "X 10^6/MCL" "M/MCL" "X 10^12/L") then lborresu="10^12/L";
+		if strip(upcase(lbstresu)) in ("10^6/µL" "X 10^6/MM^3" "X 10^6/MCL" "M/MCL" "X 10^12/L") then lbstresu="10^12/L";
+		if strip(upcase(lbstresu)) in ( "X 10^9/L" "K/MCL" "X 10^3/MCL" "X 10^3/MM^3" "K/MM^3") then lbstresu="10^9/L";
+		if strip(upcase(lborresu)) in ( "X 10^9/L" "K/MCL" "X 10^3/MCL" "X 10^3/MM^3" "K/MM^3") then lborresu="10^9/L";
+		if strip(upcase(lbstresu)) in ("?MOL/L" "µMOL/L" "µmol/L") then lbstresu="umol/L";
+		if strip(upcase(lborresu)) in ("?MOL/L" "µMOL/L" "µmol/L") then lborresu="umol/L";
+		if strip(upcase(lbstresu)) in ("ML/MIN/1.73M^2") then lbstresu="mL/min/1.73m2";
+		if strip(upcase(lborresu)) in ("ML/MIN/1.73M^2" "µmol/L") then lborresu="mL/min/1.73m2";
+		if lbtestcd="GFRE" and strip(upcase(lbstresu))="%" then lbstresu="mL/min/1.73m2"; 
+		if strip(upcase(lbstresu)) in ("PG") then lbstresu="pg";
+		if strip(upcase(lborresu)) in ("PG") then lborresu="pg";
+		if strip(upcase(lbstresu)) in ("FL") then lbstresu="fL";
+		if strip(upcase(lborresu)) in ("FL") then lborresu="fL";
+		if strip(upcase(lbstresu)) in ("MU/L") then lbstresu="mU/L";
+		if strip(upcase(lborresu)) in ("MU/L") then lborresu="mU/L";
+		if strip(upcase(lbstresu)) in ("CELLS/MCL" "CELLS/UL") then lbstresu="Cells/uL";
+		if strip(upcase(lborresu)) in ("CELLS/MCL" "CELLS/UL") then lborresu="Cells/uL";
+		if strip(upcase(lbstresu)) in ("MEQ/L") then lbstresu="mEq/L";
+		if strip(upcase(lborresu)) in ("MEQ/L") then lborresu="mEq/L";
+		if strip(upcase(lbstresu)) in ("MG/L") then lbstresu="mg/L";
+		if strip(upcase(lborresu)) in ("MG/L") then lborresu="mg/L";
+		if strip(upcase(lbstresu)) in ("MCMOL/L") then lbstresu="umol/L";
+		if strip(lborresu) in ("%0") then lborresu="%";
+		if strip(upcase(lborresu)) in ("MCMOL/L") then lborresu="umol/L";
+		if strip(upcase(lbstresu)) in ("NG/ML") then lbstresu="ng/mL";
+		if strip(upcase(lborresu)) in ("NG/ML") then lborresu="ng/mL";
+		if strip(upcase(lbstresu)) in ("MCG/DL") then lbstresu="ug/dL";
+		if strip(upcase(lborresu)) in ("MCG/DL") then lborresu="ug/dL";
+		if strip(upcase(lbstresu)) in ("ML/MIN") then lbstresu="mL/min";
+		if strip(upcase(lborresu)) in ("ML/MIN") then lborresu="mL/min";
+		if strip(upcase(lbstresu)) in ("PG/ML") then lbstresu="pg/mL";
+		if strip(upcase(lborresu)) in ("PG/ML") then lborresu="pg/mL";
+		if strip(upcase(lbstresu)) in ("NG/DL") then lbstresu="ng/dL";
+		if strip(upcase(lborresu)) in ("NG/DL") then lborresu="ng/dL";
+		if strip(upcase(lbstresu)) in ("MIU/ML") then lbstresu="mIU/mL";
+		if strip(upcase(lborresu)) in ("MIU/ML") then lborresu="mIU/mL";
+		if strip(upcase(lbstresu)) in ("PMOL/L") then lbstresu="pmol/L";
+		if strip(upcase(lborresu)) in ("PMOL/L") then lborresu="pmol/L";
+		if strip(upcase(lbstresu)) in ("NMOL/L") then lbstresu="nmol/L";
+		if strip(upcase(lborresu)) in ("NMOL/L") then lborresu="nmol/L";
+		if strip(lborresu) in ("%0") then lborresu="%";
+run;
+
+**Create lbcatfor locol and locl_oth**;
+data temp.mrl_all;
+	set temp.mrl_all;
+	if strip(upcase(lbtestcd)) in ("ALB","ALBGLOB","ALP","ALT","AMYLASE","ANIONG","AST","BICARB","BILDIR","BILI","CA","CK","CL","CREAT","CREATCLR",
+									"CRP","GFR","GFRE","GGT","GLOBUL","GLUC","IRON","K","LDH","MG","PCT","PHOS","PROT","SHBG","SODIUM","URATE",
+									"UREA","UREAN","VITB9","VITD","VITDIT","LIPASET")  then lbcat="CHEMISTRY";
+
+	if strip(upcase(lbtestcd)) in ("BASO","BASOLE","EOS","EOSLE","HCT","HGB","LYM","LYMAT","LYMATLE","LYMLE","MCH","MCHC","MCV","METAMY",
+									"METAMYLE","MONO","MONOLE","MPV","MYCY","MYCYLE","NEUT","NEUTB","NEUTBLE","NEUTLE","NEUTSG","NEUTSGLE",
+									"PDW","PLAT","PLATEST","PLATHCT","RBC","RBCNUCLE","RDW","RETI","RETIRBC","WBC","WBCEST")  then lbcat="HEMATOLOGY";
+
+	if strip(upcase(lbtestcd)) in ("APPEAR","BACT","COLOR","CSGRAN","CSHYAL","CYAMORPH","CYCACAR","CYCAOXA","CYTRPHOS",
+									"CYURIAC","EPIRCE","EPISQCE","EPITCE","KETONES","LEUKASE","MICROSC","MUCTHR","NITRITE",
+									"OCCBLD","PH","SPERM","SPGRAV","UGLUC","UPROT","URBC","UROBIL","UWBC","YEAST")  then lbcat="URINALYSIS";
+
+	if strip(upcase(lbtestcd)) in ("AMH","ESTRDIOL","FSH","LH","PROGEST","PROLCTN","TESTOS","TESTOSFR","TGLOB","TSH") then lbcat="HORMONE LEVELS";
+
+	if strip(upcase(lbtestcd)) in ("ANA","HBSAG","HCAB","HCVVLD","HIV12AB","HIV1MONA") then lbcat="SEROLOGY";
+
+	if strip(upcase(lbtestcd)) in ('BNPPRONT' 'ESSWAB' 'KLSWAB') then lbcat="OTHER";
+
+	if strip(upcase(lbtestcd)) in ("INR" 'DDIMER') then lbcat="COAGULATION";
+
+	if strip(upcase(lbtestcd)) in ("GLUC" "PROT" "BILI"  "RBC" "WBC") and (upcase(lbspec)='URINE' or index(locl_lbtestcd,'URINE')) then lbcat='URINALYSIS';
+
+	if strip(upcase(lbtestcd)) in ("GLUC" "PROT" "BILI") and upcase(lbspec) in ('SERUM','BLOOD') then lbcat='CHEMISTRY';
+
+	if strip(upcase(lbtestcd)) in ('RETI')  and (strip(lborresu) eq '%' or missing(lborres)) then do;
+			lbtestcd='RETIRBC';
+			lbtest='Reticulocytes/Erythrocytes';
+	end;
+	if strip(upcase(lbtestcd)) in ('BILDIR' 'DBILI')  then do; 
+			lbcat="CHEMISTRY";lbtestcd='BILDIR';lbtest='Direct Bilirubin';
+	end;
+	if strip(upcase(lbtestcd)) in ('D-BIL (BLOOD)')  then do; 
+		lbcat="CHEMISTRY"; lbtestcd='BILDIR'; lbtest='Direct Bilirubin';lbspec="BLOOD";
+	end;
+	if strip(upcase(lbtestcd)) in ('BILI')  then do;
+		lbtestcd='BILI'; lbtest='Bilirubin';
+	end;
+	if strip(upcase(lbtestcd)) in ('PHOSPHOR','PHOS')  then do;
+		lbtestcd='PHOS'; lbtest='Phosphate';lbcat="CHEMISTRY";
+	end;
+	if strip(upcase(lbtestcd)) in ('BILIRUBIN')  then do; 
+		lbtestcd='BILI'; lbtest='Bilirubin';lbcat="CHEMISTRY";
+	end;
+	if strip(upcase(lbtestcd)) in ('TBILI'  )  then do;
+		lbtestcd='BILI'; lbtest='Bilirubin';lbcat="CHEMISTRY";
+	end;
+	if strip(upcase(lbtestcd)) in ('D-BIL (BLOOD)')  then do;
+		lbcat="CHEMISTRY"; lbtestcd='BILDIR'; lbtest='Direct Bilirubin';lbspec="BLOOD";
+	end;
+	if strip(upcase(lbtestcd)) in ('TBIL (BLOOD)')  then do;
+		lbtestcd='BILI'; lbtest='Bilirubin'; lbspec="BLOOD";lbcat="CHEMISTRY";
+	end;
+	if strip(upcase(lbtestcd)) in ('BILIRUBIN (URINE)') then do;
+		lbtestcd='BILI'; lbtest='Bilirubin';lbspec="URINE";lbcat="URINALYSIS";
+	end;
+	if strip(upcase(lbtestcd)) in ('BILIU') then do;
+		lbtestcd='BILI'; lbtest='Bilirubin';
+	end;
+
+	if strip(upcase(lbtestcd)) in ('UROBIL') and index(lbnam,'Quest') then do;
+		lbtestcd='BILI'; lbtest='Bilirubin';
+	end;
+
+	if strip(upcase(lbtestcd)) in ('FAECES/ CLOSTRIDIOIDIS DIFFICILE')  then do;
+		lbtestcd='CDF'; lbtest='Clostridium difficile';
+		lbcat="OTHER";lbspec="STOOL";
+	end;
+	if strip(upcase(lbtestcd)) in ('BASOPHILS') and (lborresu eq '%' or missing(lborres)) then do;
+		lbtestcd='BASOLE'; lbtest='Basophils/Leukocytes';
+	end;
+	if strip(upcase(lbtestcd)) in ('BASOLE','BASOPHILS') and (lborresu ='10^9/L') then do;
+		lbtestcd='BASO'; lbtest='Basophils';
+	end;
+	if strip(upcase(lbtestcd))='MONOLE' and (lborresu='10^9/L') then do;
+		lbtestcd='MONO'; lbtest='Monocytes';
+	end;
+	if strip(upcase(lbtestcd))='EOS' and (lborresu='%') then do;
+		lbtestcd='EOSLE'; lbtest='Eosinophils/Leukocytes';
+	end;
+	if strip(upcase(lbtestcd))='LYM' and (lborresu='%') then do;
+		lbtestcd='LYMLE'; lbtest='Lymphocytes/Leukocytes';
+	end;
+	if strip(upcase(lbtestcd))='LYMLE' and (lborresu='10^9/L') then do;
+		lbtestcd='LYM'; lbtest='Lymphocytes';
+	end;
+	if strip(upcase(lbtestcd))='MONO' and (lborresu='%') then do;
+		lbtestcd='MONOLE'; lbtest='Monocytes/Leukocytes';
+	end;
+	if strip(upcase(lbtestcd))='NEUT' and (lborresu='%') then do;
+		lbtestcd='NEUTLE'; lbtest='Neutrophils/Leukocytes';
+	end;
+	if strip(upcase(lbtestcd))='EOSLE' and (lborresu='10^9/L') then do;
+		lbtestcd='EOS'; lbtest='Eosinophils';
+	end;
+	if strip(upcase(lbtestcd))='NEUTLE' and (lborresu='10^9/L') then do;
+		lbtestcd='NEUT'; lbtest='Neutrophils';
+	end;
+run;
+
+proc freq data=temp.mrl_all noprint;
+	tables lbcat*lbtestcd*lbtest /out=chk;
+run;
+
+data temp.lab3a;
+	set temp.mrl_all;
+		if strip(upcase(lbtestcd)) in ('BASOLE') and (lborresu ='10^9/L') then do;
+		lbtestcd='BASO'; lbtest='Basophils';
+	end;
+	if strip(upcase(lbornrlo)) in ("NA" "N/A" "NO UNIT" "(NONE)" "(SEE COMMENTS)") then lbornrlo="";
+	if strip(upcase(lbornrhi)) in ("NA" "N/A" "NO UNIT" "(NONE)" "(SEE COMMENTS)") then lbornrhi="";
+	if strip(upcase(lbstresu)) in ("NA" "N/A" "NO UNIT" "(NONE)" "1" "(SEE COMMENTS)") then lbstresu="";
+	if strip(upcase(lborresu)) in ("NA" "N/A" "NO UNIT" "(NONE)" "1" "(SEE COMMENTS)") then lborresu="";
+	if strip(upcase(lbstnrc))  in ("NA" "N/A" "NO UNIT" "(NONE)" "1" "(SEE COMMENTS)") then lbstnrc="";
+run;
+
+proc sql noprint;
+	create table temp.lab4 as 
+	select a.*,a.visitx as visit ,b.visitnum
+	from temp.lab3a as a left join sdtm.tv as b
+	on a.visitx=b.visit;
+quit;
+
+data temp.sch temp.unsch(drop=visit visitnum);
+	set temp.lab4;
+	if index(visit,'Unscheduled') then output temp.unsch;
+	else output temp.sch;
+run;
+
+data sv;
+	set sdtm.sv;
+	where index(visit,'Unscheduled');
+
+	**Impute partial start and end dates in SV.Discussed with Anwesh**;
+	if length(compress(svstdtc))<10 then svstdtc=compress(svstdtc)||'-01';
+	if length(compress(svendtc))<10 then svendtc=compress(svendtc)||'-01';
+	svstdt=input(svstdtc,yymmdd10.);
+	svendt=input(svendtc,yymmdd10.);
+run;
+
+data temp.unsch;
+	set temp.unsch;
+	if lbdtc^='' then lbdtc2=lbdtc;
+	**handling partial dates in preg data**;
+	if length(lbdtc2)<10 then lbdtc2=strip(lbdtc2)||'-01';
+run;
+
+
+**Get  visitnum for unscheduled from SV**;
+proc sql noprint;
+	create table temp.lab_uns as
+	select a.*,b.visit as visit,b.visitnum as visitnum,b.svstdtc,b.svendtc
+	from temp.unsch as a left join sv as b
+	on a.usubjid=b.usubjid  and
+	     input(b.svstdtc,yymmdd10.) <= input(substr(a.lbdtc2,1,10),yymmdd10.) <= input(b.svendtc,yymmdd10.);
+quit;
+
+
+data temp.lab5;
+	length visit $200.;
+	set temp.sch temp.lab_uns;
+run;
+
+proc sort data=temp.lab5;by usubjid lbtest visitnum;run;
+
+proc freq data=temp.lab5 noprint;
+	tables lbstat*lbtest /out=chk;
+run;
+
+**LBDY**;
+data temp.lab5;
+	merge temp.lab5(in=b) sdtm.dm(in=a keep=usubjid rfst: rfpen: RFXSTDTC);
+	by usubjid;
+	if a and b;
+	rfstdt=input(substr(rfstdtc,1,10), yymmdd10.);
+	if cmiss(lbdt,rfstdt) eq 0 then  lbdy=lbdt-rfstdt+(lbdt>=rfstdt);
+	lbcat=upcase(lbcat);
+run;
+
+data temp.lab6;
+	set temp.lab5 ;
+	if (strip(upcase(lbstresu))="IU/L" or ~missing(lbstresc)) and lbtestcd in ("ALP" "ALT" "AST" "GGT" ) then lbstresu="U/L";
+	if strip(upcase(lbstresu))="IU/L" and lbtestcd="RBC" then lbstresu="U/L";
+	if lbtestcd='RBC' and lborresu='mU/L' then lbstresu='mU/L';
+run;
+
+**Unit Conversions**;
+data temp.lab6;
+	set temp.lab6;
+
+	if lbtestcd="CREAT" and strip(upcase(lborresu))="UMOL/L" then
+		do;
+			lbstresu=lborresu;
+			lbstresc=lborres;
+
+			if ~missing(lborres) then
+				lbstresn= input(lborres,??best.);
+
+			if ~missing(lbornrlo) then
+				lbstnrlo=input(lbornrlo,??best.);
+
+			if ~missing(lbornrhi) then
+				lbstnrhi=input(lbornrhi,??best.);
+		end;
+
+	if lbtestcd in ("CREAT") and strip(upcase(lborresu))="MG/DL" then
+		do;
+			lbstresu="umol/L";
+
+			if ~missing(lborres) then
+				lbstresn= 88.4*input(lborres,??best.);
+
+			if ~missing(lbstresn) then
+				lbstresc=strip(put(lbstresn,best.));
+
+			if ~missing(lbornrlo) then
+				lbstnrlo=88.4*input(lbornrlo,??best.);
+
+			if ~missing(lbornrhi) then
+				lbstnrhi=88.4*input(lbornrhi,??best.);
+			lbstnrc=" ";
+		end;
+
+	if lbtestcd in ("GLUC") and strip(upcase(lborresu))="MG/DL" then
+		do;
+			lbstresu="mmol/L";
+
+			if ~missing(lborres) then
+				lbstresn= 0.0555*input(lborres,??best.);
+
+			if ~missing(lbstresn) then
+				lbstresc=strip(put(lbstresn,best.));
+
+			if ~missing(lbornrlo) then
+				lbstnrlo=0.0555*input(lbornrlo,??best.);
+
+			if ~missing(lbornrhi) then
+				lbstnrhi=0.0555*input(lbornrhi,??best.);
+			lbstnrc=" ";
+		end;
+
+	if lbtestcd="ESTRDIOL" and strip(upcase(lborresu))="PMOL/L" then
+		do;
+			lbstresu=lborresu;
+			lbstresc=lborres;
+
+			if ~missing(lborres) then
+				lbstresn= input(lborres,??best.);
+
+			if ~missing(lbornrlo) then
+				lbstnrlo=input(lbornrlo,??best.);
+
+			if ~missing(lbornrhi) then
+				lbstnrhi=input(lbornrhi,??best.);
+			lbstnrc=compress(lbornrlo);
+			lbstresc=compress(lbstresc);
+		end;
+
+	if lbtestcd="GLUC" and strip(upcase(lborresu))="MMOL/L" then
+		do;
+			lbstresu=lborresu;
+			lbstresc=lborres;
+
+			if ~missing(lborres) then
+				lbstresn= input(lborres,??best.);
+
+			if ~missing(lbornrlo) then
+				lbstnrlo=input(lbornrlo,??best.);
+
+			if ~missing(lbornrhi) then
+				lbstnrhi=input(lbornrhi,??best.);
+		end;
+
+	if lbtestcd in ("HGB" "PROT") and strip(upcase(lborresu))="G/L" then
+		do;
+			lbstresu=lborresu;
+			lbstresc=lborres;
+
+			if ~missing(lborres) then
+				lbstresn= input(lborres,??best.);
+
+			if ~missing(lbornrlo) then
+				lbstnrlo=input(lbornrlo,??best.);
+
+			if ~missing(lbornrhi) then
+				lbstnrhi=input(lbornrhi,??best.);
+		end;
+
+	if lbtestcd in ("UREAN") and strip(upcase(lborresu))="MMOL/L" then
+		do;
+			lbstresu=lborresu;
+			lbstresc=lborres;
+
+			if ~missing(lborres) then
+				lbstresn= input(lborres,??best.);
+
+			if ~missing(lbornrlo) then
+				lbstnrlo=input(lbornrlo,??best.);
+
+			if ~missing(lbornrhi) then
+				lbstnrhi=input(lbornrhi,??best.);
+		end;
+
+	if lbtestcd in ("UROBIL") and strip(upcase(lborresu))="UMOL/L" then
+		do;
+			lbstresu="mg/dL";
+
+			if ~missing(lborres) and anydigit(lborres)>0 then
+/*				lbstresn= 0.0625*input(lborres,??best.);*/
+				lbstresn= input(resultc,best.);
+
+			if ~missing(lbstresn) then
+				lbstresc=strip(put(lbstresn,??best.));
+
+			if ~missing(lbornrlo) and anydigit(lbornrlo)>0 and indexc(lbornrlo,"<>=")=0 then
+				lbstnrlo=0.0625*input(lbornrlo,??best.);
+
+			if ~missing(lbornrhi) and anydigit(lbornrhi)>0 then
+				lbstnrhi=0.0625*input(lbornrhi,??best.);
+			lbstnrc="<1";
+		end;
+
+	if lbtestcd in ("PROT") and strip(upcase(lborresu))="G/DL" then
+		do;
+			lbstresu="g/L";
+
+			if ~missing(lborres) then
+				lbstresn= 10*input(lborres,??best.);
+
+			if ~missing(lbstresn) then
+				lbstresc=strip(put(lbstresn,best.));
+
+			if ~missing(lbornrlo) then
+				lbstnrlo=10*input(lbornrlo,??best.);
+
+			if ~missing(lbornrhi) then
+				lbstnrhi=10*input(lbornrhi,??best.);
+			lbstnrc=" ";
+		end;
+
+	if lbtest in ('Albumin') and strip(upcase(lborresu))='G/L' and strip(upcase(lbstresu)) ne 'G/DL' then
+		do;
+			lbstresu='g/dL';
+
+			if ~missing(lborres) then
+				lbstresn=0.1 *input(lborres,??best.);
+
+			if ~missing(lbstresn) then
+				lbstresc=strip(put(lbstresn,best.));
+
+			if ~missing(lbornrlo) then
+				lbstnrlo=0.1*input(lbornrlo,??best.);
+
+			if ~missing(lbornrhi) then
+				lbstnrhi=0.1*input(lbornrhi,??best.);
+			lbstnrc='';
+		end;
+
+	if lbtest in ('Anti-Mullerian Hormone') and strip(upcase(lborresu))='NG/DL' then
+		do;
+			lbstresu='ng/mL';
+
+			if ~missing(lborres) then
+				lbstresn=0.01 *input(lborres,??best.);
+
+			if ~missing(lbstresn) then
+				lbstresc=strip(put(lbstresn,best.));
+
+			if ~missing(lbornrlo) then
+				lbstnrlo=0.01*input(lbornrlo,??best.);
+
+			if ~missing(lbornrhi) then
+				lbstnrhi=0.01*input(lbornrhi,??best.);
+			lbstnrc='';
+		end;
+
+	if lbtest in ('Anti-Mullerian Hormone') and strip(upcase(lborresu))='PMOL/L' then
+		do;
+			lbstresu='ng/mL';
+
+			if ~missing(lborres) then
+				lbstresn=0.14 *input(lborres,??best.);
+
+			if ~missing(lbstresn) then
+				lbstresc=strip(put(lbstresn,best.));
+
+			if ~missing(lbornrlo) then
+				lbstnrlo=0.14*input(lbornrlo,??best.);
+
+			if ~missing(lbornrhi) then
+				lbstnrhi=0.14*input(lbornrhi,??best.);
+			lbstnrc='';
+		end;
+
+	if lbtest in ('Basophils') and strip(upcase(lborresu))='10^12/L' then
+		do;
+			lbstresu='10^9/L';
+
+			if ~missing(lborres) then
+				lbstresn=1000 *input(lborres,??best.);
+
+			if ~missing(lbstresn) then
+				lbstresc=strip(put(lbstresn,best.));
+
+			if ~missing(lbornrlo) then
+				lbstnrlo=1000*input(lbornrlo,??best.);
+
+			if ~missing(lbornrhi) then
+				lbstnrhi=1000*input(lbornrhi,??best.);
+			lbstnrc='';
+		end;
+
+	if lbtest in ('Basophils') and strip(upcase(lborresu))='CELLS/UL' then
+		do;
+			lbstresu='10^9/L';
+
+			if ~missing(lborres) then
+				lbstresn=0.001 *input(lborres,??best.);
+
+			if ~missing(lbstresn) then
+				lbstresc=strip(put(lbstresn,best.));
+
+			if ~missing(lbornrlo) then
+				lbstnrlo=0.001*input(lbornrlo,??best.);
+
+			if ~missing(lbornrhi) then
+				lbstnrhi=0.001*input(lbornrhi,??best.);
+			lbstnrc='';
+		end;
+
+	if lbtest in ('Bilirubin') and strip(upcase(lborresu))='MMOL/L' and strip(upcase(lbstresu)) ne 'MG/DL' then
+		do;
+			lbstresu='mg/dL';
+
+			if ~missing(lborres) then
+				lbstresn=58.5 *input(lborres,??best.);
+			lbstresc=strip(put(lbstresn,8.2));
+
+			if ~missing(lbornrlo) then
+				lbstnrlo=58.5*input(lbornrlo,??best.);
+
+			if ~missing(lbornrhi) then
+				lbstnrhi=58.5*input(lbornrhi,??best.);
+			lbstnrc='';
+		end;
+
+	if lbtest in ('Bilirubin') and strip(upcase(lborresu))='UMOL/L' and strip(upcase(lbstresu)) ne 'MG/DL' then
+		do;
+			lbstresu='mg/dL';
+
+			if ~missing(lborres) then
+				lbstresn=0.0585 *input(lborres,??best.);
+			lbstresc=strip(put(lbstresn,8.2));
+
+			if ~missing(lbornrlo) then
+				lbstnrlo=0.0585*input(lbornrlo,??best.);
+
+			if ~missing(lbornrhi) then
+				lbstnrhi=0.0585*input(lbornrhi,??best.);
+			lbstnrc='';
+		end;
+
+	if lbtest in ('C Reactive Protein') and strip(upcase(lborresu))='MG/DL' then
+		do;
+			lbstresu='mg/L';
+
+			if ~missing(lborres) then
+				lbstresn=10 *input(lborres,??best.);
+
+			if ~missing(lbstresn) then
+				lbstresc=strip(put(lbstresn,best.));
+
+			if ~missing(lbornrlo) then
+				lbstnrlo=10*input(lbornrlo,??best.);
+
+			if ~missing(lbornrhi) then
+				lbstnrhi=10*input(lbornrhi,??best.);
+			lbstnrc='';
+		end;
+
+	if lbtest in ('Calcium') and strip(upcase(lborresu))='MG/DL' and strip(upcase(lbstresu)) ne 'MMOL/L' then
+		do;
+			lbstresu='mmol/L';
+
+			if ~missing(lborres) then
+				lbstresn=0.25 *input(lborres,??best.);
+
+			if ~missing(lbstresn) then
+				lbstresc=strip(put(lbstresn,best.));
+
+			if ~missing(lbornrlo) then
+				lbstnrlo=0.25*input(lbornrlo,??best.);
+
+			if ~missing(lbornrhi) then
+				lbstnrhi=0.25*input(lbornrhi,??best.);
+			lbstnrc='';
+		end;
+
+	if lbtest in ('Creatinine') and strip(upcase(lborresu))='MG/DL' and strip(upcase(lbstresu)) ne 'UMOL/L' then
+		do;
+			lbstresu='umol/L';
+
+			if ~missing(lborres) then
+				lbstresn=88.4 *input(lborres,??best.);
+
+			if ~missing(lbstresn) then
+				lbstresc=strip(put(lbstresn,best.));
+
+			if ~missing(lbornrlo) then
+				lbstnrlo=88.4*input(lbornrlo,??best.);
+
+			if ~missing(lbornrhi) then
+				lbstnrhi=88.4*input(lbornrhi,??best.);
+			lbstnrc='';
+		end;
+
+	if lbtest in ('Direct Bilirubin') and strip(upcase(lborresu))='UMOL/L' and strip(upcase(lbstresu)) ne 'MG/DL' then
+		do;
+			lbstresu='mg/dL';
+
+			if ~missing(lborres) then
+				lbstresn=0.0585 *input(lborres,??best.);
+
+			if ~missing(lbstresn) then
+				lbstresc=strip(put(lbstresn,best.));
+
+			if ~missing(lbornrlo) then
+				lbstnrlo=0.0585*input(lbornrlo,??best.);
+
+			if ~missing(lbornrhi) then
+				lbstnrhi=0.0585*input(lbornrhi,??best.);
+			lbstnrc='';
+		end;
+
+	if lbtest in ('Eosinophils') and strip(upcase(lborresu))='CELLS/UL' then
+		do;
+			lbstresu='10^9/L';
+
+			if ~missing(lborres) then
+				lbstresn=0.001 *input(lborres,??best.);
+
+			if ~missing(lbstresn) then
+				lbstresc=strip(put(lbstresn,best.));
+
+			if ~missing(lbornrlo) then
+				lbstnrlo=0.001*input(lbornrlo,??best.);
+
+			if ~missing(lbornrhi) then
+				lbstnrhi=0.001*input(lbornrhi,??best.);
+			lbstnrc='';
+		end;
+
+	if lbtest in ('Ery. Mean Corpuscular HGB Concentration') and strip(upcase(lborresu))='G/L' then
+		do;
+			lbstresu='g/dL';
+
+			if ~missing(lborres) then
+				lbstresn=0.1 *input(lborres,??best.);
+
+			if ~missing(lbstresn) then
+				lbstresc=strip(put(lbstresn,best.));
+
+			if ~missing(lbornrlo) then
+				lbstnrlo=0.1*input(lbornrlo,??best.);
+
+			if ~missing(lbornrhi) then
+				lbstnrhi=0.1*input(lbornrhi,??best.);
+			lbstnrc='';
+		end;
+
+	if lbtest in ('Erythrocytes') and strip(upcase(lborresu))='10^9/L' then
+		do;
+			lbstresu='10^12/L';
+
+			if ~missing(lborres) then
+				lbstresn=0.001 *input(lborres,??best.);
+
+			if ~missing(lbstresn) then
+				lbstresc=strip(put(lbstresn,best.));
+
+			if ~missing(lbornrlo) then
+				lbstnrlo=0.001*input(lbornrlo,??best.);
+
+			if ~missing(lbornrhi) then
+				lbstnrhi=0.001*input(lbornrhi,??best.);
+			lbstnrc='';
+		end;
+
+	if lbtest in ('Erythrocytes') and strip(upcase(lborresu))='CELLS/UL' then
+		do;
+			lbstresu='10^12/L';
+
+			if ~missing(lborres) then
+				lbstresn=0.000001 *input(lborres,??best.);
+
+			if ~missing(lbstresn) then
+				lbstresc=strip(put(lbstresn,best.));
+
+			if ~missing(lbornrlo) then
+				lbstnrlo=0.000001*input(lbornrlo,??best.);
+
+			if ~missing(lbornrhi) then
+				lbstnrhi=0.000001*input(lbornrhi,??best.);
+			lbstnrc='';
+		end;
+
+	if lbtest in ('Estradiol') and strip(upcase(lborresu))='PG/ML' then
+		do;
+			lbstresu='pmol/L';
+
+			if ~missing(lborres)  and anydigit(lborres)>0 and indexc(lborres,"><=")=0 then
+				lbstresn=3.6713 *input(lborres,??best.);
+
+			if ~missing(lbstresn) then
+				lbstresc=strip(put(lbstresn,best.));
+
+			if ~missing(lbornrlo) and anydigit(lbornrlo)>0 and indexc(lbornrlo,"><=")=0 then
+				lbstnrlo=3.6713*input(lbornrlo,??best.);
+
+			if ~missing(lbornrhi) and anydigit(lbornrhi)>0 and indexc(lbornrhi,"><=")=0 then
+				lbstnrhi=3.6713*input(lbornrhi,??best.);
+			lbstnrc='';
+		end;
+
+	if lbtest in ('Follicle Stimulating Hormone') and strip(upcase(lborresu))='UIU/ML' then
+		do;
+			lbstresu='mIU/mL';
+
+			if ~missing(lborres) and anydigit(lborres)>0 and indexc(lborres,"><=")=0 then
+				lbstresn=0.001 *input(lborres,??best.);
+
+			if ~missing(lbstresn) then
+				lbstresc=strip(put(lbstresn,best.));
+
+			if ~missing(lbornrlo) and anydigit(lbornrlo)>0 and indexc(lbornrlo,"><=")=0 then
+				lbstnrlo=0.001*input(lbornrlo,??best.);
+
+			if ~missing(lbornrhi) and anydigit(lbornrhi)>0 and indexc(lbornrhi,"><=")=0 then
+				lbstnrhi=0.001*input(lbornrhi,??best.);
+			lbstnrc='';
+		end;
+
+	if lbtest in ('Glucose') and strip(upcase(lborresu))='MG/DL' and strip(upcase(lbstresu)) ne 'MMOL/L' then
+		do;
+			lbstresu='mmol/L';
+
+			if ~missing(lborres) then
+				lbstresn=0.0555 *input(lborres,??best.);
+
+			if ~missing(lbstresn) then
+				lbstresc=strip(put(lbstresn,best.));
+
+			if ~missing(lbornrlo) then
+				lbstnrlo=0.0555*input(lbornrlo,??best.);
+
+			if ~missing(lbornrhi) then
+				lbstnrhi=0.0555*input(lbornrhi,??best.);
+			lbstnrc='';
+		end;
+
+	if lbtest in ('Glucose') and strip(upcase(lborresu))='UG/DL' and strip(upcase(lbstresu)) ne 'MMOL/L' then
+		do;
+			lbstresu='mmol/L';
+
+			if ~missing(lborres) then
+				lbstresn=55.5 *input(lborres,??best.);
+
+			if ~missing(lbstresn) then
+				lbstresc=strip(put(lbstresn,best.));
+
+			if ~missing(lbornrlo) then
+				lbstnrlo=55.5*input(lbornrlo,??best.);
+
+			if ~missing(lbornrhi) then
+				lbstnrhi=55.5*input(lbornrhi,??best.);
+			lbstnrc='';
+		end;
+
+	if lbtest in ('Hematocrit') and strip(upcase(lborresu))='' and strip(upcase(lbstresu)) ne '%' then
+		do;
+			lbstresu='%';
+
+			if ~missing(lborres) then
+				lbstresn=100 *input(lborres,??best.);
+
+			if ~missing(lbstresn) then
+				lbstresc=strip(put(lbstresn,best.));
+
+			if ~missing(lbornrlo) then
+				lbstnrlo=100*input(lbornrlo,??best.);
+
+			if ~missing(lbornrhi) then
+				lbstnrhi=100*input(lbornrhi,??best.);
+			lbstnrc='';
+		end;
+
+	if lbtest in ('Hematocrit') and strip(upcase(lborresu))='L/L' and strip(upcase(lbstresu)) ne '%' then
+		do;
+			lbstresu='%';
+
+			if ~missing(lborres) then
+				lbstresn=100 *input(lborres,??best.);
+
+			if ~missing(lbstresn) then
+				lbstresc=strip(put(lbstresn,best.));
+
+			if ~missing(lbornrlo) then
+				lbstnrlo=100*input(lbornrlo,??best.);
+
+			if ~missing(lbornrhi) then
+				lbstnrhi=100*input(lbornrhi,??best.);
+			lbstnrc='';
+		end;
+
+	if lbtest in ('Hemoglobin') and strip(upcase(lborresu))='G/DL' and strip(upcase(lbstresu)) ne 'G/L' then
+		do;
+			lbstresu='g/L';
+
+			if ~missing(lborres) then
+				lbstresn=10 *input(lborres,??best.);
+
+			if ~missing(lbstresn) then
+				lbstresc=strip(put(lbstresn,best.));
+
+			if ~missing(lbornrlo) then
+				lbstnrlo=10*input(lbornrlo,??best.);
+
+			if ~missing(lbornrhi) then
+				lbstnrhi=10*input(lbornrhi,??best.);
+			lbstnrc='';
+		end;
+
+	if lbtest in ('Hemoglobin') and strip(upcase(lborresu))='MG/DL' and strip(upcase(lbstresu)) ne 'G/L' then
+		do;
+			lbstresu='g/L';
+
+			if ~missing(lborres) then
+				lbstresn=0.01 *input(lborres,??best.);
+
+			if ~missing(lbstresn) then
+				lbstresc=strip(put(lbstresn,best.));
+
+			if ~missing(lbornrlo) then
+				lbstnrlo=0.01*input(lbornrlo,??best.);
+
+			if ~missing(lbornrhi) then
+				lbstnrhi=0.01*input(lbornrhi,??best.);
+			lbstnrc='';
+		end;
+
+	if lbtest in ('Hemoglobin') and strip(upcase(lborresu))='MMOL/L' and strip(upcase(lbstresu)) ne 'G/L' then
+		do;
+			lbstresu='g/L';
+
+			if ~missing(lborres) then
+				lbstresn=16.1 *input(lborres,??best.);
+
+			if ~missing(lbstresn) then
+				lbstresc=strip(put(lbstresn,best.));
+
+			if ~missing(lbornrlo) then
+				lbstnrlo=16.1*input(lbornrlo,??best.);
+
+			if ~missing(lbornrhi) then
+				lbstnrhi=16.1*input(lbornrhi,??best.);
+			lbstnrc='';
+		end;
+
+if lbtest in ('Ketones') and strip(upcase(lborresu))='MMOL/L' and strip(upcase(lbstresu)) ne 'MG/DL' then
+		do;
+			lbstresu='mg/dL';
+
+			if ~missing(lborres) then
+				lbstresn=5.81 *input(lborres,??best.);
+
+			if ~missing(lbstresn) then
+/*				lbstresc=strip(put(lbstresn,best.));*/
+				lbstresc=strip(resultc);
+
+			if ~missing(lbornrlo) then
+				lbstnrlo=5.81*input(lbornrlo,??best.);
+
+			if ~missing(lbornrhi) then
+				lbstnrhi=5.81*input(lbornrhi,??best.);
+			lbstnrc='';
+		end;
+		if lbtest in ('Ketones') and strip(upcase(lborresu))='MMOL/L' and not(anyalpha(resultc)) then do;
+				 test=input(compress(resultc,'<>='),??best.);
+				if not missing(compress(resultc,'<>=')) then lbstresc=compress(substr(resultc,1,2)||strip(put(test,5.0)));
+		end;
+
+	if lbtest in ('Leukocytes') and strip(upcase(lborresu))='CELLS/UL' then
+		do;
+			lbstresu='10^9/L';
+
+			if ~missing(lborres) then
+				lbstresn=0.001 *input(lborres,??best.);
+
+			if ~missing(lbstresn) then
+				lbstresc=strip(put(lbstresn,best.));
+
+			if ~missing(lbornrlo) then
+				lbstnrlo=0.001*input(lbornrlo,??best.);
+
+			if ~missing(lbornrhi) then
+				lbstnrhi=0.001*input(lbornrhi,??best.);
+			lbstnrc='';
+		end;
+
+	if lbtest in ('Luteinizing Hormone') and strip(upcase(lborresu))='MU/L' and strip(upcase(lbstresu)) ne 'MIU/ML' then
+		do;
+			lbstresu='mIU/mL';
+
+			if ~missing(lborres) then
+				lbstresn=0.001 *input(lborres,??best.);
+
+			if ~missing(lbstresn) then
+				lbstresc=strip(put(lbstresn,best.));
+
+			if ~missing(lbornrlo) then
+				lbstnrlo=0.001*input(lbornrlo,??best.);
+
+			if ~missing(lbornrhi) then
+				lbstnrhi=0.001*input(lbornrhi,??best.);
+			lbstnrc='';
+		end;
+
+	if lbtest in ('Luteinizing Hormone') and strip(upcase(lborresu))='UIU/ML' and strip(upcase(lbstresu)) ne 'MIU/ML' then
+		do;
+			lbstresu='mIU/mL';
+
+			if ~missing(lborres) then
+				lbstresn=0.001 *input(lborres,??best.);
+
+			if ~missing(lbstresn) then
+				lbstresc=strip(put(lbstresn,best.));
+
+			if ~missing(lbornrlo) then
+				lbstnrlo=0.001*input(lbornrlo,??best.);
+
+			if ~missing(lbornrhi) then
+				lbstnrhi=0.001*input(lbornrhi,??best.);
+			lbstnrc='';
+		end;
+
+	if lbtest in ('Lymphocytes') and strip(upcase(lborresu))='CELLS/UL' then
+		do;
+			lbstresu='10^9/L';
+
+			if ~missing(lborres) then
+				lbstresn=0.001 *input(lborres,??best.);
+
+			if ~missing(lbstresn) then
+				lbstresc=strip(put(lbstresn,best.));
+
+			if ~missing(lbornrlo) then
+				lbstnrlo=0.001*input(lbornrlo,??best.);
+
+			if ~missing(lbornrhi) then
+				lbstnrhi=0.001*input(lbornrhi,??best.);
+			lbstnrc='';
+		end;
+
+	if lbtest in ('Magnesium') and strip(upcase(lborresu))='MMOL/L' and strip(upcase(lbstresu)) ne 'MG/DL' then
+		do;
+			lbstresu='mg/dL';
+
+			if ~missing(lborres) then
+				lbstresn=2.43 *input(lborres,??best.);
+
+			if ~missing(lbstresn) then
+				lbstresc=strip(put(lbstresn,best.));
+
+			if ~missing(lbornrlo) then
+				lbstnrlo=2.43*input(lbornrlo,??best.);
+
+			if ~missing(lbornrhi) then
+				lbstnrhi=2.43*input(lbornrhi,??best.);
+			lbstnrc='';
+		end;
+
+	if lbtest in ('Monocytes') and strip(upcase(lborresu))='10^12/L' then
+		do;
+			lbstresu='10^9/L';
+
+			if ~missing(lborres) then
+				lbstresn=1000 *input(lborres,??best.);
+
+			if ~missing(lbstresn) then
+				lbstresc=strip(put(lbstresn,best.));
+
+			if ~missing(lbornrlo) then
+				lbstnrlo=1000*input(lbornrlo,??best.);
+
+			if ~missing(lbornrhi) then
+				lbstnrhi=1000*input(lbornrhi,??best.);
+			lbstnrc='';
+		end;
+
+	if lbtest in ('Monocytes') and strip(upcase(lborresu))='CELLS/UL' then
+		do;
+			lbstresu='10^9/L';
+
+			if ~missing(lborres) then
+				lbstresn=0.001 *input(lborres,??best.);
+
+			if ~missing(lbstresn) then
+				lbstresc=strip(put(lbstresn,best.));
+
+			if ~missing(lbornrlo) then
+				lbstnrlo=0.001*input(lbornrlo,??best.);
+
+			if ~missing(lbornrhi) then
+				lbstnrhi=0.001*input(lbornrhi,??best.);
+			lbstnrc='';
+		end;
+
+	if lbtest in ('Neutrophils') and strip(upcase(lborresu))='CELLS/UL' then
+		do;
+			lbstresu='10^9/L';
+
+			if ~missing(lborres) then
+				lbstresn=0.001 *input(lborres,??best.);
+
+			if ~missing(lbstresn) then
+				lbstresc=strip(put(lbstresn,best.));
+
+			if ~missing(lbornrlo) then
+				lbstnrlo=0.001*input(lbornrlo,??best.);
+
+			if ~missing(lbornrhi) then
+				lbstnrhi=0.001*input(lbornrhi,??best.);
+			lbstnrc='';
+		end;
+
+	if lbtest in ('Phosphate') and strip(upcase(lborresu))='MG/L' then
+		do;
+			lbstresu='mg/dL';
+
+			if ~missing(lborres) then
+				lbstresn=0.1 *input(lborres,??best.);
+
+			if ~missing(lbstresn) then
+				lbstresc=strip(put(lbstresn,best.));
+
+			if ~missing(lbornrlo) then
+				lbstnrlo=0.1*input(lbornrlo,??best.);
+
+			if ~missing(lbornrhi) then
+				lbstnrhi=0.1*input(lbornrhi,??best.);
+			lbstnrc='';
+		end;
+
+	if lbtest in ('Phosphate') and strip(upcase(lborresu))='MMOL/L' and strip(upcase(lbstresu)) ne 'MG/DL' then
+		do;
+			lbstresu='mg/dL';
+
+			if ~missing(lborres) then
+				lbstresn=3.1 *input(lborres,??best.);
+
+			if ~missing(lbstresn) then
+				lbstresc=strip(put(lbstresn,best.));
+
+			if ~missing(lbornrlo) then
+				lbstnrlo=3.1*input(lbornrlo,??best.);
+
+			if ~missing(lbornrhi) then
+				lbstnrhi=3.1*input(lbornrhi,??best.);
+			lbstnrc='';
+		end;
+
+	if lbtest in ('Platelets') and strip(upcase(lborresu))='CELLS/UL' then
+		do;
+			lbstresu='10^9/L';
+
+			if ~missing(lborres) then
+				lbstresn=0.001 *input(lborres,??best.);
+
+			if ~missing(lbstresn) then
+				lbstresc=strip(put(lbstresn,best.));
+
+			if ~missing(lbornrlo) then
+				lbstnrlo=0.001*input(lbornrlo,??best.);
+
+			if ~missing(lbornrhi) then
+				lbstnrhi=0.001*input(lbornrhi,??best.);
+			lbstnrc='';
+		end;
+
+	if lbtest in ('Progesterone') and strip(upcase(lborresu))='MG/DL' then
+		do;
+			lbstresu='nmol/L';
+
+			if ~missing(lborres) then
+				lbstresn=31800 *input(lborres,??best.);
+
+			if ~missing(lbstresn) then
+				lbstresc=strip(put(lbstresn,best.));
+
+			if ~missing(lbornrlo) then
+				lbstnrlo=31800*input(lbornrlo,??best.);
+
+			if ~missing(lbornrhi) then
+				lbstnrhi=31800*input(lbornrhi,??best.);
+			lbstnrc='';
+		end;
+
+	if lbtest in ('Progesterone') and strip(upcase(lborresu))='NG/DL' then
+		do;
+			lbstresu='nmol/L';
+
+			if ~missing(lborres) then
+				lbstresn=0.0318 *input(lborres,??best.);
+
+			if ~missing(lbstresn) then
+				lbstresc=strip(put(lbstresn,best.));
+
+			if ~missing(lbornrlo) then
+				lbstnrlo=0.0318*input(lbornrlo,??best.);
+
+			if ~missing(lbornrhi) then
+				lbstnrhi=0.0318*input(lbornrhi,??best.);
+			lbstnrc='';
+		end;
+
+	if lbtest in ('Progesterone') and strip(upcase(lborresu))='NG/ML' then
+		do;
+			lbstresu='nmol/L';
+
+			if ~missing(lborres) then
+				do;
+					if indexc(lborres,"<")>0 then
+						do;
+							lbstresn=3.18 *input(compress(lborres,"<"),??best.);
+							lbstresc="<"||strip(put(lbstresn,best.));
+							lbstresn=.;
+							lbstnrlo=.;
+							LBSTNRC="<3.18";
+						end;
+					else
+						do;
+							lbstresn=3.18 *input(lborres,??best.);
+
+							if ~missing(lbstresn) then
+								lbstresc=strip(put(lbstresn,best.));
+						end;
+				end;
+
+			if ~missing(lbornrlo) then
+				lbstnrlo=3.18*input(lbornrlo,??best.);
+
+			if ~missing(lbornrhi) and anydigit(lbornrhi)>0 and indexc(lbornrhi,"<>=")=0 then
+				lbstnrhi=3.18*input(lbornrhi,??best.);
+
+			if missing(lbstnrhi) and lbstnrlo in (0) then
+				lbstnrc='<3.18';
+			else lbstnrc='';
+		end;
+
+	if lbtest in ('Progesterone') and strip(upcase(lborresu))='PG/ML' then
+		do;
+			lbstresu='nmol/L';
+
+			if ~missing(lborres) then
+				lbstresn=0.00318 *input(lborres,??best.);
+
+			if ~missing(lbstresn) then
+				lbstresc=strip(put(lbstresn,best.));
+
+			if ~missing(lbornrlo) then
+				lbstnrlo=0.00318*input(lbornrlo,??best.);
+
+			if ~missing(lbornrhi) then
+				lbstnrhi=0.00318*input(lbornrhi,??best.);
+			lbstnrc='';
+		end;
+
+	if lbtest in ('Prolactin') and strip(upcase(lborresu))='IU/L' and strip(upcase(lbstresu)) ne 'UIU/ML' then
+		do;
+			lbstresu='uIU/mL';
+
+			if ~missing(lborres) then
+				lbstresn=1000 *input(lborres,??best.);
+
+			if ~missing(lbstresn) then
+				lbstresc=strip(put(lbstresn,best.));
+
+			if ~missing(lbornrlo) then
+				lbstnrlo=1000*input(lbornrlo,??best.);
+
+			if ~missing(lbornrhi) then
+				lbstnrhi=1000*input(lbornrhi,??best.);
+			lbstnrc='';
+		end;
+
+	if lbtest in ('Prolactin') and strip(upcase(lborresu))='NG/DL' and strip(upcase(lbstresu)) ne 'UIU/ML' then
+		do;
+			lbstresu='uIU/mL';
+
+			if ~missing(lborres) then
+				lbstresn=0.2128 *input(lborres,??best.);
+
+			if ~missing(lbstresn) then
+				lbstresc=strip(put(lbstresn,best.));
+
+			if ~missing(lbornrlo) then
+				lbstnrlo=0.2128*input(lbornrlo,??best.);
+
+			if ~missing(lbornrhi) then
+				lbstnrhi=0.2128*input(lbornrhi,??best.);
+			lbstnrc='';
+		end;
+
+	if lbtest in ('Prolactin') and strip(upcase(lborresu))='NG/ML' and strip(upcase(lbstresu)) ne 'UIU/ML' then
+		do;
+			lbstresu='uIU/mL';
+
+			if ~missing(lborres) then
+				lbstresn=21.28 *input(lborres,??best.);
+
+			if ~missing(lbstresn) then
+				lbstresc=strip(put(lbstresn,best.));
+
+			if ~missing(lbornrlo) then
+				lbstnrlo=21.28*input(lbornrlo,??best.);
+
+			if ~missing(lbornrhi) then
+				lbstnrhi=21.28*input(lbornrhi,??best.);
+			lbstnrc='';
+		end;
+
+	if lbtest in ('Protein') and strip(upcase(lborresu))='G/DL' and strip(upcase(lbstresu)) ne 'G/L' then
+		do;
+			lbstresu='g/L';
+
+			if ~missing(lborres) then
+				lbstresn=10 *input(lborres,??best.);
+
+			if ~missing(lbstresn) then
+				lbstresc=strip(put(lbstresn,best.));
+
+			if ~missing(lbornrlo) then
+				lbstnrlo=10*input(lbornrlo,??best.);
+
+			if ~missing(lbornrhi) then
+				lbstnrhi=10*input(lbornrhi,??best.);
+			lbstnrc='';
+		end;
+
+	if lbtest in ('Sodium') and strip(upcase(lborresu))='UMOL/L' and strip(upcase(lbstresu)) ne 'MMOL/L' then
+		do;
+			lbstresu='mmol/L';
+
+			if ~missing(lborres) then
+				lbstresn=0.001 *input(lborres,??best.);
+
+			if ~missing(lbstresn) then
+				lbstresc=strip(put(lbstresn,best.));
+
+			if ~missing(lbornrlo) then
+				lbstnrlo=0.001*input(lbornrlo,??best.);
+
+			if ~missing(lbornrhi) then
+				lbstnrhi=0.001*input(lbornrhi,??best.);
+			lbstnrc='';
+		end;
+
+	if lbtest in ('Specific Gravity') and strip(upcase(lborresu))='G/DL' and strip(upcase(lbstresu)) ne 'G/L' then
+		do;
+			lbstresu='g/L';
+
+			if ~missing(lborres) then
+				lbstresn=10 *input(lborres,??best.);
+
+			if ~missing(lbstresn) then
+				lbstresc=strip(put(lbstresn,best.));
+
+			if ~missing(lbornrlo) then
+				lbstnrlo=10*input(lbornrlo,??best.);
+
+			if ~missing(lbornrhi) then
+				lbstnrhi=10*input(lbornrhi,??best.);
+			lbstnrc='';
+		end;
+
+	if lbtest in ('Testosterone') and strip(upcase(lborresu))='NG/DL' then
+		do;
+			lbstresu='nmol/L';
+
+			if ~missing(lborres) then
+				lbstresn=0.0347 *input(lborres,??best.);
+
+			if ~missing(lbstresn) then
+				lbstresc=strip(put(lbstresn,best.));
+
+			if ~missing(lbornrlo) then
+				lbstnrlo=0.0347*input(lbornrlo,??best.);
+
+			if ~missing(lbornrhi) then
+				lbstnrhi=0.0347*input(lbornrhi,??best.);
+			lbstnrc='';
+		end;
+
+	if lbtest in ('Testosterone, Free') and strip(upcase(lborresu))='NG/DL' and strip(upcase(lbstresu)) ne 'PG/ML' then
+		do;
+			lbstresu='pg/mL';
+
+			if ~missing(lborres) then
+				lbstresn=10 *input(lborres,??best.);
+
+			if ~missing(lbstresn) then
+				lbstresc=strip(put(lbstresn,best.));
+
+			if ~missing(lbornrlo) then
+				lbstnrlo=10*input(lbornrlo,??best.);
+
+			if ~missing(lbornrhi) then
+				lbstnrhi=10*input(lbornrhi,??best.);
+			lbstnrc='';
+		end;
+
+	if lbtest in ('Testosterone, Free') and strip(upcase(lborresu))='NMOL/L' and strip(upcase(lbstresu)) ne 'PG/ML' then
+		do;
+			lbstresu='pg/mL';
+
+			if ~missing(lborres) and anydigit(lborres)>0 then
+				lbstresn=288.42 *input(lborres,??best.);
+
+			if ~missing(lbstresn) then if ~missing(lbstresn) then
+				lbstresc=strip(put(lbstresn,best.));
+
+			if ~missing(lbornrlo) and anydigit(lbornrlo)>0 then
+				lbstnrlo=288.42*input(lbornrlo,??best.);
+
+			if ~missing(lbornrhi) and anydigit(lbornrhi)>0 then
+				lbstnrhi=288.42*input(lbornrhi,??best.);
+			lbstnrc='';
+		end;
+
+	if lbtest in ('Thyrotropin') and strip(upcase(lborresu))='IU/L' then
+		do;
+			lbstresu='uIU/mL';
+
+			if ~missing(lborres) then
+				lbstresn=1000 *input(lborres,??best.);
+
+			if ~missing(lbstresn) then
+				lbstresc=strip(put(lbstresn,best.));
+
+			if ~missing(lbornrlo) then
+				lbstnrlo=1000*input(lbornrlo,??best.);
+
+			if ~missing(lbornrhi) then
+				lbstnrhi=1000*input(lbornrhi,??best.);
+			lbstnrc='';
+		end;
+
+	if lbtest in ('Urate') and strip(upcase(lborresu))='MMOL/L' and strip(upcase(lbstresu)) ne 'MG/DL' then
+		do;
+			lbstresu='mg/dL';
+
+			if ~missing(lborres) then
+				lbstresn=16.8 *input(lborres,??best.);
+
+			if ~missing(lbstresn) then
+				lbstresc=strip(put(lbstresn,best.));
+
+			if ~missing(lbornrlo) then
+				lbstnrlo=16.8*input(lbornrlo,??best.);
+
+			if ~missing(lbornrhi) then
+				lbstnrhi=16.8*input(lbornrhi,??best.);
+			lbstnrc='';
+		end;
+
+	if lbtest in ('Urate') and strip(upcase(lborresu))='UMOL/L' and strip(upcase(lbstresu)) ne 'MG/DL' then
+		do;
+			lbstresu='mg/dL';
+
+			if ~missing(lborres) then
+				lbstresn=0.0168 *input(lborres,??best.);
+
+			if ~missing(lbstresn) then
+				lbstresc=strip(put(lbstresn,best.));
+
+			if ~missing(lbornrlo) then
+				lbstnrlo=0.0168*input(lbornrlo,??best.);
+
+			if ~missing(lbornrhi) then
+				lbstnrhi=0.0168*input(lbornrhi,??best.);
+			lbstnrc='';
+
+		end;
+		if lbtest in ('Urate') and strip(upcase(lborresu))='UMOL/L' then do;
+				test=input(compress(resultc,'<>='),??best.);
+				if not missing(compress(resultc,'<>=')) then lbstresc=compress(substr(resultc,1,2)||strip(put(test,5.1)));
+		end;
+
+	if lbtest in ('Urea') and strip(upcase(lborresu))='MG/DL' and strip(upcase(lbstresu)) ne 'MMOL/L' then
+		do;
+			lbstresu='mmol/L';
+
+			if ~missing(lborres) then
+				lbstresn=0.1665 *input(lborres,??best.);
+
+			if ~missing(lbstresn) then
+				lbstresc=strip(put(lbstresn,best.));
+
+			if ~missing(lbornrlo) then
+				lbstnrlo=0.1665*input(lbornrlo,??best.);
+
+			if ~missing(lbornrhi) then
+				lbstnrhi=0.1665*input(lbornrhi,??best.);
+			lbstnrc='';
+		end;
+
+	if lbtest in ('Urea Nitrogen') and strip(upcase(lborresu))='MG/DL' and strip(upcase(lbstresu)) ne 'MMOL/L' then
+		do;
+			lbstresu='mmol/L';
+
+			if ~missing(lborres) then
+				lbstresn=0.357 *input(lborres,??best.);
+
+			if ~missing(lbstresn) then
+				lbstresc=strip(put(lbstresn,best.));
+
+			if ~missing(lbornrlo) then
+				lbstnrlo=0.357*input(lbornrlo,??best.);
+
+			if ~missing(lbornrhi) then
+				lbstnrhi=0.357*input(lbornrhi,??best.);
+			lbstnrc='';
+		end;
+
+	if lbtest in ('Urea Nitrogen') and strip(upcase(lborresu))='UG/DL' and strip(upcase(lbstresu)) ne 'MMOL/L' then
+		do;
+			lbstresu='mmol/L';
+
+			if ~missing(lborres) then
+				lbstresn=0.000357 *input(lborres,??best.);
+
+			if ~missing(lbstresn) then
+				lbstresc=strip(put(lbstresn,best.));
+
+			if ~missing(lbornrlo) then
+				lbstnrlo=0.000357*input(lbornrlo,??best.);
+
+			if ~missing(lbornrhi) then
+				lbstnrhi=0.000357*input(lbornrhi,??best.);
+			lbstnrc='';
+		end;
+
+	if lbtest in ('Urine Glucose') and strip(upcase(lborresu))='MG/DL' and strip(upcase(lbstresu)) ne 'MMOL/L' then
+		do;
+			lbstresu='mmol/L';
+
+			if ~missing(lborres)  and anydigit(lborres)>0 and indexc(lborres,"<>=")=0 then
+				lbstresn=0.0555 *input(lborres,??best.);
+
+			if ~missing(lbstresn) then
+				lbstresc=strip(put(lbstresn,best.));
+
+			if ~missing(lbornrlo)  and anydigit(lbornrlo)>0 and indexc(lbornrlo,"<>=")=0 then
+				lbstnrlo=0.0555*input(lbornrlo,??best.);
+
+			if ~missing(lbornrhi)  and anydigit(lbornrhi)>0 and indexc(lbornrhi,"<>=")=0 then
+				lbstnrhi=0.0555*input(lbornrhi,??best.);
+			lbstnrc='';
+		end;
+
+	if lbtest in ('Urine Protein') and strip(upcase(lborresu))='MG/DL' and strip(upcase(lbstresu)) ne 'G/L' then
+		do;
+			lbstresu='g/L';
+
+			if ~missing(lborres) and anydigit(lborres)>0 and indexc(lborres,"<>=")=0 then
+				lbstresn=0.01 *input(lborres,??best.);
+
+			if ~missing(lbstresn) then
+				lbstresc=strip(put(lbstresn,best.));
+
+			if ~missing(lbornrlo) and anydigit(lbornrlo)>0 and indexc(lbornrlo,"<>=")=0 then
+				lbstnrlo=0.01*input(lbornrlo,??best.);
+
+			if ~missing(lbornrhi) and anydigit(lbornrhi)>0 and indexc(lbornrhi,"<>=")=0 then
+				lbstnrhi=0.01*input(lbornrhi,??best.);
+			lbstnrc='';
+		end;
+
+	if lbtest in ('Urobilinogen') and strip(upcase(lborresu))='UMOL/L' and strip(upcase(lbstresu)) ne 'MG/DL' then
+		do;
+			lbstresu='mg/dL';
+
+			if ~missing(lborres) and anydigit(lborres)>0 and indexc(lborres,"<>=")=0 then
+				lbstresn=0.0625 *input(lborres,??best.);
+
+			if ~missing(lbstresn) then
+				lbstresc=strip(put(lbstresn,best.));
+
+			if ~missing(lbornrlo) and anydigit(lbornrlo)>0 and indexc(lbornrlo,"<>=")=0 then
+				lbstnrlo=0.0625*input(lbornrlo,??best.);
+
+			if ~missing(lbornrhi) and anydigit(lbornrhi)>0 and indexc(lbornrhi,"<>=")=0 then
+				lbstnrhi=0.0625*input(lbornrhi,??best.);
+			lbstnrc='';
+		end;
+run;
+
+data temp.cbp;
+	set raw.xdm;
+	keep usubjid cbp sex age;
+run;
+
+proc sort nodupkey;by usubjid ;run;
+
+
+data temp.lab6;
+	length sex $200.;
+	merge temp.lab6(in=a) temp.cbp;
+	by usubjid;
+	if a;
+
+	if lbtestcd in ("UPROT") and ~missing(lbornrlo) and anyalpha(lbornrlo)>0 and index(lbornrlo,".")=0 then
+		do;
+			if lbornrlo ne lbornrhi then
+				lbstnrc=catx("-",lbornrlo,lbornrhi);
+			else if lbornrlo eq lbornrhi then
+				lbstnrc=compress(lbornrlo);
+		end;
+
+	if ~missing(lbornrlo) and strip(lbornrlo)="-" then
+		lbornrlo="";
+
+	if ~missing(lbornrhi) and strip(lbornrhi)="-" then
+		lbornrhi="";
+
+	if lbtestcd in ("BICARB" "K" "CL" "SODIUM") and lborres eq lbstresc then
+		lbstresu="mmol/L";
+
+	if lbtestcd="CREATCLR" and strip(upcase(lborresu))="ML/MIN" then
+		do;
+			lbstnrc=compress(lbornrlo);
+		end;
+
+	if lbtestcd in ("BILI" "UGLUC" "KETONES" "LEUKASE" "NITRITE" "OCCBLD" "BACT" "MUCTHR" "UROBIL" "UPROT" 'LH') and (~missing(lbornrlo) or ~missing(lbornrhi)) then
+		do;
+			if ~missing(lbornrlo) and ~missing(lbornrhi) then
+				do;
+					if lbornrlo eq lbornrhi and anyalpha(lbornrlo)>0 and index(lbornrlo,".")=0 then
+						lbstnrc=strip(lbornrlo);
+
+					if lbornrlo ne lbornrhi and anyalpha(lbornrlo)>0 and index(lbornrlo,".")=0 then
+						lbstnrc=catx("-",lbornrlo,lbornrhi);
+				end;
+
+			if ~missing(lbornrlo) and missing(lbornrhi) and anyalpha(lbornrlo)>0 and index(lbornrlo,".")=0 then
+				do;
+					lbstnrc=compress(lbornrlo);
+				end;
+
+			if ~missing(lbornrhi) and missing(lbornrlo) and anyalpha(lbornrhi)>0 and index(lbornrhi,".")=0 then
+				do;
+					lbstnrc=compress(lbornrhi);
+				end;
+		end;
+
+	if ~missing(lbstresn) then
+		lbstresc=strip(put(lbstresn,best.));
+
+	if lbtestcd in ("BASO" "EOS" "LYM" "MONO" "NEUT" "NEUTSG" "PLAT" "WBC") and strip(upcase(lborresu)) in ("10^9/L") and ~missing(lborres) then
+		do;
+			lbstresu="10^9/L";
+			lbstresc=lborres;
+
+			if ~missing(lborres) then
+				lbstresn= input(lborres,??best.);
+
+			if ~missing(lbstresn) then
+				lbstresc=strip(put(lbstresn,best.));
+			else if ~missing(lborres) then
+				lbstresc=(lborres);
+
+			if ~missing(lbornrlo) then
+				lbstnrlo=input(lbornrlo,??best.);
+
+			if ~missing(lbornrhi) then
+				lbstnrhi=input(lbornrhi,??best.);
+			lbstnrc=" ";
+
+			if lborres="Questionable integrity" then
+				lbstresc=lborres;
+		end;
+
+	if lbtestcd="AMH" then
+		do;
+			lbstresc=compress(lbstresc);
+		end;
+
+	if lbtestcd in ("PROGEST" "TESTOS") and strip(upcase(lborresu))="NMOL/L" then
+		do;
+			lbstresu="nmol/L";
+
+			if ~missing(lborres) then
+				lbstresn= input(lborres,??best.);
+
+			if ~missing(lbstresn) then
+				lbstresc=strip(put(lbstresn,best.));
+			else if ~missing(lborres) then
+				lbstresc=compress(lborres);
+
+			if ~missing(lbornrlo) then
+				lbstnrlo=input(lbornrlo,??best.);
+
+			if ~missing(lbornrhi) then
+				lbstnrhi=input(lbornrhi,??best.);
+		end;
+
+	if lbtestcd="PROGEST" and (~missing(lbstresc) or ~missing(lbstresn)) and 
+		strip(upcase(lbstresu))="NMOL/L" and strip(upcase(lborresu))="NMOL/L" and ~missing(lbgrpid) then
+		do;
+			if lbtestcd="PROGEST" and sex = 'M' then
+				do;
+					lbstnrhi = .;
+					lbstnrlo = .;
+					lbstnrc = "<0.48";
+				end;
+			else if lbtestcd="PROGEST" and sex = 'F' then
+				do;
+					if cbp = 'YES' then
+						do;
+							lbstnrhi = .;
+							lbstnrlo = .;
+							lbstnrc = "<76";
+						end;
+
+					if cbp in (' ' 'NO') then
+						do;
+							lbstnrhi = .;
+							lbstnrlo = .;
+							lbornrlo="<0.41";
+							lbstnrc = "<0.41";
+						end;
+				end;
+		end;
+
+	if lbtestcd="PROGEST" and ~missing(lborres) and strip(upcase(lborresu))="NMOL/L" and ~missing(lbgrpid) then
+		do;
+			if lbtestcd="PROGEST" and sex = 'M' then
+				do;
+					lbornrhi = "";
+					lbornrlo = "<0.48";
+				end;
+			else if lbtestcd="PROGEST" and sex = 'F' then
+				do;
+					if cbp = 'YES' then
+						do;
+							lbornrhi = "";
+							lbornrlo="<76";
+						end;
+
+					if cbp in (' ' 'NO') then
+						do;
+							lbornrhi = "";
+							lbornrlo="<0.41";
+						end;
+				end;
+		end;
+
+	if lbtestcd="AMH" and ~missing(lborres) and ~missing(lbgrpid) and lborresu="ng/mL" and ~missing(comments) 
+		and (SINORMLO="(See Comments)" or SINORMHI="(See Comments)") then
+		do;
+			if lbtestcd="AMH" and sex = 'F' then
+				do;
+					if age1 < 15 then
+						do;
+							lbornrlo = '0.256';
+							lbornrhi = '6.345';
+						end;
+					else if age1 < 18 then
+						do;
+							lbornrlo = '0.861';
+							lbornrhi = '10.451';
+						end;
+					else if age1 < 30  then
+						do;
+							lbornrlo = '0.401';
+							lbornrhi = '16.015';
+						end;
+					else if age1 < 40  then
+						do;
+							lbornrlo = '0.176';
+							lbornrhi = '11.705';
+						end;
+					else if age1 < 46  then
+						do;
+							lbornrlo ='<=6.282';
+							lbornrhi = '';
+						end;
+					else if age1 < 51 then
+						do;
+							lbornrlo = '<=.064';
+							lbornrhi = '';
+						end;
+					else if age1 >= 51 then
+						do;
+							lbornrlo = '';
+							lbornrhi = '0.003';
+						end;
+				end;
+
+			if lbtestcd="AMH" and sex = 'M' then
+				do;
+					if age1 > 12 then
+						do;
+							lbornrlo = '2.079';
+							lbornrhi = '30.656';
+							lbstnrc = "";
+						end;
+				end;
+		end;
+
+	if lbtestcd="AMH" and (~missing(lbstresc) or ~missing(lbstresn)) and ~missing(lbgrpid) and ~missing(comments) 
+		and ((SINORMLO="(See Comments)" or SINORMHI="(See Comments)") or ( missing(lbstnrlo) and missing(lbstnrhi))) then
+		do;
+			if lbtestcd="AMH" and sex = 'F' 
+			then
+
+				do;
+					if age1 < 15 then
+						do;
+							lbstnrlo = 0.256;
+							lbstnrhi = 6.345;
+							lbstnrc = " ";
+						end;
+					else if age1 < 18 then
+						do;
+							lbstnrlo = 0.861;
+							lbstnrhi = 10.451;
+							lbstnrc = " ";
+						end;
+					else if age1 < 30  then
+						do;
+							lbstnrlo = 0.401;
+							lbstnrhi = 16.015;
+							lbstnrc = " ";
+						end;
+					else if age1 < 40  then
+						do;
+							lbstnrlo = 0.176;
+							lbstnrhi = 11.705;
+							lbstnrc = " ";
+						end;
+					else if age1 < 46  then
+						do;
+							lbstnrlo = .;
+							lbstnrhi = .;
+							lbstnrc = "<=6.282";
+						end;
+					else if age1 < 51 then
+						do;
+							lbstnrlo = .;
+							lbstnrhi = .;
+							lbstnrc = "<=.064";
+						end;
+					else if age1 >= 51 then
+						do;
+							lbstnrlo = .;
+							lbstnrhi = 0.003;
+						end;
+				end;
+
+			if lbtestcd="AMH" and sex = 'M' then
+				do;
+					if age1 > 12 then
+						do;
+							lbstnrlo = 2.079;
+							lbstnrhi = 30.656;
+							lbstnrc = "";
+						end;
+				end;
+		end;
+
+	if lbtestcd="ESTRDIOL" then
+		do;
+			if index(lbstnrc,"<")=0 then
+				lbstnrc="";
+
+			if lbtestcd="ESTRADIOL" and lbstnrlo=0 then
+				lbstnrc = "<55.0695";
+		end;
+
+	if lbtestcd in ("LH" "FSH" ) and (~missing(lbstresc) or ~missing(lbstresn)) then
+		lbstresu="mIU/mL";
+
+	if lbtestcd in ("TSH" "PROLCTN") and (~missing(lbstresc) or ~missing(lbstresn)) then
+		lbstresu="uIU/mL";
+
+	if lborresu="%" and lborres eq lbstresc then
+		lbstresu=lborresu;
+
+	if lbtestcd in ("FSH" "URATE" "TSH" "LH") then
+		lbstresc=compress(lbstresc);
+
+	if lbtestcd in ("SPGRAV" "PH") then
+		do;
+			if missing(lborresu) and ~missing(lbstresu) then
+				lborresu=lbstresu;
+
+			if missing(lbornrlo) and ~missing(lbstnrlo) then
+				lbornrlo=strip(put(lbstnrlo,best.));
+
+			if missing(lbornrhi) and ~missing(lbstnrhi) then
+				lbornrhi=strip(put(lbstnrhi,best.));
+
+			if ~missing(lborresu) and missing(lbstresu) then
+				lbstresu=lborresu;
+
+			if ~missing(lbornrlo) and missing(lbstnrlo) then
+				lbstnrlo =input(lbornrlo,??best.);
+
+			if ~missing(lbornrhi) and missing(lbstnrhi) then
+				lbstnrhi =input(lbornrhi,??best.);
+		end;
+
+	if ~missing(lborres) and missing(lbstresc) then
+		lbstresc=lborres;
+
+	if lbstresu="10^3/µL" and lborresu="10^9/L" and input(lborres,??best.) eq input(lbstresc,??best.) and lbtestcd in ("LYMAT" "NEUTB" "METAMY" "MYCY") then
+		lbstresu="10^9/L";
+
+	if lbtestcd="GFRE" and ~missing(lbstresc) then
+		lbstresu="mL/min/1.73m2";
+
+	if lbstnrc="-" then
+		lbstnrc="";
+
+	if ~missing(lborres) and ~missing(lbstresc) and lborres eq lbstresc and missing(lborresu) then
+		do;
+			if ~missing(lbstresu) and lbstresu ne "%" then
+				lbstresu="";
+		end;
+
+	if lbtestcd in ("LH" "AMH") and compress(lbstresc) eq compress(lborres) and lborresu eq lbstresu then
+		do;
+			if index(lbornrlo,"<=")>0 or index(lbornrlo,">=")>0 or index(lbornrlo,"<")>0 or index(lbornrlo,"<")>0 then
+				lbstnrc=strip(lbornrlo);
+
+			if index(lbornrhi,"<=")>0 or index(lbornrhi,">=")>0 or index(lbornrhi,"<")>0 or index(lbornrhi,">")>0 then
+				lbstnrc=strip(lbornrhi);
+		end;
+
+	if lbtestcd="AMH" then
+		do;
+			if lbstnrc in ("<=6.282","<=.064") then
+				do;
+					lbstnrlo=.;
+					lbstnrhi=.;
+				end;
+
+			if lbornrlo in ("<=6.282","<=.064") and compress(lbstresc) eq compress(lborres) then
+				do;
+					lbstnrc=lbornrlo;
+				end;
+		end;
+
+	if lbstresc="Questionableintegrity" then
+		lbstresc="Questionable integrity";
+
+	if lbstresc="Unabletoperform" then
+		lbstresc="Unable to perform";
+
+	if lbstresc="Outsidestability" then
+		lbstresc="Outside stability";
+
+	if ~missing(lborres) then
+		lbstat="";
+
+	if lbtestcd='CRP' and upcase(lbstresu)='MG/DL' then do;
+		lbstnrlo=0;
+		lbstnrhi=5;
+	end;
+	if lbtestcd="ESTRDIOL" then do;
+		if index(lbstnrc,"<")=0 then lbstnrc="";
+		if lbtestcd="ESTRDIOL" and lbstnrlo=0 and lbstnrhi=. and lbnam^='' then lbstnrc = "<55.0695";
+	end;
+
+if lbtest in ('Potassium') and strip(upcase(lborresu))='MG/DL' and strip(upcase(lbstresu)) eq 'MMOL/L' then do; lbstresu='mmol/L';
+        if ~missing(lborres)  and anydigit(lborres)>0 and indexc(lborres,"<>=")=0 then lbstresn=0.2558*input(lborres,??best.);
+        if ~missing(lbstresn) then lbstresc=strip(put(lbstresn,best.));
+        if ~missing(lbornrlo)  and anydigit(lbornrlo)>0 and indexc(lbornrlo,"<>=")=0 then lbstnrlo=0.2558*input(lbornrlo,??best.);
+        if ~missing(lbornrhi)  and anydigit(lbornrhi)>0 and indexc(lbornrhi,"<>=")=0 then lbstnrhi=0.2558*input(lbornrhi,??best.);
+        lbstnrc='';
+end;
+
+run;
+
+
+data temp.lab6;
+	set temp.lab6;
+	if lbtest='Phosphate' then lbtest='PHOS';
+if lbtestcd='PCT' and lborresu='%' then do;
+	lbtestcd='PLATHCT';
+	lbtest='Platelet Hematocrit';
+	lbcat='HEMATOLOGY';
+end;
+
+if LBSTRESC='NEG' then LBSTRESC='NEGATIVE';
+if lbstresn^=. and lbstresu='' and lborresu^='' and lbtestcd not in ('PH','SPGRAV') then lbstresu=lborresu;
+
+		if lbstat^='' then do;
+		lbornrlo='';
+		lbornrhi='';
+		lbstresu='';
+	end;
+
+	if lbstnrlo=. and lbornrlo^='' then lbstnrlo=input(lbornrlo,??best.);
+	if lbstnrhi=. and lbornrhi^='' then lbstnrhi=input(lbornrhi,??best.);
+	if lbtestcd="ESTRDIOL" then do;
+	if index(lbstnrc,"<")=0 then lbstnrc="";
+	if lbtestcd="ESTRADIOL" and lbstnrlo=0 then lbstnrc = "<55.0695";
+	end;
+
+	if (index(lborres,'Outside stability') or index(lborres,'not confirmed')) and lbornrlo='' then lbnrind='';
+run;
+
+proc sort data=temp.lab6 ;by usubjid lbcat lbtest visitnum lbdtc lborres lborresu lbnam lbornrlo;run;
+
+data temp.main temp.notdone;
+	set temp.lab6;
+	if lbstat='' then output temp.main;
+	else if lbstat^='' then output temp.notdone;
+run;
+
+**LBBLFL**;
+proc sort data=temp.main out=temp.base;
+ 	by usubjid lbcat lbtestcd lbdt lbdtc visitnum;
+	where lborres^='' and index(lborres,'not confirmed')=0 and .< lbdt <= rfstdt;
+run;
+
+data temp.base;
+ 	set temp.base;
+	by usubjid lbcat lbtestcd lbdt lbdtc visitnum;
+	if last.lbtestcd;
+	LBBLFL="Y";
+	keep usubjid lbcat lbtestcd  lbdt lbdtc visitnum LBBLFL lbgrpid;
+run;
+
+proc sort data=temp.main;by usubjid lbcat lbtestcd lbdt lbdtc visitnum lbgrpid;run;
+proc sort data=temp.base;by usubjid lbcat lbtestcd lbdt lbdtc visitnum lbgrpid;run;
+
+data temp.lab6x1;
+	merge temp.main temp.base;
+	by usubjid lbcat lbtestcd lbdt lbdtc visitnum lbgrpid;
+	if lbstresu^='' then lbstresux=lbstresu;
+
+run;
+
+data temp.lab6x1;
+	set temp.lab6x1 temp.notdone;
+	if   index(lborres,'HIV infection not confirmed') and lbblfl='Y' then lbblfl='';
+run;
+
+/*proc sort data=temp.lab6x;by usubjid lbcat lbtestcd lbdt lbdtc visitnum;run;*/
+
+********************************;
+data temp.lab6x1;
+	length folder $200.;
+	set temp.lab6x1;
+	domain="LB";
+LBCAT=upcase(LBCAT);
+LBORNRLO=strip(LBORNRLO);
+LBORNRHI=strip(LBORNRHI);
+**Fix a data entry Issue**;
+if lbornrhi='0,5' then lbornrhi='0.5';
+lbornrhi=strip(lbornrhi);
+lbstresc=tranwrd(lbstresc,'< 0','<0');
+lbstresc=tranwrd(lbstresc,'> 0','>0');
+lbstresc=tranwrd(lbstresc,'> ','>');
+if lbspec_blk='Y' then lbspec='';
+if index(upcase(folder),'UNS') then folder='UNS';
+lbdtcy=substr(lbdtc,1,10);
+if index(upcase(folder),"UNS") then folder = cats(folder,"-",lbdtcy);
+else if folder eq "SCRN" then folder = "SCR";
+else if strip(upcase(folder)) eq "FOLLOW-UP" then folder = "FUP";
+else if strip(upcase(folder)) eq "FOLLOW-UP_OLE" then folder = "FUP_OLE";
+else folder = folder;
+run;
+
+data temp.lab2_supp;
+length folder $200.;
+	set temp.lab2_supp1;
+	if lbdtc ne '' then lbdtcy=substr(lbdtc,1,10);
+	if folder eq "UNS" then folder = cats(folder,"-",lbdtcy);
+ 	else folder = folder;
+	rename covasses = covasses1
+         covwind = covwind1
+         assescom = assescom1
+         covidsp = covidsp1
+         covid = covid1;
+run;
+
+proc sql noprint;
+	create table temp.lab6x2 as
+	select a.*, b.cnt 
+	from temp.lab6x1 a 
+	left join 
+	(select distinct usubjid,lbcat,folder,lbtestcd,count(*) as cnt 
+	from temp.lab6x1(where=(crf_mrl_fl eq "mrl"))	group by usubjid,lbcat,folder,lbtestcd) b
+	on a.usubjid eq b.usubjid and a.folder eq b.folder and a.lbcat eq b.lbcat 
+	and a.lbtestcd eq b.lbtestcd
+	order by usubjid,lbcat,folder;
+quit;
+
+proc sort data=temp.lab2_supp nodupkey;by  usubjid lbcat folder lbdtcy;
+run;
+
+data temp.lab6x;
+	merge temp.lab6x2(in=a)
+	temp.lab2_supp(in=b drop=lbdtc);
+	by usubjid lbcat folder;
+	if a;
+
+ 	if (lbtestcd eq "LBALL") and strip(upcase(perf)) eq "NO" and 
+	lbtestcd ne "HCG" then do;
+	covasses1a = covasses1;
+	covwind1a = covwind1;
+	assescom1a = assescom1;
+	covidsp1a = covidsp1;
+	covid1a = covid1;
+	end;
+	else if missing(cnt) and lbstat eq "NOT DONE" and lbtestcd ne "HCG" and perf ne "NO" then do;
+	covasses1a = covasses1;
+	covwind1a = covwind1;
+	assescom1a = assescom1;
+	covidsp1a = covidsp1;
+	covid1a = covid1;
+	end;
+	else if strip(upcase(perf)) eq "YES" and crf_mrl_fl eq "crf" and 
+	assescom1 ne "LOCALLY" then call missing(covasses1a,covwind1a,assescom1a,covidsp1a,covid1a);
+	else if strip(upcase(perf)) eq "YES" and crf_mrl_fl ne "crf" and 
+	assescom1 eq "LOCALLY" then call missing(covasses1a,covwind1a,assescom1a,covidsp1a,covid1a);
+	else if strip(upcase(perf)) eq "YES" and missing(cnt) and 
+	assescom1 eq "IN-CLINIC" then call missing(covasses1a,covwind1a,assescom1a,covidsp1a,covid1a);
+	else if strip(upcase(perf)) eq "YES" and lbtestcd ne "HCG" and cmiss(lborres,lbstresc) ne 2 then do;
+	covasses1a = covasses1;
+	covwind1a = covwind1;
+	assescom1a = assescom1;
+	covidsp1a = covidsp1;
+	covid1a = covid1;
+	end;
+	else call missing(covasses1a,covwind1a,assescom1a,covidsp1a,covid1a);
+
+	covasses = coalescec(covasses1a,covasses);
+	covwind = coalescec(covwind1a,covwind); 
+	assescom = coalescec(assescom1a,assescom);
+	covidsp = coalescec(covidsp1a,covidsp);
+	covid = coalescec(covid1a,covid);
+
+	drop covasses1: covwind1: assescom1: covidsp1: covid1:;
+run;
+
+**EPOCH**;
+data ser;
+set sdtm.se;
+if length(sestdtc)=10 then start=input(sestdtc,is8601da.);
+if length(seendtc)=10 then end=input(seendtc,is8601da.);
+run;
+%macro setr(in=);
+proc transpose data=ser out=&in.(drop=_name_) prefix=&in._;
+by usubjid;
+var &in.;
+id etcd;
+run;
+%mend;
+%setr(in=start);
+%setr(in=end);
+
+data temp.se;
+merge start end;
+by usubjid;
+run;
+
+/*Double blinded phase end date*/
+data temp.ldbp;
+	set raw.xds_eot;
+	 studyid = "NIR-DT-301";
+	 subjid = compress(tranwrd(subjectkeylabel,",","-"));
+	 usubjid = catx("-",studyid,subjid);
+	lstdosdbl_dsdatc=tranwrd(lstdosdbl_dsdatc,"UNK","--");
+	if lstdosdbl_dsdatc='--/--/--' then lstdosdbl_dsdatc="";
+	if ~missing(lstdosdbl_dsdatc) then do;
+		if index(lstdosdbl_dsdatc,"--")=0 then lstdosdbl=put(input(lstdosdbl_dsdatc,mmddyy10.),yymmdd10.);
+		else if index(lstdosdbl_dsdatc,"--")>0 then do;
+		 if scan(lstdosdbl_dsdatc,1,"/")="--" and scan(lstdosdbl_dsdatc,2,"/")="--"  then lstdosdbl=scan(lstdosdbl_dsdatc,3,"/");
+		 else if scan(lstdosdbl_dsdatc,1,"/") ne "--" and scan(lstdosdbl_dsdatc,2,"/")="--"  then lstdosdbl=catx("-",scan(lstdosdbl_dsdatc,3,"/"),scan(lstdosdbl_dsdatc,1,"/"));
+		 if scan(lstdosdbl_dsdatc,2,"/") ne "--" and (scan(lstdosdbl_dsdatc,1,"/") eq "--" or scan(lstdosdbl_dsdatc,3,"/") eq "--") then putlog  "WARN" "ING: data issue only date present month or year missing" lstdosdbl_dsdatc;
+		end;
+	end;
+	if length(lstdosdbl)=10 then lstdosdbln=input(lstdosdbl,is8601da.);
+	format lstdosdbln date9.;
+	 keep usubjid  lstdosdbln;
+run;
+
+data temp.lab6x;
+	set temp.lab6x;
+	lbdtc5=lbdtc;
+/*	if  length(lbdtc) <10 and lbstat='' then lbdtc5=lbdtc2;*/
+run;
+
+data temp.lab7a;
+length usubjid $200.;
+merge temp.dm(in=a) temp.lab6x(in=b) temp.se temp.ldbp;
+by usubjid;
+if a and b;
+if not missing(rfstdtc) then rfstdt=input(substr(rfstdtc,1,10),yymmdd10.);
+if not missing(lbdtc5) and length(lbdtc5)>=10 then lbdt=input(substr(lbdtc5,1,10),yymmdd10.);
+if ~missing(lbdt) and not missing(rfstdt) then vsdy=(lbdt-rfstdt) + (lbdt>=rfstdt);
+
+/*Epoch*/
+  length epoch $20.;
+	/*For complete dates:*/
+	if ~missing(lbdt) and length(lbdtc5) ge 10 then do;
+		if ~missing(start_scr) and ~missing(end_scr) and lbdt<=end_scr then epoch="SCREENING";
+		if ~missing(start_trtblnd) and ~missing(end_trtblnd) and start_trtblnd<=lbdt<=end_trtblnd then epoch="BLINDED TREATMENT";
+		if ~missing(start_trtole) and ~missing(end_trtole) and start_trtole<=lbdt<=end_trtole then epoch="OPEN-LABEL TREATMENT";
+		if ~missing(start_fup) and ~missing(end_fup) and start_fup<lbdt  then epoch="FOLLOW-UP";
+
+		if lbdt <= end_trtblnd and start_trtole=lstdosdbln and epoch^="SCREENING" then do;
+				epoch="BLINDED TREATMENT";
+		end;
+	end;
+	/*For Partial dates:*/
+	 else if ~missing(lbdtc5) and length(lbdtc5) lt 10 then do;
+/*	 put 'WARNING: Lab raw data have partial dates'/ usubjid= lbdtc= visit= lbcat= lbtest=;*/
+	 lbdtm=input(scan(lbdtc5,2,"-"),best.);lbdty=input(scan(lbdtc5,1,"-"),best.);
+
+	/*For partial dates with Month and Year:*/
+	 if length(lbdtc5)=7 then do;
+	 lbdt_imp = input(cats(lbdtc5,"-01"),??is8601da.);
+	 if ~missing(start_scr) and ~missing(end_scr) and lbdt_imp<=end_scr then epoch="SCREENING";
+		if ~missing(start_trtblnd) and ~missing(end_trtblnd) and start_trtblnd<=lbdt_imp<=end_trtblnd 
+		then epoch="BLINDED TREATMENT";
+		if ~missing(start_trtole) and ~missing(end_trtole) and start_trtole<=lbdt_imp<=end_trtole 
+		then epoch="OPEN-LABEL TREATMENT";
+		if ~missing(start_fup) and ~missing(end_fup) and start_fup<lbdt_imp  then epoch="FOLLOW-UP";
+
+		if lbdt_imp <= end_trtblnd and start_trtole=lstdosdbln and epoch^="SCREENING" 
+		then epoch="BLINDED TREATMENT";
+
+	 /*if ~missing(start_scr) and ~missing(end_scr) and lbdty<year(end_scr)then epoch="SCREENING";
+	 if ~missing(start_scr) and ~missing(end_scr) and lbdty=year(end_scr) and lbdtm<=month(end_scr) 
+	 then epoch="SCREENING";
+
+	 if ~missing(start_trtblnd) and ~missing(end_trtblnd) and year(start_trtblnd)<=lbdty<=year(end_trtblnd) 
+		and month(start_trtblnd)<=lbdtm<=month(end_trtblnd) then epoch="BLINDED TREATMENT";
+
+	if ~missing(start_trtole) and ~missing(end_trtole) and year(start_trtole)<=lbdty<=year(end_trtole) 
+		and month(start_trtole)<=lbdtm<=month(end_trtole) then epoch="OPEN-LABEL TREATMENT";
+
+	if ~missing(start_fup) and ~missing(end_fup) and year(start_fup)<lbdty  then epoch="FOLLOW-UP";
+	if ~missing(start_fup) and ~missing(end_fup) and year(start_fup)=lbdty and month(start_fup)<lbdtm  
+	then epoch="FOLLOW-UP";
+
+	    if lbdty < year(start_scr) and epoch='SCREENING' then epoch='';
+		if lbdty = year(start_scr) and lbdtm < month(start_scr) and epoch='SCREENING' then epoch='';
+		if epoch='FOLLOW-UP' and  lbdty> year(end_FUP) then epoch='';
+		if epoch='FOLLOW-UP' and  lbdty= year(end_FUP) and lbdtm>month(end_FUP) then epoch='';*/
+	 end;
+
+	/*For partial dates with only Year:*/
+	 if length(lbdtc5)=4 then do;
+	 	if ~missing(start_scr) and ~missing(end_scr) and lbdty<=year(end_scr)then epoch="SCREENING";
+		if ~missing(start_trtblnd) and ~missing(end_trtblnd) and year(start_trtblnd)<=lbdty<=year(end_trtblnd)then epoch="BLINDED TREATMENT";
+		if ~missing(start_trtole) and ~missing(end_trtole) and year(start_trtole)<=lbdty<=year(end_trtole) then epoch="OPEN-LABEL TREATMENT";
+		if ~missing(start_fup) and ~missing(end_fup) and year(start_fup)<lbdty  then epoch="FOLLOW-UP";
+
+		if lbdty <= year(end_trtblnd) and start_trtole=lstdosdbln and epoch^="SCREENING" then do;
+				epoch="BLINDED TREATMENT";
+		end;
+		if lbdty < year(start_scr) and epoch='SCREENING' then epoch='';
+		if epoch='FOLLOW-UP' and  lbdty> year(end_FUP) then epoch='';
+	 end;
+	end;
+
+	if lbdt < start_scr and epoch='SCREENING' then epoch='';
+	if epoch='FOLLOW-UP' and  lbdt> end_FUP then epoch='';
+
+	ctoff= %sysfunc(inputn(&_cutoffdt. ,date9.));
+	if ~missing(lbdt) and ctoff<lbdt then delete;
+
+
+format ctoff lbdt start_scr end_scr start_fup end_fup start_trtblnd end_trtblnd start_trtole 
+end_trtole date9.;
+
+studyid='NIR-DT-301';
+domain='LB';
+
+**Removing extar records caused due to data issues**;
+**For subject 017 LBALL record was created on the visitnum=2253 when collected results exist due to a differnt date on lball record**;
+/*if usubjid='NIR-DT-301-017-017' and lbcat='URINALYSIS' and visitnum=2253 and lbstat^='' then delete;*/
+/***For 022-004 subject LBALL records are being created due to lball record having datetime difference by a second.Deleting them**;*/
+/*if USUBJID='NIR-DT-301-022-004' and LBCAT='HEMATOLOGY' and  */
+/*LBTESTCD in ('EOS','MONO','NEUT','BASO','LYM') and visitnum=8 and lbstat^='' then delete;*/
+/**/
+/*if usubjid='NIR-DT-301-017-019' and lbcat='URINALYSIS' and lbtestcd='LBALL' and lbdy=1134 then delete;*/
+run;
+
+**To match PP sorting**;
+data temp.lab7;
+	set temp.lab7a;
+	if lbtestcd="HCG" then do;
+	if index(visit,"Unscheduled")>0 then do;if lbspec="SERUM" then seq=1;else seq=2;end;
+	else do;if lbspec="URINE" then seq=1;else seq=2;end;end;
+	if lbtest='PHOS' then lbtest='Phosphate';
+	if lbtest='PHOS' then lbtest='Phosphate';
+
+	if lbtestcd eq "BACT" and lbcat eq "URINALYSIS" and cmiss(lborres,lbstresc) ne 2 then 
+	lbspec = "URINE";
+	else if lbtestcd eq "CDF" and missing(lbspec) and cmiss(lborres,lbstresc) ne 2 then 
+	lbspec = "STOOL";
+	else lbspec = lbspec;
+
+	keep domain epoch lbblfl lbcat lbdtc lbdy lbgrpid lbnam lbnrind lbornrhi lbornrlo lborres lborresu
+		 lbreasnd lbspec lbstat lbstnrc lbstnrhi lbstnrlo lbstresc lbstresn lbstresu lbtest
+		 lbtestcd studyid usubjid visit visitnum
+		 sinormhi sinormlo siresult siunit flaghilo clinsig assescom covasses covid covidsp covwind 
+		 comments cmt2 cmt3 cmt4 cmt5 seq lbreasn1;
+
+run;
+proc sort data=temp.lab7;by  STUDYID USUBJID LBCAT LBTEST VISITNUM LBDTC LBORRES LBORRESU LBNAM LBORNRLO seq;run;
+
+data temp.lab8;
+attrib
+STUDYID   	label='Study Identifier'
+DOMAIN   	label='Domain Abbreviation'
+USUBJID   	label='Unique Subject Identifier'
+LBSEQ   	label='Sequence Number'
+LBGRPID   	label='Group ID'
+LBTESTCD   	label='Lab Test or Examination Short Name'
+LBTEST   	label='Lab Test or Examination Name'
+LBCAT   	label='Category for Lab Test' length=$200
+LBORRES   	label='Result or Finding in Original Units'
+LBORRESU   	label='Original Units'
+LBORNRLO   	label='Reference Range Lower Limit in Orig Unit'
+LBORNRHI   	label='Reference Range Upper Limit in Orig Unit'
+LBSTRESC   	label='Character Result/Finding in Std Format'
+LBSTRESN   	label='Numeric Result/Finding in Standard Units'
+LBSTRESU   	label='Standard Units'
+LBSTNRLO   	label='Reference Range Lower Limit-Std Units'
+LBSTNRHI   	label='Reference Range Upper Limit-Std Units'
+LBSTNRC   	label='Reference Range for Char Rslt-Std Units'
+LBNRIND   	label='Reference Range Indicator' length=$200
+LBSTAT   	label='Completion Status'
+LBREASND   	label='Reason Test Not Done'
+LBNAM   	label='Vendor Name'
+LBSPEC   	label='Specimen Type'
+LBBLFL   	label='Baseline Flag'
+VISITNUM   	label='Visit Number'
+VISIT   	label='Visit Name'
+EPOCH   	label='Epoch' 
+LBDTC   	label='Date/Time of Specimen Collection' length=$20.
+LBDY   		label='Study Day of Specimen Collection'
+SINORMHI  	label='SI NORMAL HIGH'
+SINORMLO  	label='SI NORMAL LOW'
+SIRESULT  	label='SI RESULT'
+SIUNIT  	label='SI UNIT'
+FLAGHILO  	label='FLAG HIGH LOW'
+CLINSIG  	label='CLINICALLY SIGNIFICANT'
+ASSESCOM  	label='HOW WAS ASSESSMENT COMPLETED'
+COVASSES  	label='WAS ASSESSMENT IMPACTED BY COVID-19'
+COVID  		label='COVID-19 REASON NOT DONE'
+COVIDSP  	label='COVID-19 REASON NOT DONE SPECIFY'
+COVWIND  	label='ASSESSMENT OUT OF WINDOW DUE TO COVID-19'
+COMM  		label='INVESTIGATOR COMM' length=$200.
+COMM2  		label='INVESTIGATOR COMM2' length=$200.
+COMM3  		label='INVESTIGATOR COMM3' length=$200.
+COMM4  		label='INVESTIGATOR COMM4' length=$200.
+COMM5  		label='INVESTIGATOR COMM5' length=$200.
+LBREASN1  label='REASON TEST NOT DONE 1' length=$200.;
+
+set temp.lab7(rename=lbdtc=lbdtc_old);
+BY STUDYID USUBJID LBCAT LBTEST VISITNUM LBDTC_OLD LBORRES LBORRESU LBNAM LBORNRLO SEQ;
+if first.usubjid then lbseq=1;
+else lbseq+1;
+domain="LB";
+lbdtc=lbdtc_old;
+LBCAT=upcase(LBCAT);
+LBORNRLO=strip(LBORNRLO);
+LBORNRHI=strip(LBORNRHI);
+**Fix a data entry Issue**;
+if lbornrhi='0,5' then lbornrhi='0.5';
+lbornrhi=strip(lbornrhi);
+lbstresc=tranwrd(lbstresc,'< 0','<0');
+lbstresc=tranwrd(lbstresc,'> 0','>0');
+lbstresc=tranwrd(lbstresc,'> ','>');
+comm=strip(comments);
+comm2=strip(cmt2);
+comm3=strip(cmt3);
+comm4=strip(cmt4);
+comm5=strip(cmt5);
+run;
+
+data temp.final sdtm.lb(label="Laboratory Test Results");
+	set temp.lab8;
+	keep domain epoch lbblfl lbcat lbdtc lbdy lbgrpid lbnam lbnrind lbornrhi lbornrlo lborres lborresu
+		 lbreasnd lbseq lbspec lbstat lbstnrc lbstnrhi lbstnrlo lbstresc lbstresn lbstresu lbtest
+		 lbtestcd studyid usubjid visit visitnum;
+run;
+
+*===================================================================;
+****SUPPLB***;
+*===================================================================;
+proc sort data=temp.lab8; by studyid usubjid domain lbseq; 
+run;
+
+proc transpose data=temp.lab8 out=temp.supp_lb; 
+  by studyid usubjid domain lbseq; 
+  var sinormhi sinormlo siresult siunit flaghilo covid covidsp assescom covasses covwind clinsig 
+	comm comm2 comm3 comm4 comm5 lbreasn1;
+run;
+
+data temp.supplb;
+	set temp.supp_lb;
+	where not missing(col1);
+		attrib 	 
+		rdomain length = $2 label = "Related Domain Abbreviation"
+	  idvar   length = $5 label = "Identifying Variable"
+		idvarval length = $10 label = "Identifying Variable Value"
+		qnam    length = $8 label = "Qualifier Variable Name"
+	  qlabel  length = $40 label = "Qualifier Variable Label"
+		qval    length = $200 label = "Data Value"
+		qorig   length = $7 label = "Origin"
+    qeval   length = $1 label = "Evaluator";
+
+	rdomain = domain;
+	idvar = 'LBSEQ';
+	idvarval = left(put(lbseq,best.));
+	qnam = left(upcase(_name_));
+	qlabel = left(_label_);
+	qval = strip(col1);
+	qeval="";
+
+	if qnam in ('SINORMHI' 'SINORMLO' 'SIRESULT' 'SIUNIT' 'FLAGHILO' 'COMM') then qorig='eDT';
+	else if qnam in ('CLINSIG' 'COVID' 'COVIDSP' 'ASSESCOM' 'COVASSES' 'COVWIND' 'LBREASN1') 
+	then qorig='CRF';
+	else if qnam in ('COMM2' 'COMM3' 'COMM4' 'COMM5') then qorig='DERIVED';
+	else call missing(qorig);
+
+	if missing(qnam) then putlog  "WARN" "ING: Unassigned qnam and qlabel " _name_=;
+
+	keep studyid usubjid rdomain idvar idvarval qnam qlabel qval qorig qeval;
+run;
+
+data temp.supplb;
+	retain studyid rdomain usubjid idvar idvarval qnam qlabel qval qorig qeval;
+	set temp.supplb;
+run;
+
+proc sort data=temp.supplb ;
+	by studyid rdomain usubjid idvar idvarval qnam;
+run;
+
+data sdtm.supplb(label='Supplemental Qualifiers - LB');
+ set temp.supplb;
+run;
+
+/*proc datasets library=temp kill noprint;*/
+/*run;*/
+******End of Program******;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
