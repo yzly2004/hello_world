@@ -1,0 +1,749 @@
+	1. To deal with all the char variable;
+data t143442_cm;
+  set tfldata.T_14_3_4_4_2;
+  array char_vars {*} _character_; 
+  do i = 1 to dim(char_vars);
+      char_vars{i} = strip(tranwrd(char_vars{i},"|",""));
+  end;
+  drop i;
+  Param = strip(param);
+run;
+2026-02-27                      
+M说以后和外面的服务商联系之前必须获得M和N的批准，只能通过他们去联系，不能擅自自己联系。要认清自己的角色，不要坏了人家的规矩，人在屋檐下，必须低头，不然头破血流。
+2024-08-28
+说服他人并不难：效应值计算-LingLab
+因此，现在在报告统计检验结果时候，也会同时报告另一个参数，以说明我的检验结果是有意义的，这个参数被称作效应量(effect size)。今
+天我们来讲讲都有哪些可以测量的效应量.
+
+Cohen's d 系数
+Cohen's d是一种用于比较均值差异效应大小的参数，在t检验中我们经常会用到这一参数。它通过平均数差和样本标准差的比值来定义效应大小，即Cohen's d = 平均数差 / 样本标准差。比如，检测男性和女性发音人在元音/a/的F1上有没有性别差异，假设我们得到了男性/a/发F1的均值M1，女性发F1的均值M2，通过t检验发现具有显著性差异，但是这个差异效应是大还是小，我们通过计算平均数差(M1-M2)，除以样本标准差，那么我们就得到了Cohen's d的数值。
+学者们针对不同的计算数值，将Cohen's d数值分成了不同的等级，以便研究者说明效应大小。根据Cohen (1988)的建议，我们认为小于.2的Cohen's d数值说明处理效应太小，小到这个研究不值得做。大于等于.8的数值说明这是一个大效应，但是也不至于大到一眼就能看出研究中的因果关系。
+ 
+
+Cohen's d数值与效应大小
+
+在R中，我们可以通过调用lsr包中的cohensD( )函数来计算我们Cohen's d数值。我们根据R中的帮助信息，可以看到该函数调用十分简单，只要说明你是做哪两组的t检验分析，哪两组是你要计算的效应大小即可。
+ 
+
+cohensD( )函数示例
+ 
+关于效应量（effect size），这些干货你需要知道! (360doc.com)
+规模很重要： 临床试验中样本量的重要性-AJE美国期刊专家
+Confidence Intervals in Statistics: Examples & Interpretation (simplypsychology.org)  
+
+The confidence interval (CI) is a range of values that’s likely to include a population value with a certain degree of confidence. It is often expressed as a % whereby a population mean lies between an upper and lower interval.
+
+
+The confidence is in the method, not in a particular CI. If we repeated the sampling method many times, approximately 95% of the intervals constructed would capture the true population mean.
+Therefore, as the sample size increases, the range of interval values will narrow, meaning that you know that mean with much more accuracy than a smaller sample.
+
+
+For example, the probability of the population mean value being between -1.96 and +1.96 standard deviations (z-scores) from the sample mean is 95%.
+Accordingly, there is a 5% chance that the population mean lies outside of the upper and lower confidence interval (as illustrated by the 2.5% of outliers on either side of the 1.96 z-scores).
+Therefore, a confidence interval is simply a way to measure how well your sample represents the population you are studying.
+How to calculate
+To calculate the confidence interval, start by computing the mean and standard error of the sample.
+Remember, you must calculate an upper and low score for the confidence interval using the z-score for the chosen confidence level (see table below).
+
+Confidence Level	Z-Score
+0.90	1.645
+0.95	1.96
+0.99	2.58
+Confidence interval formula
+
+Where:
+• X is the mean
+• Z is the chosen Z-value (1.96 for 95%)
+• s is the standard error
+• n is the sample size
+For the lower interval score, divide the standard error by the square root on n, and then multiply the sum of this calculation by the z-score (1.96 for 95%). Finally, subtract the value of this calculation from the sample mean.
+GraphPad Prism 10 Statistics Guide - Testing for equivalence
+You must decide how large a difference has to be to in order to be considered scientifically or clinically relevant.
+In any experiment, you expect to almost always see some difference in outcome when you apply two treatments. So the question is not whether the two treatments lead to exactly the same outcome. Rather, the question is whether the outcomes are close enough to be clinically or scientifically indistinguishable. How close is that? There is no way to answer that question generally. The answer depends on the scientific or clinical context of your experiment.
+To ask questions about equivalence, you first have to define a range of treatment effects that you consider to be scientifically or clinically trivial. This is an important decision that must be made totally on scientific or clinical grounds.
+
+CFR Code of Federal Regulations: 联邦法规
+CTCAE：Common Terminology Criteria for Adverse Events 是“不良事件的通用术语标准”的缩写，是用于描述和分类药物临床试验中出现的不良事件的标准术语。
+ESR erythrocyte sedimentation rate: 红细胞沉降率，红细胞沉降率：红细胞在垂直管中沉淀的速度，通常以每小时毫米为单位表示，常用作筛查炎症存在的检测方法。
+FSH follicle stimulating hormone 促卵泡激素
+HbA1c hemoglobin A1c ：糖化血红蛋白：一种血液中的血红蛋白，可以反映过去2-3个月内的平均血糖水平，常用于糖尿病患者的血糖控制评估。
+HEOR health economics and outcomes research：卫生经济学与效果研究
+HIPAA Health Insurance Portability and Accountability Act：（美国）健康保险携带和责任法案
+HRQoL Health-Related Quality of Life ：健康相关的生活质量
+IB Investigators’ Brochure： 调查人员的小册子
+ICH International Council for Harmonisation：国际协调理事会
+IUD intrauterine device： 宫内节育器
+IWRS interactive web response system：交互式网络应答系统
+JSN joint space narrowing：
+NSAID non-steroidal anti-inflammatory drug 非甾体抗炎药
+OMERACT Outcome Measures in Rheumatoid Arthritis Clinical Trials 类风湿关节炎临床试验的结局指标
+Evaluate the Health-Related Quality of Life (HRQoL) as measured by the physical component score (PCS) of the 12-Item Short-Form Health Survey version 2 (SF-12v2®) questionnaire at 12 month
+"OMERACT-OARSI" 是一个由两个缩写组成的文本。它代表了两个国际学术组织的合作关系。
+
+1. OMERACT：全称为Outcome Measures in Rheumatology（风湿病结果测量），是一个致力于发展和推广评估风湿病治疗效果的国际学术组织。该组织通过制定标准化的测量工具和方法，帮助医生和研究人员评估患者在治疗过程中的改善情况，并促进临床试验和药物开发。
+
+例如，OMERACT 可以协助医生使用统一的问卷调查来衡量患者在接受特定药物治疗后是否有明显改善。这样可以确保不同地区、不同医院或不同时间进行比较时，所得到的数据是可靠且一致的。
+
+2. OARSI：全称为Osteoarthritis Research Society International（骨关节炎国际科学会议），是一个专注于骨关节炎领域科学研究与交流的国际性学术组织。该组织汇集了来自各个领域（如临床、基础科学、流行病学等）对骨关节炎感兴趣并从事相关工作的专家与科学家。
+
+例如，OARSI 组织每年都会举办国际性会议，在这些会议上，来自全球范围内对骨关节炎有着深入了解并做出重要贡献的专家们可以分享他们最新的科技成果、经验教训以及未来方向等内容。这种交流有助于加强跨领域合作，并推动更好地理解和管理骨关节炎。
+
+总之，“OMERACT-OARSI”代表了两个重要机构之间在风湿类相关问题上进行合作与交流，旨在提高诊断、评估和治愈风湿类相关问题所需信息水平，并促进更好地预防与控制策略实施。
+
+"reactogenicity"是一个医学术语，指的是疫苗接种后引起的免疫反应或副作用。当人体接受疫苗注射时，免疫系统会被激活并产生一系列反应，这些反应可
+以包括局部红肿、发热、头痛等不适感觉。
+
+举个例子来说明，当我们接种流感疫苗时，可能会出现注射部位红肿和发硬的情况，并且有些人还可能会出现轻微的发热和乏力等不适。这些都属于正常的  
+免疫反应，即reactogenicity。
+
+需要注意的是，大多数情况下reactogenicity只是暂时性的，并在几天内自行消失。它通常被认为是一种良好的迹象，表明人体正在对该特定抗原产生有效
+的免疫保护。然而，在极少数情况下，某些人可能对特定类型的疫苗具有过敏反应或更严重的副作用，请在接种前咨询专业医生以获取正确建议和指导。
+
+"免疫原性"是指一种物质能够引起机体产生免疫反应的特性。当人体接触到某些外来物质时，会产生针对这些物质的抗体或细胞免疫反应，从而保护身体不受侵害。因此，在药品和疫苗开发中，评估其免疫原性非常重要。
+
+例如，新冠肺炎疫苗需要具有良好的免疫原性才能有效预防感染。在临床试验中，科学家们会通过检测志愿者血液中是否出现了特定的抗体来评估该疫苗的免疫原性。
+
+《贝尔蒙原则》是指一组伦理准则，用于指导人类和动物参与科学研究的道德行为。这些原则最初在1979年由美国政府制定，并被广泛接受和采纳。
+
+具体来说，《贝尔蒙原则》包括以下三个主要准则：
+
+1. 尊重个体：这意味着研究者必须尊重每个参与研究的人或动物的权利、自主性和尊严。例如，在进行人类试验时，研究者应该确保被试知情同意并明白他们所参与的实验内容以及可能带来的风险和益处。
+
+2. 利益最大化：这表示在进行科学研究时，需要优先考虑到社会、群体或个体的利益。例如，在开展新药物测试时，需要确保药物对患者有治疗效果，并且不会造成过多副作用。
+
+3. 正义公平：这意味着在选择参与科学研究的对象时，应该遵循公正、平等和无歧视原则。例如，在选取实验对象时不能因为种族、性别或经济地位而偏袒某些群体。
+
+总之，《贝尔蒙原则》旨在确保科学研究过程中遵守伦理规范，并保护参与者的权益和福祉。通过遵循这些准则，可以建立起可靠、可信赖且符合道德标准的科学实践环境。
+
+dose regimen: 剂量方案：指药物治疗中规定的用药剂量和用药时间的方案。
+Arthritis cartilage: 关节炎软骨
+Analgesics:镇痛药 Arthroplasty： 关节成形术。
+a) Hypothetical Strategy Analysis: This method will truncate follow-up of patients at the occurrence of an intercurrent event. b) Tipping Point Analysis: This method will assess the impact of missing data on the study conclusions by varying assumptions about the missing data.
+
+The difference between two phase 3 clinical trials:
+Both studies are identical in design and objectives, except for an additional exploratory efficacy endpoint to evaluate health outcomes using the European Quality of Life-Five Dimensions Questionnaire (EQ-5D-5L) in Study TGC-15302.
+In this model, change from baseline will be used as the dependent variable with visit, KL Grade, gender, treatment, and interactions between treatment and visit as fixed factors, subject as a random factor, and baseline value as a covariate. In this model, change from baseline will be used as the dependent variable with visit, KL Grade, gender, treatment, and interactions between treatment and visit as fixed factors, subject as a random factor, and baseline value as a covariate. An unstructured covariance matrix will be used to model the repeated assessments over time. Denominator degrees of freedom will be adjusted using Kenward-Roger’s method. Treatment comparisons will be made for each timepoint with the primary comparison made using Month 12 data. 
+By using this approach, missing values will not be explicitly imputed but estimated assuming that the subject’s missing data after withdrawal would have followed the trend observed among the subjects in the same treatment group. Therefore, the missing data will be assumed to be MAR where any systematic differences between the observed and unobserved endpoint values can be explained by other observed variables. As such, this analysis approach also enables the evaluation of the estimand of interest under the treatment policy strategy. 
+1. Hypothetical Strategy (HS) Analysis In the hypothetical strategy, the goal is to evaluate the effect of a single injection of TG-C against placebo in subjects who receive the study treatment and remain on study to have the primary endpoint evaluated at Month 12, without taking analgesics or undergoing arthroplasty of the target knee. Consequently, for subjects that do experience any of these events, their data will either be missing due to study termination (ICE1), or it will be set to be missing starting from the time of the occurrence of the event (ICE2 and ICE3). A MMRM analysis approach will be used CONFIDENTIAL Kolon TissueGene, Inc. Meeting Briefing Package TISSUEGENE-C (TG-C) Page 25 to analyze each of the two co-primary endpoints and estimate the treatment effect of interest. The modeling approach will be the same as described above for the primary analysis. This sensitivity analysis will serve as a basis to evaluate the treatment effect under a HS approach. 2. Tipping Point Analysis The tipping point sensitivity analysis will be performed to assess the robustness of significant study results to the departure from MAR assumptions in the MMRM analysis. The tipping point analysis will vary the assumptions about the missing data mechanism in order to determine how large a departure from the MAR assumption would need to have occurred in order to tip the results, i.e., change study conclusions, and then by considering the plausibility of such a departure from MAR. In this way, the tipping point analysis helps to understand the potential impact of missing data. The tipping point analysis will be performed by varying the mean difference between outcomes in dropouts and outcomes in completers on each of the two treatment arms (Yan, 2009). This plan for the tipping point analysis will allow for a systematic and comprehensive exploration of possible departures from the MAR assumption, but without the need for imputations.
+2024-10-08 
+Read: Impact of total knee replacement practice: cost effectiveness analysis of data from the Osteoarthritis Initiative. By Bart S Ferket
+在统计学中，“cohort”指的是研究对象按照某种特定属性进行分类并跟踪观察的群体。通过对不同年龄、性别、地区等因素进行分类，并随着时间推移收集数据和观察结果，可以更好地了解该群体在某方面的变化趋势和影响因素。例如，在医学研究中，科学家可能会追踪一个特定年龄范围内的人群来了解他们在长期服药后出现副作用的情况。
+
+Validation cohort comprised 2907 patients from MOST with two year follow-up. ZY: What's the purpose of setting up the validation cohort? 
+QALYs: Quality adjusted life years. ZY: How to calculate the quality adjusted life years.
+. These findings were reproduced among patients with knee osteoarthritis from the MOST cohort and were robust against various scenarios including increased rates of total knee replacement and mortality and inclusion of non-healthcare costs but were sensitive to increased deterioration in quality of life without surgery. In a threshold analysis, total knee replacement would become cost effective in patients with SF-12 PCS scores ≤40 if the associated hospital admission costs fell below $14000 given a cost effectiveness threshold of $200000/QALY.  我不太理解黄标的这句，在没有手术的情况下QOL的下降恶化程度？ 
+
+Mixed-effects model repeated measures (MMRM) is a statistical analysis technique that can handle missing data by assuming that missing data would have followed the trend of the subject's treatment group. MMRM is used when a continuous response is measured repeatedly over time. 
+MMRM can provide an unbiased estimate of the treatment effect that would have been observed if all patients had completed treatment. It does this by: Making use of all available data, Considering subject-specific effects, and Accounting for correlations between repeated measurements. 
+MMRM is an acceptable approach for estimating the true treatment difference and controlling type I error rates when missing data is ignorable. However, there are many types of missing data scenarios, and it's possible that some of the data are not "missing at random" (MAR). 
+Missing data can be caused by a number of factors, including: Patient refusal to continue, Withdrawal of consent, Adverse events that result in discontinuation of study treatment, and Poor record keeping. 
+To reduce the amount of missing data, it's important to consider this early in the design stage of a study.
+LOINC (Logical Observation Identifiers Names and Codes) is a universal standard for identifying clinical information in electronic reports. In clinical trials, LOINC codes are used to uniquely identify laboratory and clinical test results, facilitating the exchange and pooling of data for clinical care, outcomes management, and research12.
+
+LOINC codes help ensure that test results and observations are consistently understood across different systems and institutions, which is crucial for the accuracy and reliability of clinical trial data3.
+
+2025-01-02 
+How to derive values for BASE IN ADLB?
+You need to merge or join the original data with its observations that are baseline.
+ data adlb ;
+  do usubjid = "1" , "2" ;
+    do visitnum = 1 to 10 ;
+      aval = ranuni( 1 ) ;
+      if visitnum = 1 then ablfl = "Y" ;
+       else ablfl = " " ;
+      output ;
+    end ;
+  end ;
+run ;
+ 
+proc sql ;
+  create table adlb_base as
+  select a.*
+       , case when ablfl = " " then b.aval
+               else .
+         end as base
+  from adlb as a
+       left join ( select usubjid
+                        , aval
+                   from adlb
+                   where ablfl = "Y"
+                 ) as b
+         on a.usubjid = b.usubjid
+  order by a.usubjid
+         , a.visitnum
+  ;
+quit ;
+	1. Estimand:
+An estimand is a precise mathematical description of what you want to estimate in a clinical trial. It's essentially the target of your statistical analysis - the specific treatment effect you're trying to measure.
+
+The concept was formalized by the ICH E9(R1) guideline in 2019 to address ambiguities that often arose when interpreting clinical trial results. An estimand consists of five key components:
+
+**Population**: The specific group of patients you're studying (e.g., adults with moderate to severe depression, patients with Type 2 diabetes inadequately controlled on metformin).
+
+**Variable**: The outcome or endpoint you're measuring (e.g., change in depression score, reduction in HbA1c, time to cardiovascular event).
+
+**Intercurrent events**: How you handle events that occur after treatment initiation that could affect the interpretation or existence of the variable (e.g., patients discontinuing treatment, switching to rescue medication, or dying).
+
+**Population-level summary**: How you summarize the treatment effect across the population (e.g., difference in means, hazard ratio, proportion of responders).
+
+**Treatment condition**: The specific treatment regimen being evaluated, including things like dose, duration, and concomitant care.
+
+The most critical aspect is defining how to handle intercurrent events. For example, if a patient stops taking the study drug due to side effects, do you:
+- Ignore data after discontinuation (treatment policy strategy)?
+- Estimate what would have happened if they continued (hypothetical strategy)?
+- Consider discontinuation as treatment failure (composite strategy)?
+
+Different approaches to intercurrent events can lead to different estimands answering different clinical questions. A "treatment policy" estimand reflects real-world effectiveness including discontinuations, while a "hypothetical" estimand estimates efficacy under ideal adherence conditions.
+
+By clearly defining the estimand upfront, researchers ensure that study design, conduct, analysis, and interpretation all align with the specific clinical question being asked.
+
+To add a new row;
+data final01a;
+  set final01 end = eof;
+   output; 
+   IF eof THEN DO;
+   NTRTGR1 = "Protocol Violation"; Treatment_A = 0; Treatment_B = 0; Tot_N = 0;
+   output;
+  END;
+run;
+
+*To assign LBSEQ;
+retain _seq ; 
+  if first.usubjid then _seq = 1 ; 
+  else _seq = _seq + 1 ; 
+  mbseq = _seq ; 
+  _rfdt = RFSTDTC_2 ; 
+  _mbdt = mbDTC_2; 
+  if nmiss(_rfdt, _mbdt) eq 0 then mbdy = _mbdt - _rfdt + (_mbdt >= _rfdt) ; 
+  drop _: ; 
+
+data OUT.L16243;
+    set elig_final;
+/* Array of all character variables in the row */
+  array _cvars _character_;
+
+  /* Loop over each character variable and replace "." with "_" */
+  do _i = 1 to dim(_cvars);
+    /* translate replaces ALL occurrences of "." with "_" */
+      if _cvars[_i] in (".") or missing(_cvars[_i]) then _cvars[_i] = "-";
+  end;
+
+  drop _i;
+run;
+
+I need to develop SAS code to generate a table named Table 14.3_4.2.1 as attached, the snapshot of the output sas dataset for producing the table is also attached. The contents of ADLB dataset is provided, the within group LSMean and 95% CI , and between group LSMean and 95%CI are based on ANOVA model with CHG as dependent variable and treatment(trt01p) as a fixed factor. Please refer to the SAS code for generating the table for Summary of Change from Baseline in Hematology by Visit. Please help draft the SAS code.
+
+options mlogic mprint symbolgen;
+libname raw12301 "S:\KTG Biometrics\Database\INVOSSA\TGC-12301\SDTM\Raw" INENCODING="UTF-8" access=readonly;
+LIBNAME SDTM301 "S:\KTG Biometrics\Database\INVOSSA\TGC-12301\SDTM\Primary" INENCODING="UTF-8" ACCESS=READONLY;
+LIBNAME ADAM301 "S:\KTG Biometrics\Database\INVOSSA\TGC-12301\ADAM\Primary" INENCODING="UTF-8" ACCESS=READONLY;
+LIBNAME OUT "S:\KTG Biometrics\Database\INVOSSA\TGC-12301\ADaM\Validation" OUTENCODING="UTF-8";
+LIBNAME SMQ "S:\KTG Biometrics\Database\INVOSSA\TGC-12301\ADaM\SMQ" ACCESS=READONLY;
+
+*Add a new row;
+data T143473_v01;
+    set work.T143473_v00;
+    output;
+    if _N_ = 1 then do;
+        paramcd = 'HR';
+        param = 'Heart Rate (bpm)';
+        CRIT = '>= 120 bpm and Increase >= 15 bpm from Baseline';
+        _1 = '0';
+        _2 = '0';
+        output;
+    end;
+run;
+
+Prompt for generating ADDV sas code:
+I need to develop SAS code to validate the ADDV dataset by the CRO company, the contents of this ADaM dataset is attached. The specs for ADDV dataset is attached too. ADDV dataset will be derived based on two SDTM dataset: DV and SUPPDV, the contents for these two dataset are attatched too. please refer to my SAS code for validating ADMB when you draft the SAS code for ADDV.
+
+Prompt for generating table 14.1_9:
+I need to develop SAS code to generate a table named Table 14.1_9 as attached. The contents of ADDV dataset is provided formerly. DVCAT and DVDECOD variables will be used to produce the table. please refer to the SAS code for t14.1_3.1.1 to draft the SAS code.
+
+Prompt for generating ADRHCU SAS Code:
+I need to develop SAS code to validate the ADRHCU dataset by the CRO company, the contents of this ADaM dataset is attached. The specs for ADRHCU dataset is attached too. ADRHCU dataset will be derived based on two SDTM dataset: QS, PR and HO, the contents for these three datasets are attached too. please refer to my SAS code for validating ADMB when you draft the SAS code for ADRHCU.
+
+*2025-10-30;
+I need to develop SAS code to generate Table 14.3_1.9.1.1 as attached. The contents of ADAE dataset is provided, the  95% CI for EAIR was based on Poisson distribution. Please refer to the SAS code for generating the table . Please help draft the SAS code for table 14.3_4.8. Two papers about the EAIR reporting are attached for reference. Please use CQ06NAM="Y" to select observations for the first section "Subjects with Any Total Target Knee Replacement TEAEs", and use condition AEBODSYS="Surgical and medical procedures" and AOCC71FL="Y" to select observations for section 2:"Surgical and medical procedures", and use condition AEDECOD="Knee arthroplastry" and AOCC72FL="Y" to select observations for section 3:"Knee arthroplasty".
+
+For Table 14.3_1.9.1.2;Please use CQ07NAM="Total Non-target Knee Replacement Event" to select observations for the first section "Subjects with Any Total Non-target Knee Replacement TEAEs", and use condition AEBODSYS="Surgical and medical procedures" and AOCC83FL ne "Y" to select observations for section 2:"Surgical and medical procedures", and use condition AEDECOD="Knee arthroplastry" and AOCC84FL="Y" to select observations for section 3:"Knee arthroplasty".
+
+For Table 14.3_1.9.2: Please use CQ02NAM="Covid Event" to select observations for the first section "Subjects with Any Covid TEAEs", and use condition AEBODSYS="Infections and infestations" and AOCC38FL ne "Y" to select observations for section 2:"Infections and infestations", and use condition AEDECOD="COVID-19" and AOCC39FL="Y" to select observations for section 3:"COVID-19".
+
+For Table 14.3_1.9.3: Please use CQ04NAM="Injection Site Event" to select observations for the first section "Subjects with Any Covid TEAEs", and use condition AEBODSYS="General disorders and administration site conditions" and AOCC74FL ne "Y" to select observations for section 2:"Infections and infestations", and use  AEDECOD items of dataset for section2 to produce the following sections for Prefered Term, they are subsection of section2 actually. Please prepare the SAS code for this table.
+
+For Table 14.3_1.9.4: Please use CQ04NAM="Injection Site Event" to select observations for the first section "Subjects with Any Malignancy TEAEs", and use condition AEBODSYS="Neoplasms benign, malignant and unspecified (incl cysts and polyps)" and AOCC77FL ne "Y" to select observations for section 2:"Infections and infestations", and use  AEDECOD items of dataset for section2 to produce the following sections for Preferred Term, they are subsection of section2 actually. Please prepare the SAS code for this table.
+
+For Table 14.3_1.9.5: Please use CQ03NAM="Target Knee Related Event" to select observations for the first section "Subjects with Any Target Knee Related TEAEs", and use condition AEBODSYS="General disorders and administration site conditions" and AOCC29FL ne "Y" to select observations for section 2:"General disorders and administration site conditions", and use  condition AEBODSYS="General disorders and administration site conditions" and AOCC30FL ne "Y" to select observations for  the following sections ,AEDECOD items will be used for Preferred Term, these sections are subsection of section2 actually. Please prepare the SAS code for this table.
+
+For Listing 16.2_1.1, I need to develop SAS code to generate Listing 16.2_1.1 as attached. The contents of ADSL dataset is provided, the SAS dataset for producing this listing is attached too.For C1, please use variables SUBJID/AGE/SEX from ADSL,
+For C2, use EOSDT, we need to calculate the Study Day, the algorithm is: if EOSSTT = "RANDOMIZED BUT NOT TREATED" then STUDY_DAY=intck(RANDDT,EOSDT)+1, otherwise, STUDY_DAY=intck(TRTSDT,EOSDT)+1. For C3, use variable EOSSTT. For C4, if EOSSTT = "RANDOMIZED BUT NOT TREATED" then use NTRTGR1/ONTRGR1, if  EOSSTT = "DISCONTINUED", then use variable DCSREAS. Otherwise, set C4 to blank. For c5, use variable DCSREASP. For C6, set to "No", for C7, set to "TREATMENT COMPLETED". Please refer to sas program for table 14.3_2.8.1 for reference.
+
+
+For Listing 16.2_1.2, I need to develop SAS code to generate Listing 16.2_1.2 as attached. The content for the sas dataset  of this listing is provided.please find the appropriate variables from adsl dataset and draft the sas code. Please refer to the final modified sas code for Listing 16.2_1.1 based on the code you originally generated.
+
+For Listing 16.2_1.3.1: I need to develop SAS code to generate Listing 16.2_1.3.1 as attached. The content for the sas dataset  of this listing is provided. please find the appropriate variables from DS and SUPPDS dataset and draft the sas code. 
+DS Domain: Records disposition events such as informed consent, re-consent, withdrawal, etc.Key variables: DSDECOD (Disposition Event: ="INFORMED CONSENT OBTAINED" for C2 and C3 ,="PROTOCOL RECONSENT" for C4 and C5), DSSTDTC (Start Date/Time of Disposition Event).SUPPDS (Supplemental Qualifiers for DS): Stores additional details related to DS events.For example, QNAM values like:
+ICVER (Protocol version under consent signed)
+RECONVE(Protocol version under re-consent signed)
+The above 2 QNAM and according values will be used for this listing.
+Please refer to the final modified sas code for Listing 16.2_1.1 based on the code you originally generated.
+
+
+For Listing 16.2_1.3.2: I need to develop SAS code to generate Listing 16.2_1.3.2 as attached. The content for the sas dataset  of this listing is provided. please find the appropriate variables from DS and SUPPDS dataset and draft the sas code. 
+DS Domain: Records disposition events such as informed consent, re-consent, withdrawal, etc.Key variables: DSDECOD (Disposition Event: ="RANDOMIZED" for Columns of the listing), DSSTDTC (Start Date/Time of Disposition Event) for Date and Time of Randomization in Local Time.SUPPDS (Supplemental Qualifiers for DS): Stores additional details related to DS events.For example, QNAM values like:
+RANDUTC(Date and time of randomization in UTC)
+The above QNAM and according values will be used for this listing. Please get the Target knee,age,sex, and KLG Grade OF Target Knee from ADSL. Set C4 to "Yes".
+Please refer to the final modified sas code for Listing 16.2_1.1 based on the code you originally generated.
+
+
+RANDUTC(Date and time of randomization in UTC)
+STRATUM(Stratum Name)
+DSUNBLND (Was treatment unblinded by the site?)
+DSCWTDT (Date of consent withdrawal)
+
+For Listing 16.2_1.3.3: I need to develop SAS code to generate Listing 16.2_1.3.3 as attached. The content for the sas dataset  of this listing is provided. please find the appropriate variables from SDTM302.IE dataset and draft the sas code. Variable IECAT will be used for C2, Use ITESTCD by obtaining the last two char such as "04" for C3, use IETEST for C4.
+ Please get the TRT and TRTN based on TRT01P and TRT01PN  from ADSL. .
+Please refer to the final modified sas code for Listing 16.2_1.1 based on the code you originally generated.
+
+*2025-11-03 Monday;
+	1. For Listing 16.2_41: I need to develop SAS code to generate Listing 16.2_4.1 as attached. The content for the sas dataset  of this listing is provided. please find the appropriate variables from ADaM302.ADSL dataset and draft the sas code.  Please get the TRT and TRTN based on TRT01P and TRT01PN  from ADSL. Please note that if RACE="OTHER", the value of variable RACEOTH will be used to append to the value of variable RACE, such as: "OTHER, MIDDLE EASTERN".Please refer to the final modified sas code for Listing 16.2_1.1 based on the code you originally generated.
+	2. For Listing 16.2_4.2: I need to develop SAS code to generate Listing 16.2_4.2 as attached. The content for the sas dataset  of this listing is provided. please find the appropriate variables from ADaM302.ADSL dataset and draft the sas code. Please note that there are many variables would be selected from adsl dataset and the columns for one subject will cross 8 pages. Please use the length and label information from the content of the listing sas dataset to set up the attributes for the validation sas dataset. Please refer to the final modified sas code for Listing 16.2_1.1 based on the code you originally generated.
+	3. For Listing 16.2_4.3: I need to develop SAS code to generate Listing 16.2_4.3 as attached. The content for the sas dataset L16243_CM of this listing is provided. please find the appropriate variables from the source dataset ELIG01, its content is provided also. Please use the length and label information from the content of the listing sas dataset L16243_CM to set up the attributes for the validation sas dataset we will generated.  Please note: rename the variable  LK_VAS of dataset ELIG01 as ELIG0101, RK_VAS as ELIG0102, TK_VAS as ELIG0103, LK_WAC as ELIG0104,RK_WAC as ELIG0105, TK_WAC as ELIG0106. Then set  C1=strip(ELIG0101), C2=strip(ELIG0102), C3=strip(ELIG0103), C4=strip(ELIG0104),C5=strip(ELIG0105),C6=strip(ELIG0106). For ELIG0107, just assign "Y" to it. To derive ELIG0108,  if (put(strip(LK_VAS),8.))>=40 or put(strip(LK_VAS),8.) )>=40)   then ELIG0108="Y", else ELIG0108="N". To derive ELIG0109, if put(strip(LK_VAS),8.)) >=40    then ELIG0109="Y", else ELIG0109="N". To derive ELIG0110, if put(strip(RK_VAS),8.)) >=40    then ELIG0110="Y", else ELIG0110="N". For C7, if ELIG0107="Y", then C7="Yes",else C7="No". For C8, if ELIG0108="Y", then C8="Yes",else C8="No". For C9, if ELIG0109="Y", then C9="Yes",else C9="No". For C10, if ELIG0110="Y", then C10="Yes",else C10="No". Please derive variable XXX based on QSDTC and QSDY. Derive variable SUBJECT  based on SUBJID,AGE and SEX. Set C0 = strip(SUBJECT).We need to produce a dataset to compare with L16243_CM, if they are perfectly match, then this listing is fully validated. Please refer to the final modified sas code for Listing 16.2_1.1 based on the code you originally generated.
+	4. For Listing 16.2_4.6: I need to develop SAS code to generate Listing 16.2_4.6 as attached. The content for the sas dataset  of this listing is provided. please find the appropriate variables from ADaM302.ADMH dataset and draft the sas code.Please use the length and label information from the content of this listing sas dataset to set up the attributes for the validation sas dataset. Select the following variables from ADMH dataset: 1. for C1, use SUBJID,AGE and SEX. For C2, use MHBODSYS,MHDECOD,MHTERM. For C3, use MHSTDTC. For C4, use two variables MHENDTC and MHENRTPT, if missing(MHENDTC)=1 then C4=strip(MHENRTPT), else C4=strip(MHENDTC). For C5, use MHCTRL, if  MHCTRL="Y" then C5="Yes", else if MHCTRL="N", then C5="No", else C5="".Please refer to the final modified sas code for Listing 16.2_1.1 based on the code you originally generated.
+	5. For Listing 16.2_4.7: I need to develop SAS code to generate Listing 16.2_4.7 as attached. The content for the sas dataset of this listing is provided. please find the appropriate variables from ADaM302.ADCM dataset and draft the sas code.Please use the length and label information from the content of this listing sas dataset to set up the attributes for the validation sas dataset. Select the following variables from ADCM dataset: 1. for C1, use SUBJID,AGE and SEX. For C2, use CMCLAS,CMDECOD,CMTRT. For C3, use CMINDC,(CMREASON,CMMEDHST),CMRESCUE. Note that CMREASON and CMMEDHST will be concatenated by put "," in between.For C4, use two variables CMSTDTC and CMENDTC, if missing(CMENDTC)=1 then use strip(CMENRTPT) for second part of C4, else second part of C4=strip(MHENDTC). For C5, use CMDOS,CMDOSFRQ,CMROUTE. For C6, USE PREFL and ONTRTFL. If  their values equal "Y" then  set to "Yes", else if they equal to "N", then set to "No", else C5="".Please refer to the final modified sas code for Listing 16.2_4.6 based on the code you originally generated.
+	6. For Listing 16.2_4.9: I need to develop SAS code to generate Listing 16.2_4.9 as attached. The content for the sas dataset of this listing is provided. please find the appropriate variables from ADaM302.ADPR dataset and draft the sas code.Please use the length and label information from the content of this listing sas dataset to set up the attributes for the validation sas dataset. Select the following variables from ADPR dataset: 1. for C1, use SUBJID,AGE and SEX. For C2, use PRSOC,PRDECOD,PRTRT. For C3, use PRINDC,PRSCAT,PRTYPSPY. Note that if PRSCAT="Other", then concatenate the values of PRSCAT and PRTYPSPY, if not equal to "Other, then  only use the value of PRSCAT.".For C4, use variables PRSTDTC,PRSTDY,PRENDTC,PRENDY PRENRTPT, the format will be like "2023-05-04 (274)/2023-05-04 (274)"  or "2023-12-08 (366)/ONGOING" or "2023-06/2023-12", the rule for deriving is that, check if those variables are missing or not, use those non-missing values, if PRENDTC is missing, then PRENDY will be missing too, then we will use the value of PRENRTPT,which is "ONGOING". Please refer to the final modified sas code for Listing 16.2_4.6 based on the code you originally generated.
+	7. For Listing 16.2_4.13: I need to develop SAS code to generate Listing 16.2_4.13 as attached. The content for the sas dataset of this listing is provided. please find the appropriate variables from WORK.ADQS00 dataset(Contents provided) and draft the sas code.Please use the length and label information from the content of this listing sas dataset to set up the attributes for the validation sas dataset. There are 52 distinct items for PRAMAMCD, This variable will be transposed from long to wide,please use AVALC after VAR statement. The values for the records with ABLFL="Y" will be marked with "*". The values for every paramcd items by visit will be shown in this listing. Please refer to the final modified sas code for Listing 16.2_4.6 based on the code you originally generated.
+	8. For Listing 16.2_4.14: I need to develop SAS code to generate Listing 16.2_4.14 as attached. The content for the sas dataset of this listing is provided. please find the appropriate variables from WORK.ADQS00 dataset(Contents provided) and draft the sas code.Please use the length and label information from the content of this listing sas dataset to set up the attributes for the validation sas dataset. There are 2 distinct items(RHCH0101,RHCH0102) for PRAMAMCD, no transpose is needed.please use AVALC for C5. The values for the records with ABLFL="Y" will be marked with "*". The values for every paramcd items by visit will be shown in this listing. Please refer to the final modified sas code for Listing 16.2_4.13 based on the code you originally generated.
+	9. For Listing 16.2_4.15: I need to develop SAS code to generate Listing 16.2_4.15 as attached. The content for the sas dataset of this listing is provided. please find the appropriate variables from WORK.ADQS00 dataset(Contents provided) and draft the sas code.Please use the length and label information from the content of this listing sas dataset to set up the attributes for the validation sas dataset. There are 2 distinct items(HV0101,HV0102) for PRAMAMCD, no transpose is needed.please use AVALC for C6. The values for the records with ABLFL="Y" will be marked with "*". The values for every paramcd items by visit will be shown in this listing. Please refer to the final modified sas code for Listing 16.2_4.14 based on the code you originally generated. Please only generate the SAS code, other documents are not required to save the time.
+	10. For Listing 16.2_4.16: I need to develop SAS code to generate Listing 16.2_4.16 as attached. The content for the sas dataset of this listing is provided. please find the appropriate variables from WORK.ADQS00 dataset(Contents provided) and draft the sas code.Please use the length and label information from the content of this listing sas dataset to set up the attributes for the validation sas dataset. There are 14 distinct items for PARAMCD, no transpose is needed.please use AVALC for C6. The values for the records with ABLFL="Y" will be marked with "*". Use full PARAM values for C4.The values for every paramcd items by visit will be shown in this listing. Please refer to the final modified sas code for Listing 16.2_4.15 based on the code you originally generated. Please only generate the SAS code, other documents are not required to save the time.
+	11. For Listing 16.2_5: I need to develop SAS code to generate Listing 16.2_5 as attached. The content for the sas dataset of this listing is provided. please find the appropriate variables from the following three dataset: ADAM302.ADSL(AGE,SEX), SDTM302.EX(EXSTDTC,EXSTDY),SDTM302.SUPPEX(where=(QNAM in ("EXLOCAT","EXULTRAG"))). So appropriate merge of these 3 dataset is required to get the necessary variables. Contents for sdtm302.ex and sdtm302.suppex are provided. Please use the length and label information from the content of this listing sas dataset to set up the attributes for the validation sas dataset. The value of QVAL of suppex will be converted by: if QVAL="Y" then QVAL="Yes",else if QVAL = "N", then QVAL = "NO". Please refer to the final modified sas code for Listing 16.2_4.15 based on the code you originally generated. Please put my name "Joshua Yuan" in the program head section. Please only generate the SAS code, other documents are not required to save the time.
+	12. For Listing 16.2_4.2: I need to develop SAS code to generate Listing 16.2_4.2 as attached. please find the appropriate variables from ADaM302.ADSL dataset and draft the sas code. Please note that there are many variables would be selected from adsl dataset and the columns for one subject will cross 8 pages. Please use the length and label information from the content of the listing sas dataset to set up the attributes for the validation sas dataset. Please refer to the previous sas code for Listing 16.2_4.2 based on the code you originally generated. The following vairable SF6DBL and its related C22 column, WORMSBL and its related C34, XRAYBL and its related C35, OMRACTBL and its related C38 Column could not be found from ADSL, please still put them in the validation dataset as place holder and set missing value to them. 
+	13. For Listing 16.2_7.1:I need to develop SAS code to generate Listing 16.2_7.1 as attached. The content and csv file for the sas dataset of this listing are provided. please find the appropriate variables from WORK.ADAE dataset(Contents provided) and draft the sas code.Please use the length and label information from the content of this listing sas dataset to set up the attributes for the validation sas dataset.  Please refer to the final modified sas code for Listing 16.2_5 based on the code you originally generated. Please only generate the SAS code, other documents are not required to save the time.
+	14. For Listing 16.2_8.1: I need to develop SAS code to generate Listing 16.2_8.1 as attached. The content for the sas dataset of this listing is provided. please find the appropriate variables from ADAM302.ADLB dataset(Contents provided) and draft the sas code.Please use the length and label information from the content of this listing sas dataset to set up the attributes for the validation sas dataset. There are 15 distinct items for PRAMAMCD when select the observations using condition where=(parcat1="Hematology"),  This variable will be transposed from long to wide, please use AVAL and CHG after VAR statement, those transposed values will be converted to char and concatenated to format such as "0.3/0.3".The AVAL values for the records with ABLFL="Y" will be marked with "*",such as "0.2*/". If ANL02FL="Y", then the AVAL value of the record will be marked with "#", such as "0.14#/-0.06". Use variables VISIT/AVISIT for C2, Use LBDTC/LBDY for C3.  The values for every paramcd items by visit will be shown in this listing. Please refer to the final modified sas code for Listing 16.2_4.6 based on the code you originally generated. Please only generate the SAS code, other documents are not required to save the time. Put my name "Joshua Yuan" in the program header section too.
+	15. For Listing 16.2_8.2: I need to develop SAS code to generate Listing 16.2_8.2 as attached. The content for the sas dataset of this listing is provided. please find the appropriate variables from ADAM302.ADLB dataset(Contents provided) and draft the sas code.Please use the length and label information from the content of this listing sas dataset to set up the attributes for the validation sas dataset. There are 19 distinct items for PRAMAMCD when select the observations using condition where=(parcat1="Serum Chemistry").Note that for paramcd="SCGLUC", two columns C18 and C18A  will be  used to show the values, C18 displays the SCGLUC values for those observations with LBFAST="Y",and C18A displays the SCGLUC values for those observations with LBFAST="N". This char-type AVAL/CHG values will be transposed from long to wide, please use it after VAR statement, those transposed values will be in format such as "0.3/0.3". If AVAL value is missing, then just display "Not Done".The AVAL values for the records with ABLFL="Y" will be marked with "*",such as "0.2*/". If ANL02FL="Y", then the AVAL value of the record will be marked with "#", such as "0.14#/-0.06". Use variables VISIT/AVISIT for C2, Use LBDTC/LBDY for C3.  The values for every paramcd items by visit will be shown in this listing. Please refer to the final modified sas code for Listing 16.2_8.1 based on the code you originally generated. Please only generate the SAS code, other documents are not required to save the time. Put my name "Joshua Yuan" in the program header section too.
+	16. For Listing 16.2_9: I need to develop SAS code to generate Listing 16.2_9 as attached. The content for the sas dataset of this listing is provided. please find the appropriate variables from ADAM302.ADVS dataset(Contents provided) and draft the sas code. Please use the length and label information from the content of this listing sas dataset to set up the attributes for the validation sas dataset. There are 9 distinct items for PRAMAMCD .Note that for column C2, variables VISIT/AVISIT/VSTPT  will be  used. For column C3, variables VSDTC/ADY will be used. For column C4, use the values of variable AVAL for PARAMCD = "SYSBP". For column C5, use the values of variable AVAL for PARAMCD = "DIABP".For Column SYSBP and DIABP in the listing SAS dataset, the values of variables AVAL/CHG for PARAMCD in ("SYSBP","DIABP") will be used and converted to character. This char-type AVAL values  and AVAL/CHG values for all PARAMCD items will be transposed from long to wide. If AVAL value is missing, then just display "Not Done".The AVAL values for the records with ABLFL="Y" will be marked with "*",such as "160*/" for columns SYSBP and DIABP, "167*" columns C4 to C11 . If ANL02FL="Y", then the AVAL value of the record will be marked with "#", such as "119#/4#" for columns SYSBP and DIABP, and "110#" for columns C4 to C11. The values for every paramcd items by visit will be shown in this listing. Please refer to the final modified sas code for Listing 16.2_8.1 based on the code you originally generated. Please only generate the SAS code, other documents are not required to save the time. Put my name "Joshua Yuan" in the program header section too.
+	
+	17. For Listing 16.2_6.4.1: I need to develop SAS code to generate Listing 16.2_6.4.1 as attached. The content for the sas dataset of this listing is provided. please find the appropriate variables from ADAM302.ADQS dataset(Contents provided) and use condition(where parcat1 = "HAQ-DI WITH VAS" and substr(paramcd,1,5)="HAQ01") to choose the Paramcd values: "HAQ0101" to "HAQ0147",the PARAMCD variable  should be transposed from long to wide.Please use the length and label information from the content of this listing sas dataset to set up the attributes for the validation sas dataset.  Please derive a new variable by concatenating the value of AVALC and AVAL, such as "With SOME difficulty (1)" and use it after VAR statement. The values for the records with ABLFL="Y" will be marked with "*",such as "With SOME difficulty (1)*". Please refer to the final modified sas code for Listing 16.2_4.15 based on the code you originally generated. Remove 3 variables BLANK,_LABEL_,_NAME_ from the L_16_2_6_4_1 dataset when handling it for downstream validation. Please only generate the SAS code, other documents are not required to save the time. Put my name "Joshua Yuan" in the program header section too.
+	18. For Listing 16.2_6.4.2: I need to develop SAS code to generate Listing 16.2_6.4.2 as attached. The content for the sas dataset of this listing is provided. please find the appropriate variables from ADAM302.ADQS dataset(Contents provided) and use condition(where parcat1 = "HAQ-DI WITH VAS" and paramcd in ("HAQ0146","HAQ0147","HAQDI","HAQDID1","HAQDID2","HAQDID3","HAQDID4","HAQDID5","HAQDID6","HAQDID7","HAQDID8") ,the PARAMCD variable  should be transposed from long to wide, AVALC and CHG will be displayed. The AVALC values for the records with ABLFL="Y" will be marked with "*",such as "55*".Please use the length and label information from the content of this listing sas dataset to set up the attributes for the validation sas dataset. Please refer to the final modified sas code for Listing 16.2_6.4.1 based on the code you originally generated. Please only generate the SAS code, other documents are not required to save the time. Put my name "Joshua Yuan" in the program header section too.
+	19. For Listing 16.2_6.7: I need to develop SAS code to generate Listing 16.2_6.7 as attached. The content for the sas dataset of this listing is provided. please find the appropriate variables from ADAM302.ADQS dataset(Contents provided) and use condition(where parcat1 = "IKDC SUBJECTIVE KNEE EVALUATION" ,the PARAMCD variable  should be transposed from long to wide.Please use the length and label information from the content of this listing sas dataset to set up the attributes for the validation sas dataset.  For Paramcd not in ("IKEVQ02","IKEVQ03","IKEVQ10","IKEVQ11","IKEVSCOR"),Please derive a new variable by concatenating the value of AVALC and AVAL, such as "Moderately difficult (2)" and use it after VAR statement. Otherwise, just use AVALC for displaying. The values for the records with ABLFL="Y" will be marked with "*",such as "Extremely difficult (1)*". Please refer to the final modified sas code for Listing 16.2_6.4.1 based on the code you originally generated. Remove 3 variables _LABEL_,_NAME_ from the L_16_2_6_7 dataset when handling it for downstream validation. Please only generate the SAS code, other documents are not required to save the time. Put my name "Joshua Yuan" in the program header section too.
+	20. For Listing 16.2_6.7.1: I need to develop SAS code to generate Listing 16.2_6.7.1 as attached. The content for the sas dataset of this listing is provided. please find the appropriate variables from ADAM302.ADQS dataset(Contents provided) and use condition(where parcat1 = "EQ-5D-5L" and PARAMCD in ("EQ5D0201","EQ5D0202","EQ5D0203","EQ5D0204","EQ5D0205","EQ5D0206",) ,the PARAMCD variable  should be transposed from long to wide.Please use the length and label information from the content of this listing sas dataset to set up the attributes for the validation sas dataset.  Please derive a new variable by concatenating the value of AVALC and AVAL, such as "I am slightly anxious or depressed (2)" and use it after VAR statement.  The values for the records with ABLFL="Y" will be marked with "*",such as "Extremely difficult (1)*". Please refer to the final modified sas code for Listing 16.2_6.4.1 based on the code you originally generated. Remove 3 variables _LABEL_,_NAME_ from the L_16_2_6_7_1 dataset when handling it for downstream validation. Please only generate the SAS code, other documents are not required to save the time. Put my name "Joshua Yuan" in the program header section too.
+	21. For Listing 16.2_6.7.2: I need to develop SAS code to generate Listing 16.2_6.7.2 as attached. The content for the sas dataset of this listing is provided. please find the appropriate variables from ADAM302.ADQS dataset(Contents provided) and use condition(where parcat1 = "EQ-5D-5L" and PARAMCD in ( "EQ5D0206", "EQ5D5L", "EQ5D5LAD","EQ5D5LMO","EQ5D5LPD","EQ5D5LSC","EQ5D5LUA") ,the PARAMCD variable  should be transposed from long to wide. Please use the length and label information from the content of this listing sas dataset to set up the attributes for the validation sas dataset. AVALC and CHG will be displayed. The AVALC values for the records with ABLFL="Y" will be marked with "*",such as "0.681*". Please refer to the sas code for Listing 16.2_6.4.2 . Remove 2 variables _LABEL_,_NAME_ from the L_16_2_6_7_2 dataset when handling it for downstream validation. Please only generate the SAS code, other documents are not required to save the time. Put my name "Joshua Yuan" in the program header section too.
+	22. For Listing 16.2_10.1: I need to develop SAS code to generate Listing 16.2_10.1 as attached. The content for the sas dataset of this listing is provided. please find the appropriate variables from ADAM302.ADMB dataset(Contents provided) and use condition(where parcat1 = "Serum TGF-BETA1" and PARAMCD in ("TGFB1") . Please use the length and label information from the content of this listing sas dataset to set up the attributes for the validation sas dataset.   The values for the records with ABLFL="Y" will be marked with "*",such as "BLINDED*/-". Please refer to the final modified sas code for Listing 16.2_8.1 which was based on the code you originally generated. Remove variable "BLANK"  from the L_16_2_10_1 dataset when handling it for downstream validation. Please only generate the SAS code, other documents are not required to save the time. Put my name "Joshua Yuan" in the program header section too.
+	23. For Listing 16.2_10.2: I need to develop SAS code to generate Listing 16.2_10.2 as attached. The content for the sas dataset of this listing is provided. please find the appropriate variables from ADAM302.ADMB dataset(Contents provided) and use condition(where parcat1 = "Vector DNA" and PARAMCD in ("PKEB1","PKVSVG"), the PARAMCD variable  should be transposed from long to wide. Please use the length and label information from the content of this listing sas dataset to set up the attributes for the validation sas dataset.   For column C3, use variable MBDTC and ADY form ADaM302.ADMB. For column C3A, use the value of MBEVALID. For column C4 and C5, the CHG value will not be included. The values for the records with ABLFL="Y" will be marked with "*",such as "BLINDED*/-". The values for the records with ANL02FL="Y" will be marked with "#",such as "BLINDED#/-".Please refer to the final modified sas code for Listing 16.2_10.1 which was based on the code you originally generated. Remove variable "BLANK"  from the L_16_2_10_1 dataset when handling it for downstream validation. Please only generate the SAS code, other documents are not required to save the time. Put my name "Joshua Yuan" in the program header section too.
+	24. For Listing 16.2_10.2: I need to develop SAS code to generate Listing 16.2_10.3 as attached. The content for the sas dataset of this listing is provided. please find the appropriate variables from ADAM302.ADMB dataset(Contents provided) and use condition(where parcat1 = "Vector DNA" and PARAMCD in ("PCRTARG"). Please use the length and label information from the content of this listing sas dataset to set up the attributes for the validation sas dataset.   For column C3, use variable MBDTC and ADY form ADaM302.ADMB. For column C3A, use the value of MBEVALID. For column C4 , the CHG value will not be included. The values for the records with ABLFL="Y" will be marked with "*",such as "BLINDED*". The values for the records with ANL02FL="Y" will be marked with "#",such as "BLINDED#".Please refer to the final modified sas code for Listing 16.2_10.1 which was based on the code you originally generated. Remove variable "BLANK"  from the L_16_2_10_1 dataset when handling it for downstream validation. Please only generate the SAS code, other documents are not required to save the time. Put my name "Joshua Yuan" in the program header section too.
+	25. For Listing 16.2_4.2 Re-validation: I need to develop SAS code to generate Listing 16.2_4.2 again to compare with the newly updated listing by CRO. The content for the sas dataset  of this updated listing is provided. please find the appropriate variables from ADaM302.ADSL dataset and draft the sas code. Please note that there are many variables would be selected from adsl dataset . Please use the length and label information from the content of the listing sas dataset to set up the attributes for the validation sas dataset. Please refer to the old version of sas code for Listing 16.2_4.2 based on the code you originally generated.
+	26. Please refer to the paper and content of the adqs_mwpc01 as attached, there are 3 anchor variables: IMPROVED01,IMPROVED02, and IMPROVED03 will be used as dependent variable in logistic regression model. Please use variables PARAMCD, TRT01P, AVISIT in the BY statement. Use BASE, SEX, KLGBL as covariates in the logistic regression model, note that SEX, KLGBL are categorical variables. Please draft a macro for using different combinations of variables in BY statement and covariates (such as only use one covariate BASE) flexibly, and generate 95% CI using bootstrap 95% CI in the macro. Refer to the code generated by other AI tools, it has many bugs and cannot run through and get required results.
+2026-03-06;
+I need to develop SAS code to generate Table 14.3_5.1 as attached. The contents of ADMB dataset is provided.The logic is similar to that of table T14.3_4.7.1, the sas code is provided for reference. The snapshot of the sas dataset for the table is provided.
+please generate the SAS code to produce the table shell in RTF format for Table 14.1_1.1 (attached) by using proc report and the same font and size as the table. Refer to the example table shell and the according SAS code as attached.
+
+Please draft SAS code for creating the table shell for attached table 14.1_1.2, refer to the workable SAS code for T14.1_1.1.
+
+Great job, the code works. Please draft SAS code for attached table 14.1_1.3. please replace the first column of first row of the second section "Schnitzer, Thomas (506)" with "Name of Main Investigator 1 (xxx)",replace the first column of the first row of section 3 "Hommen, Jan (507)" "Hanson, Peter (508)" with "Name of Main Investigator 1 (xxx)" , replace the first column of the first row of section 4 with "Repeat for other main investigators" and leave the values for other columns to blank. For the values of other columns, use the largest number for deciding the length of values such as "xxxx", for example, if the largest number of the column is 176, then set the value for this column as "xxx", however, if the largest number is 96, then set the value for this column to "xx".
+
+Please draft sas code for table 14.1_4 shell, refer to the attached example shell. Note that we need to use SOC1, PT1 to replace the exact content for the first column of each section, and put "..." at the bottom of each section and leave the value for other columns to blank. Note that the format such as "xx (xx.x)" for each column of each section should be same, decided by the largest number of this column for this section.
+
+Please draft sas code for table 14.1_5.1.1 shell, refer to the attached example shell. Note that we need to use "Antaomical Therapeutic Chemical (ATC Level 2) 01", "Preferred Term 01", "Preferred Term 02" to replace the exact content for the first column of each section, and put "..." at the bottom of each section and leave the value for other columns to blank. Repeat this section for another two times and increase the serial number of ATC. Put "xxx (xx.x)" for three columns(Treatment A, Treatment B, and Total).
+
+Please draft sas code for table 14.1_5.1.1 shell, refer to the attached example shell. Note that we need to use "Antaomical Therapeutic Chemical (ATC Level 2) 01", "Preferred Term 01", "Preferred Term 02" to replace the exact content for the first column of each section, and put "..." at the bottom of each section and leave the value for other columns to blank. Repeat this section for another two times and increase the serial number of ATC. Put "xxx (xx.x)" for three columns(Treatment A, Treatment B, and Total). refer to the SAS code for 14.1_4. Put "20xx-xx-xx" after Data Cut Off Date:. Put "...\TGC-15302\Tables\Production\xxx.sas (DDMMMYYYY  HH:MM)" after Source code:. Change the page info at right top "Page 1 of 33" to "Page 1 of xx".
+
+Please draft sas code for table 14.1_5.1.1 shell, refer to the attached example shell. Note that we need to use "Antaomical Therapeutic Chemical (ATC Level 2) 01", "Preferred Term 01", "Preferred Term 02" to replace the exact content for the first column of each section, and put "..." at the bottom of each section and leave the value for other columns to blank. Repeat this section for another two times and increase the serial number of ATC. Put "xxx (xx.x)" for three columns(Treatment A, Treatment B, and Total). refer to the SAS code for 14.1_4. Put "20xx-xx-xx" after Data Cut Off Date:. Put "...\TGC-15302\Tables\Production\xxx.sas (DDMMMYYYY  HH:MM)" after Source code:. Change the page info at right top "Page 1 of 33" to "Page 1 of xx".
+
+Please draft sas code for table 14.1_5.1.2 shell, refer to the attached example shell. Note that we need to use "Antaomical Therapeutic Chemical (ATC Level 2) 01", "Preferred Term 01", "Preferred Term 02" to replace the exact content for the first column of each section, and put "..." at the bottom of each section and leave the value for other columns to blank. Repeat this section for another two times and increase the serial number of ATC. Put "xxx (xx.x)" for three columns(Treatment A, Treatment B, and Total) and use option 'just=center'. refer to the SAS code for 14.1_4. Put "20xx-xx-xx" after Data Cut Off Date:. Put "...\TGC-15302\Tables\Production\xxx.sas (DDMMMYYYY  HH:MM)" after Source code:. Change the page info at right top "Page 1 of 33" to "Page 1 of xx".. refer to the SAS code for 14.1_5.1.1. Put "20xx-xx-xx" after Data Cut Off Date:. Put "...\TGC-15302\Tables\Production\xxx.sas (DDMMMYYYY HH:MM)" after Source code:. Change the page info at right top "Page 1 of 33" to "Page 1 of xx".
+
+Please draft sas code for table 14.1_5.1.3 shell, refer to the attached example shell. Note that we need to use "System Organ Class 01", "Preferred Term 01", "Preferred Term 02" to replace the exact content for the first column of each section, and put "..." at the bottom of each section and leave the value for other columns to blank. Repeat this section for another two times and increase the serial number of SOC. Put "xxx (xx.x)" for three columns(Treatment A, Treatment B, and Total) and use option 'just=center'.  Put "20xx-xx-xx" after Data Cut Off Date:. Put "...\TGC-15302\Tables\Production\xxx.sas (DDMMMYYYY  HH:MM)" after Source code:. Change the page info at right top "Page 1 of 33" to "Page 1 of xx".. refer to the SAS code for 14.1_5.1.1. Put "20xx-xx-xx" after Data Cut Off Date:. Put "...\TGC-15302\Tables\Production\xxx.sas (DDMMMYYYY HH:MM)" after Source code:. Change the page info at right top "Page 1 of 33" to "Page 1 of xx".
+
+Please draft sas code for table 14.1_9 shell. Put "xxx (xx.x)" for three columns(Treatment A, Treatment B, and Total) and use option 'just=center'.  Put "20xx-xx-xx" after Data Cut Off Date:. Put "...\TGC-15302\Tables\Production\xxx.sas (DDMMMYYYY  HH:MM)" after Source code:. Change the page info at right top "Page 1 of 33" to "Page 1 of xx".. refer to the SAS code for 14.1_5.1.1. Put "20xx-xx-xx" after Data Cut Off Date:. Put "...\TGC-15302\Tables\Production\xxx.sas (DDMMMYYYY HH:MM)" after Source code:. Change the page info at right top "Page 1 of 33" to "Page 1 of xx"
+
+*For 14.3 AE serial tables;
+Please draft sas code for table 14.3_1.1.1 shell, refer to the attached example table. Note that we need to use all the items in the first column of the table. Put "xxx (xx.x)" for n (%)  and xxx (xxx.x) for E (E*100/PYS) for Treatment A,and Treatment B column. In Treatment Difference column, use xx.x (xx.x,xx.x) for 95% CI and use option 'just=center'.  Put "20xx-xx-xx" after Data Cut Off Date:. Put "...\TGC-15302\Tables\Production\xxx.sas (DDMMMYYYY  HH:MM)" after Source code:. Change the page info at right top "Page 1 of 33" to "Page 1 of xx".. refer to the SAS code for 14.1_5.1.1. Put "20xx-xx-xx" after Data Cut Off Date:. Put "...\TGC-15302\Tables\Production\xxx.sas (DDMMMYYYY HH:MM)" after Source code:. Change the page info at right top "Page 1 of 3" to "Page 1 of xx".
+
+Please draft sas code for table 14.3_1.1.2 shell, refer to the attached example table. It's similar to table 14.3_1.1.1 shell except that this table is for the AEs within 4 weeks after Injection. please replace the numbers with xxx, for example, replace "N=153" with "N=xxx", "PYS=23.6" with "PYS=xx.x". Note that for treatment A column, there is a line across two sub columns "n (%)" and "E (E*100/PYS)", similar to Treatment B column and Treatment Difference column. 
+
+
+Please draft sas code for table 14.3_1.2.1 shell, refer to the attached snapshot of the table. Note that we need to use "System Organ Class 01", "Preferred Term 01", "Preferred Term 02" to replace the exact content for the first column of each section, and put "..." at the bottom of each section and leave the value for other columns to blank. Repeat this section for another two times and increase the serial number of SOC. Put "xxx (xx.x)" for n (%) of three columns(Treatment A, Treatment B, and Total) , put "xxx (xxx.x)" for E (E*100/PYS). Use option 'just=center'.  Put "20xx-xx-xx" after Data Cut Off Date:. Put "...\TGC-15302\Tables\Production\xxx.sas (DDMMMYYYY  HH:MM)" after Source code:. Change the page info at right top "Page 1 of 33" to "Page 1 of xx".. refer to the SAS code for 14.3_1.1.1. Put "20xx-xx-xx" after Data Cut Off Date:. Put "...\TGC-15302\Tables\Production\xxx.sas (DDMMMYYYY HH:MM)" after Source code:. Change the page info at right top "Page 1 of 41" to "Page 1 of xx".
+
+
+Please draft sas code for table 14.3_1.4.1 shell, refer to the attached snapshot of the table. Note that we need to use " "Preferred Term 01", "Preferred Term 02","Preferred Term 03", "Preferred Term 04","Preferred Term 05", "Preferred Term 06" to replace the exact content for the first column of each section, and put "..." at the bottom of each section and leave the value for other columns to blank.  Put "xxx (xx.x)" for n (%) of three columns(Treatment A, Treatment B, and Total) , put "xxx (xxx.x)" for E (E*100/PYS). Use option 'just=center'. please replace the numbers in the header  with xxx, for example, replace "N=153" with "N=xxx", "PYS=255.8" with "PYS=xxx.x".  Put "20xx-xx-xx" after Data Cut Off Date:. Put "...\TGC-15302\Tables\Production\xxx.sas (DDMMMYYYY  HH:MM)" after Source code:. Change the page info at right top "Page 1 of 33" to "Page 1 of xx".. refer to the SAS code for 14.3_1.2.1. Put "20xx-xx-xx" after Data Cut Off Date:. Put "...\TGC-15302\Tables\Production\xxx.sas (DDMMMYYYY HH:MM)" after Source code:. Change the page info at right top "Page 1 of 41" to "Page 1 of xx".
+
+
+Please draft sas code for table 14.3_1.5.1 shell, refer to the attached snapshot of the table. Note that we need to use "System Organ Class 01","Preferred Term 01", "Preferred Term 02","Preferred Term 03" to replace the exact content for the first column of each section, and put "..." at the bottom of each section and leave the value for other columns to blank. Repeat this section for another two times and increase the serial number of SOC.  Put "xxx (xx.x)" for n (%) of two columns(Treatment A, Treatment B). Use option 'just=center'. please replace the numbers in the header  with xxx, for example, replace "N=153" with "N=xxx".  Put "20xx-xx-xx" after Data Cut Off Date:. Put "...\TGC-15302\Tables\Production\xxx.sas (DDMMMYYYY  HH:MM)" after Source code:. Change the page info at right top "Page 1 of 33" to "Page 1 of xx".. refer to the SAS code for 14.3_1.2.1. Put "20xx-xx-xx" after Data Cut Off Date:. Put "...\TGC-15302\Tables\Production\xxx.sas (DDMMMYYYY HH:MM)" after Source code:. Change the page info at right top "Page 1 of 145" to "Page 1 of xxx".
+
+
+Please draft sas code for table 14.3_1.8 shell, refer to the attached snapshot of the table. Note that we need to use "System Organ Class 01","Preferred Term 01", "Preferred Term 02","Preferred Term 03" to replace the exact content for the first column of each section, and put "..." at the bottom of each section and leave the value for other columns to blank. Repeat this section for another two times and increase the serial number of SOC.  Put "xxx-xxxxx,xxx-xxxxx*,xxx-xxxxx#,…" for  two columns(Treatment A, Treatment B). Use option 'just=left' for these two columns. please replace the numbers in the header  with xxx, for example, replace "N=176" with "N=xxx".  Put "20xx-xx-xx" after Data Cut Off Date:. Put "...\TGC-15302\Tables\Production\xxx.sas (DDMMMYYYY  HH:MM)" after Source code:. Change the page info at right top "Page 1 of 33" to "Page 1 of xx".. refer to the SAS code for 14.3_1.2.1. Put "20xx-xx-xx" after Data Cut Off Date:. Put "...\TGC-15302\Tables\Production\xxx.sas (DDMMMYYYY HH:MM)" after Source code:. Change the page info at right top "Page 1 of 145" to "Page 1 of xxx".
+
+Please draft sas code for table 14.3_2.8.1 shell, refer to the attached snapshot of the table. Note that we need to  replace the number under each column with "x", for example, 2024-04-18 will be converted as "xxx-xx-xx", for the character string before of after "/", if the length is greater than 6, then replace the string as "xxxxxx", else, replace each character with "x". Use three record as example, and put "…" at the bottom of the third record.  Put "20xx-xx-xx" after Data Cut Off Date:. Put "...\TGC-15302\Tables\Production\xxx.sas (DDMMMYYYY  HH:MM)" after Source code:. Change the page info at right top "Page 1 of 33" to "Page 1 of xx".. refer to the SAS code for 14.3_1.2.1. Put "20xx-xx-xx" after Data Cut Off Date:. Put "...\TGC-15302\Tables\Production\xxx.sas (DDMMMYYYY HH:MM)" after Source code:. Change the page info at right top "Page 1 of 20" to "Page 1 of xx".
+
+Please draft sas code for table 14.3_4.5.2 shell, refer to the attached snapshot of the table. Note that we need to  replace the number under  columns except "Date and Time of Assessment/Study Day" with "x", for example, 551-20368 will be converted as "xxx-xxxxx", for the character string , just keep as is.  Put "...\TGC-15302\Tables\Production\xxx.sas (DDMMMYYYY  HH:MM)" after Source code:. Change the page info at right top "Page 1 of 33" to "Page 1 of xx".. refer to the SAS code for 14.3_1.2.1. 
+
+Please draft sas code for table 14.3_4.7.3 shell, refer to the attached snapshot of the table. Note that we need to  put "xxx/xxx (xx.x)" for columns Treatment A and Treatment B, for the first column, just keep as is.  Put "...\TGC-15302\Tables\Production\xxx.sas (DDMMMYYYY  HH:MM)" after Source code:. Change the page info at right top "Page 1 of  1" to "Page 1 of xx".. refer to the SAS code for 14.3_1.2.1. 
+
+Please draft sas code for table 14.3_4.7.4 shell, refer to the attached snapshot of the table. Note that we need to  replace the number under each column with "x", for example, 2024-04-18 will be converted as "xxx-xx-xx", keep the charact as is. There are 6 visits for this subject in this snapshot, please remove the no.3,4,5 visit record and replace them with "…" in the second column and leave the other columns blank for this row. Repeat this section one more time and put "…" at the bottom of the first column.  Put "20xx-xx-xx" after Data Cut Off Date:. Put "...\TGC-15302\Tables\Production\xxx.sas (DDMMMYYYY  HH:MM)" after Source code:. Change the page info at right top "Page 1 of 313" to "Page 1 of xxx".. refer to the SAS code for 14.3_1.2.1. 
+
+Please draft sas code for table 14.3_4.8 shell, refer to the attached snapshot of the table. Note that we need to  put "xxx" for the row with value="N1" of the first column, put "xxx/xxx (xx.x)"  for the other rows for columns Treatment A and Treatment B, There are 4 visits for this examination item(General Appearance) in this snapshot, please remove the no.4 visit record and replace them with "…" in the first column and leave the other columns blank for this row. Repeat the  section  for "General Appearance" one more time and change the examination item to "Autoimmune" for the new section. put "…" at the bottom of the first column under the second section.  Put "20xx-xx-xx" after Data Cut Off Date:. Put "...\TGC-15302\Tables\Production\xxx.sas (DDMMMYYYY  HH:MM)" after Source code:. Change the page info at right top "Page 1 of 313" to "Page 1 of xxx".. refer to the SAS code for 14.3_1.2.1. 
+
+Please draft sas code for table 14.2_32.1.1 shell, its title is: Proportion of Subjects with achievement of "Much Better" and "Moderately Better" on CGI-C by Visit Through Month 24 ( Primary Analysis) . Refer to the attached table shell of table 14.2_12.1.1.  
+
+Please draft sas code for table 14.3_1.9.1.1 shell, refer to the attached snapshot of the table. Note that we need to  put "xxx" for the row with value="n" of the "Statistics" column, put "xxx.xx"  for the rows with Statistics in ("PY","EAIR") for columns Treatment A and Treatment B. For the rows with Statistics in ("Difference","95% CI"), put "xxx.xx" in Treatment B only for row "Difference", and put "(xxx.xx,xxx.xx)" for row "95% CI", and leave the according places under Treatment A column to be blank.  Put "20xx-xx-xx" after Data Cut Off Date:. Put "...\TGC-15302\Tables\Production\xxx.sas (DDMMMYYYY  HH:MM)" after Source code:. Change the page info at right top "Page 1 of 313" to "Page 1 of xxx".. refer to the SAS code for 14.3_1.2.1. 
+
+
+
+Please suggest a table shell for table 14.1_7.1 Summary of Clinical Test at Screening (All Randomized Subjects). refer to the attached protocol and SAP of the clinical study.
+
+Please suggest a table shell for table 14.1_9 Protocol Deviations (Mitt Population). refer to the attached protocol and SAP of the clinical study.
+
+Please suggest a table shell for table 14.1_10 Summary of Subjects Excluded from the Per-Protocol Population. refer to the attached protocol and SAP of the clinical study.
+
+Please suggest a table shell for table 14.2_33 Summary of Intercurrent Events for Primary and Secondary Efficacy Endpoints(ITT Population). refer to the attached protocol and SAP of the clinical study. refer to the attached table shell.
+
+Please suggest a table shell for table 14.2_34 Summary of Missing Pattern for the Primary Efficacy Analysis at Month 12(ITT Population). refer to the attached protocol and SAP of the clinical study. refer to the attached table shell.
+
+Please suggest a table shell for table 14.3_2.9.1 Summary of the Grades of Osteophytes (OARSI Criteria) at baseline, Month 12 , and  Month 24(Safety Population). refer to the attached protocol and SAP of the clinical study. refer to the attached table shell.
+
+Please suggest a table shell for table 14.3_2.9.2 Change from Baseline in OARSI Osteophyte Grade by Treatment Group at Month 12 and Month 24 (Safety Population). refer to the attached protocol and SAP of the clinical study. refer to the attached table shell.
+
+Please suggest a table shell for table 14.3_2.10.1 Summary of Exposure-adjusted TEAEs per 100 Patient-years(Safety Population). refer to the attached protocol and SAP of the clinical study. refer to the attached table shell.
+
+Please suggest a table shell for table 14.3_2.10.2 Summary of Exposure-adjusted Incidence Rate(EAIR)  for Selected Adverse Events of Special Interest(AESIs)(Safety Population). refer to the attached protocol and SAP of the clinical study. refer to the attached table shell.
+
+Please refer to the attached paper and combine the table shells for 14.1 into one RTF file and create a Hyperlinked TOC, they are located in "S:\KTG Biometrics\ClinProjects\INVOSSA\TGC-15302\Statistics\TLF\Table Shell\Table Shells\Table 14.1". Please draft SAS program for this task.
+
+Table 10.1-1 Subject Disposition
+
+Please suggest a table shell for table 14.3_2.1 Summary of Treatment-Emergent Serious Adverse Events by System Organ Class and Preferred Term (Safety Population). refer to the attached protocol and SAP of the clinical study. refer to the attached table shell.
+
+How to create Table, Listing, and Figure (TLF) Shells: 
+
+The Statistical Analysis Plan (SAP) and associated TLF shells are 1A and 1B when it comes to the deliverables the biostatistician produces during the study.
+
+The SAP is the written language version of the statistician telling any reviewers of the clinical trial how the data was analyzed (what populations were used, what statistical techniques were implemented, how missing data was handled, etc.). 
+
+The Shells then, are the physical representation of what the written language says. 
+
+The Shells give the programming team something to program towards AND give the CSR development team (Sponsor, Medical Writer, Medical, etc.) an idea of what the final outputs will look like. 
+
+Here is how to ensure you create shells that are clear and meaningful to everyone: 
+
+1️⃣ Start with the SAP - as you write the SAP and any time you specify a table, figure, or listing will be generated, make a mark in the SAP for yourself. That mark is to tell you that you are calling for an output to be created. You can then create a table of contents for all the outputs the SAP is calling for. 
+
+Remember, the SAP and Shells should be a 1:1 mapping exercise - if the SAP calls for an output, there had better be a shell, and if there is a shell, there had better be text in the SAP about that shell. 
+
+2️⃣ Stand on the shoulders of giants - Very rarely have I created shells truly from scratch. I am more times than not creating shells from a template my company or the sponsor has, OR I am finding results/looking up other studies that have presented results similar to the type of results I plan on presenting - if you don't have a shell for what MMRM output should look like you can always go to clin trials dot gov and search for studies that have their statistical analysis plans or results available and see if there are any examples included (if not directly available from clintrials you can see if the drug was approved, and if it was, check out it's SBA on the FDA's website for the results and some inspiration). 
+
+3️⃣ Take your time - Often (for one reason or another) you may find yourself with a tight timeline to create TLF shells. If you have any doubts that you do not have enough time to create the shells - speak with your manager as early as possible. The shells are CRITICAL for the success of the study analysis and if you rush through them you run the risk of the programming team getting stuck because the shells are not clear, or worse, you may end up creating a shell that cannot be used by the CSR development team. 
+
+4️⃣ If ever you are not sure what to include in a shell - include as much as you can - even if it is overkill. It is much simpler to remove something than it is to add something later in the game. 
+
+Shells are a huge topic and one that deserves more time to be covered - if you have any questions about creating them please feel free to send me a direct message.
+
+
+人为什么要热爱工作，这是我听过最好的答案
+2018年10月16日 09:00
+稻盛和夫说：要想度过一个充实的人生，只有两种选择：一种是“从事自己喜欢的工作”，另一种是“让自己喜欢上工作”。稻盛和夫认为：“只要热爱工作，只要抱着纯粹的动机、强烈的愿望，付出不亚于任何人的努力，就能感动上帝，获得天铸。
+
+
+图片来源：视觉中国
+稻盛和夫说：要想度过一个充实的人生，只有两种选择：一种是“从事自己喜欢的工作”，另一种是“让自己喜欢上工作”。
+反思自己，你是否经常将工作和生活对立？或者干脆把工作和自己对立？提起工作，总是带着点“不得不”的意味？
+把赚钱看作工作的唯一目的，未免有点太过短视。事实上，工作能够带给你的东西，远比赚钱更重要。以下，Enjoy:
+
+在看这篇文章之前，请你思考一下这个问题：
+工作对于你而言，意味着什么？是赚钱的工具？还是获得自己想要生活的手段？
+很多人认为工作的意义无非是赚钱而已。
+他们把工作视为人生中的“必要之恶”，将工作和生活对立起来，认为工作是工作，生活是生活；
+抱着“拿多少钱干多少事”的态度，不是自己的工作绝不多干，加班的事情能避免就避免。
+六点钟下班，他们五点五十就开始收拾东西。
+
+而与之相反，有那么一小撮人，他们身上有很多常人无法理解的行为：
+● 办公室里最后一个走的总是他；
+● 常常喜欢去参加其他部门的营销会议，总喜欢“没事找事”；
+● 周末的时候也不肯老老实实歇着，看到什么值得学习的文章就会甩到工作群里......
+
+我一直好奇他们那么拼命工作的源动力来自哪里？他们和我们到底有什么区别？
+在《干法》中，稻盛和夫将人分为三种类型：
+不燃型：点火也烧不起来的人；
+可燃型：点火就着的人；
+自燃型：没人点自己就能熊熊燃烧的人。
+而仔细观察你就会发现，那些在同龄人中升职涨薪最快、成长进步最多的往往是第三种人——自燃型的人。
+他们有极强的自主驱动力，长期处于学习区，他们不认为工作是一种任务。
+相反的是，他们认为工作很有意思，他们从来不会等别人吩咐了才去干，而是在被人吩咐之前就自发去干。
+● 当你在假装没看到工作群里的消息的时候，自燃型的人精力充沛到半夜都在群里积极出谋划策；
+● 当你在极力推脱那些不属于自己份内的工作时，自燃型的人总爱多管闲事对其他人的工作“指手画脚”；
+● 当你摆手摇头说自己“我不会”的时候，自燃型的人"傻"到揽活上身，一口一句“我来试试吧”......
+
+他们不一定比别人更聪明、更擅长工作，但他们身上往往散发着一种对工作的热情。
+这种热情就像是《星际大战》中能够让人获得宇宙中巨大力量的“无限原石”一般，给他们的工作注入源源不断的动力。
+我身边就有这么一个自燃型的人，她是大四的实习生，也是同事口中的“小才女”，为什么会这么称呼她呢？
+因为她不仅会设计、手绘、剪音频、还会写文案、排版、做运营、摄影......
+然而她并不是一开始样样都会的，因为我们公司的实习生不多，所以部门里的其他人都会私下里把自己的工作“甩”给她来做。
+如果遇到不会做的，她不会说：“啊，这个我不会......”而是欣然接受说：“好呀，我没做过，不过可以试一下”。
+她的qq签名是“请尽情压榨我，让我成为一个有利用价值的人吧！”而她也的确让人觉得“物超所值”——
+拿着实习生的薪资，做着好几个人的工作。
+所以虽然实习不到一年，但她的成长速度极快，关键是，在这个过程中，她很满足很快乐。
+这种状态让我这个老员工也感到强烈的危机感，我开始怀疑，以前把赚钱当作工作的唯一目的的观念是不是错误的？
+如果工作的意义不是赚钱，那么我们努力工作到底是为了什么呢？
+究竟什么才是正确的工作观呢？
+对于这个问题，稻盛和夫给出了答案，那就是——热爱你的工作，像谈恋爱一样迷恋你的工作。
+01 热爱工作是一种投资
+
+一个人每周至少要工作40个小时，而平均每个人的工作年限是35年，也就是说除了睡觉以外，占据你最多时间的是——工作。
+在每天8个小时的时间里，怎么度过取决于你，你是要浑浑噩噩度过一天中时间精力最充足的时间，还是集中精力解决一个个抛过来的难题磨练自己的技能，选择权在于你。
+记得之前和某公众号的负责人出来聊天，还没到就看见他在咖啡馆掏出一个笔记本电脑工作，他说自己走到哪里都会背个双肩包装着电脑，方便随时随地处理工作上的事情。
+他跟我讲过一句话，让我印象特别深刻，大致意思是：
+其实现在的年轻人都不缺钱，如果工作仅仅是为了赚钱，那太对不起你的时间了。
+那一刻我才意识到，原来工作不是一种消费，而是一种投资。
+你想，你每天就只有那么多时间，你用这些时间逛淘宝聊微信，那么这些时间就是用来被消费的，过了就没了。
+但你用这些时间去努力工作、提升自己的技能，那么这些时间就是一种投资，给自己的未来增值。
+就我刚开始说的那个实习生，每次接到做图的活的时候，她不是表现得“啊，又要加班了”的样子，而是“好开心啊，又可以设计自己喜欢的图了”。
+她并不认为这是一种付出，相反，她认为这是一种得到，每天得以磨练自己的审美，不断修改图片直到自己满意，而自己也能清楚地感觉到自己的成长。
+当你开启投资的模式，工作也会给你更多的“复利”：工作能力的提升、其他同事的认可、成就感的爆棚......
+02 热爱工作能够提升你的心志
+
+稻盛和夫曾说过：“劳动的意义不仅在于追求业绩，更在于完善人的内心。”
+这怎么讲呢？他在《干法》中说了一个故事：
+他曾在一个电视节目访谈中听到一位修建神社的木匠师傅的话：树木里宿着生命。
+工作时必须倾听这生命发出的呼声——在使用千年树木的木料时，我们工作的精湛必须经得起千年日月的考验。
+这位70多岁的木匠，只有小学毕业，几十年只从事过这一项工作，虽然期间也有很多次想要辞职不干，但还是克服了种种劳苦，而这样的过程便孕育了他厚重的人格。
+朋友曾跟我说过一件事，她们公司某个项目出了问题，老板半夜在群里面发消息，问该怎么处理，结果其他同事都装作没看见，没有一个人回复。
+最后我的朋友忍不住在群里回复了，立马接到老板打来的电话，老板接纳了我朋友提出的建议。
+这事之后，凡事有重要的工作或出现严重的问题的时候，老板都会点名问她的意见。
+而你会发现，当你不再“逃跑”，而是选择面对直视问题的时候，你的人格就得到了磨练。
+你逐渐从从一个喜欢逃避、厌恶麻烦、随意任性的人变成一个直接面对问题、有责任感、值得信任的成熟社会人。
+而这些，是工作能够带给你的，比赚钱更重要的东西。
+03 热爱工作能够扭转局面
+
+只有热爱工作的人，神迹才会降临。
+这句话类似于吸引力法则，就是如果你一心扑在工作上，不管吃饭也好、睡觉也好，都在想着工作，那么那个困扰你很久的问题就可能在某个时刻得到启示。
+稻盛和夫在《干法》中讲了一件自己的亲身经历：
+有一段时间，他在工作中遇到了某个棘手的问题，研究如何让“镁橄榄石”成型，但是一直找不到合适的方法。
+有一天，他一边想着这个难题，一边走进实验室，突然被某个容器绊了一下，差点跌倒，一看脚下，鞋子上沾了松香树脂。
+正当他想要问谁把这玩意儿放在这里的时候，突然一个念头一闪而过“就是它！”，将松香树脂作为粘结剂完美解决了问题！
+稻盛和夫认为：“只要热爱工作，只要抱着纯粹的动机、强烈的愿望，付出不亚于任何人的努力，就能感动上帝，获得天铸。”
+他把那一刻称为“神的启示”，但实际上，如果不是他全心全意想着工作，那么即便神迹降临了他也不会发现。
+这种“神迹”无处不在：
+● 高中的时候为了完成数学作业最后一道答题，弥思苦想，吃饭的时候突然有了解题思路；
+● 一个广告文案深夜加班回到家，睡前刷微博看到一个消息，突然想到了一个绝妙的金句；
+● 一个策划熬了几个通宵为了出一个方案，但都觉得不满意，结果聊天的时候因为朋友说的一句话，于是得到了启发......
+你看，古往今来，被苹果砸过头的人应该不少，但被苹果砸到就能想出万有引力的人只有牛顿一个。
+只有你全神贯注在工作上面，才会从生活中得到启发。
+对于从来不想着工作的人来说，即便有“苹果落下”，也依然无法领悟“神迹”。
+04 热爱工作就能获得幸福
+
+稻盛和夫说过：“想要拥有一个充实的人生，你只有两种选择：一种是‘从事自己喜欢干的工作’，另一种是‘让自己喜欢上工作’”
+有人会说，这句话是不是太神了一点？但如果你真正去实践它，你会发现这个道理再容易理解不过了。
+张佳玮曾提到古龙《多情剑客无情剑》中的一个例子：
+一对厨子，饭馆打烊后，在后厨自己给自己炒了盘菜，找点小酒，很惬意地饮食一番。
+他们还活着，就是因为一天还有那么一两个时辰。
+古往今来，人们的幸福很简单。
+对于普通人来说，找一份喜欢的工作，下班后回到家，打开电视，把西瓜切半，用勺挖下最中间的一口，就是幸福。
+那既然如此，天天待在家里吹空调吃西瓜不会更幸福吗？
+我用过来人的经验告诉你，每天吃吃喝喝的生活，在第一个星期的时候或许会觉得享受。
+但如果把这样的生活持续一个月、甚至半年，你会发现，你根本感觉不到快乐了。
+以前我感到最幸福的时候，就是周五晚上，刚刚结束了一周的工作，晚上还可以去影院看一部最新上映的电影。
+但辞职以后，我发现，周五失去了它的意义，每一天对于我而言都是一样的，我不再感到期待和兴奋。
+因为幸福是一种对比，或者说是一种感受的落差。
+你感到温暖的时候，是因为外面下着雪；你觉得清爽的时候，因为刚刚大汗淋漓运动过；你觉得幸福的时候，是周五结束了一周的工作可以好好放松休息的时候。
+不可否认的是，工作能够给人带来意义感。正如稻盛和夫所说，“拼命工作的背后隐藏这快乐和欢喜，正像慢慢长夜结束后，曙光就会到来一样。“
+
+04 结语
+朋友去日本旅行的时候跟我说过一个故事：
+他们进到一家店里的时候，发现门外有一个老爷爷专门负责在客人出门的时候把客人脱下的鞋提过来。
+门外的鞋很多，但是这位老爷爷在客人出门之前，就能在很短的时间辨识出哪双是谁的。
+即便是一份“提鞋”的工作，只要你认真努力去做，也能获得人们的尊敬。
+养成对工作的仪式感，不管什么工作，想要尽办法把它做好，做到极致，只有这样才能赢得别人的认可，也能获得一个充实充满意义的人生。
+你想要每天过得有意义吗？可以，热爱你的工作。
+你想要成功吗？可以，热爱你的工作。
+你想要获得幸福吗？可以，热爱你的工作。
+
+From <https://m.jiemian.com/article/2470886.html> 
+「云才测评」从事自己热爱的工作是一种什么神仙体验？_职业 (sohu.com)
+
+2025-03-19 周三
+今天还是决定参加印度人举办的R Clinical 培训，大概200多美元，三个月时间，这也是在督促自己努力学习，目前看来这种能力还是有用的，能提高自己找下一份工作的筹码，到时要求他们提供一份学习证明还是可以的，往来的邮件就可以证明，最好还是做一个自己技术网站，这样可以让人家知道自己的一些积累，也算是给自己打个小小的广告。看了别人的帖子后整理，消化，然后形成添加了自己一点心得的东西，必须要学习静态网站的建立，学一点很基本的知识，以前陈清奇靠自己建立了自己的商业网站，成功地把生意做了起来，真是我要好好学习的榜样，他这个人很有可取之处, 人就是要扎扎实实地好好做事，先做成最简单的，然后慢慢地迭代， 这种迭代的威力太强大了。编程从hello world开始，再牛的人也是从这里开始的，只是那些牛人进步速度非常快，迭代很快，故短期内就能达到很高的水平。我以前也特别崇拜那些厉害的人，感觉他们的水平是可望而不可及的，结果自己全身心地投入后，发现也能接近他们的水平。要学会自己建网站，给小的建立一个网站，把他的点滴成就记录下来，把他写的文章也记录下来，也许可以帮助他申请比较好的大学。我要自己知道如何建立网站，这是完全可以学会的，可以帮助他，帮他把这些素材积累，整理，优化出来。他现在养鱼，其实就是个好的Project,要记录下来，不断总结，不断改善，记录这一路的历程。还有他招蜂鸟的活动，写一篇蜂鸟的文章，挂在他自己的网上，成为一个有趣的话题。还有就是建立自己的实验室，做一些有趣的实验，我完全可以在车库给他建个试验室，买桌子，废水可以送到UNC试验室倒掉，必要的一些试剂，可以自己去买，或者自己去找朋友要一点，陈勇哪里就可以要到一些，车库做实验的场景，也许可以挂在他自己的网站上，这是在给他助一臂之力，他还是有些潜力的。我还是先建立一个自己的个人网站把，用于找工作，提高自己的一点可怜的可见度，也增添自己的一点信心，不需要很专业，有那么高的水平，有总是比没有好，老是停留在想法阶段，不如开始动手做。小的把数学做错的题校正了，也挂在他自己的网上。大的支持他读一个硕士，其实UNC的硕士也还不错，关键是省钱，新加坡大学的硕士太贵了，给奖学金的话没有五万美元搞不定，甚至更多钱，我们倒也出得起，就看他了。
+我昨天花费了海量时间来搜索学习资源，这是几十年来的老毛病，资源是无限的，学到的知识和技能才能为自己所用，抓到手里的鱼才能给自己果腹，不至于饿死，而大河大湖里的鱼，那是不属于自己的，故先从湖边那些比较容易抓的小鱼开始，不断提高自己捕鱼能力，也许不久以后自己就具备了抓大鱼的能力了。静坐5分钟，想想接下来要做的事情，激励自己享受接下来做事情的美好充实的时光。每一个任务要定时，设定最低目标，目前不宜设定最高目标。
+你如果没有紧迫感，人家就会给你扇耳光，今天Martin找我谈话，表示对我进度的不满，这确实是我的问题，我必须要快速反应，最好一天之内就搞定回复，这是目前求生的唯一途径。还有，有人发觉我在公司呆得太晚了，Martin觉得这样不好，让我早点回去。这个很好办，以后我一定在5点半以前离开，就是有活干也要带到住处干，这样看来，他们对我晚上呆到很晚有意见，我早点回去还不行吗？从今天开始，他们再也见不到晚上我在这儿了，其实在住处也不错。还是请假吧，两天就两天，不要去抱怨，有什么可以抱怨的呢？人家规矩就是这么定的，没有任何的灵活性，今天下午就把结果交给他，我必须要自己反省才行，必须提高效率。周末绝对不要呆在这里，在住处好好看书不行吗？很多要学的，只在周五八点前到，周五早点跑步，在公司吃早饭。其它时间都是八点准时从公司动身。一定克制自己想那些没用的事情。周三周四我当然可以干自己的事情，种菜也好，读书也好，这个公司是病态啊，不要难为他们了，这是我自己的实力不足啊，如果老是想着，那又有什么难的呢？我就是没有老是想工作的事情，故效率低下。其实只要全身心投入，几个小时就搞定了，那些dataset,我也能很快搞定的。
+
+2025-05-08 周四
+近来感觉人生好难，我感觉自己都面对不了这些艰难了， 工作没做好，
+2024-10-13 周四
+多年来， 我一有空闲，其实也不是空闲，而是没有火烧眉毛迫于生存压力不得不马上去做的事情的时候，我就会浪费大把的时间去关心那些远在我的影响力范围之外很远很远的宏大叙事，如俄乌战争，以色列战争，中国局势等，在应对紧迫事务之余的这点可怜的能相对自由支配的时间就这样花费在这些我这样卑微普通的人根本不能有极其微小影响的国际国家大事上了，对自己的工作和生活没有多少有意义的帮助，反而产生一种深深的无能为力的感觉，对国家失望，对国际局势失望，产生一种消极情绪。我在北京工作期间，浪费大量时间看那些新闻，中了易宪容，牛刀等杂种唱空房地产的毒，没有买房，错过了早日财富自由的可能，遗恨至今，如果那时不浪费天量的时间看新闻，而是专注于工作，我后面的路就会好走很多。
+
+我决定改变自己能控制的那部分，也就是自我。我决定转变工作态度，寻找工作的乐趣，并在困难的环境中开创出一条路。假使一开始我能找到比较理想的工作并身处更优越的环境，或许我就没有机会取得今天的成就。心胸开阔，你才能察觉出生命的至福。
+——稻盛和夫
+而自我燃烧最好的办法，就是要爱上工作。任何工作，只要全身心投入并取得成功，就会获得巨大的成就感并产生自信，进而萌生向下一个目标挑战的欲望。在这样反复的过程中，你就会更加热爱工作。这种状态下，任何努力也不会觉得辛苦，就能孕育出优异的成果。
+在那样的处境之下，我渐渐认识到，整天唉声叹气、牢骚满腹是无济于事的。因为这就像仰头向天吐唾沫，唾沫吐不到天上，还最终落到自己身上。既然如此，不如试着改变心态，埋头工作。从那以后，我开始全身心投入到精密陶瓷的研究中。不久，研究成果也开始慢慢显现，这让我感受到了工作的乐趣。
+我的大学专业是有机化学，主修的方向是石油化和合成树脂。对于制陶技术，我只是在就职前阵营磨枪地学过一点。因为当时我对无机化学并不是很感兴趣。
+
+但随着自己的努力研究出成果，我对于制陶领域的兴趣渐渐浓厚起来。由于产生了兴趣，就愈发努力地投入其中，结果又获得了新的成果。随着这样的循环，仅仅在一年左右的时间内，我便成功合成了新型高频绝缘材料，当时在日本尚属首次。我认为，这是因为在万物深处蕴涵着共通的真理，必须牢记：专注于某个领域、究其极致，就能够融会贯通。他指出热爱是点燃工作激情的火把。无论什么工作，只要全力以赴去做就能产生很大的成就感和自信心，而且会产生向下一个目标挑战的积极性。成功的人往往都是那些沉醉于所做之事的人。不断地想，不断地去思考，一次又一次地在头脑中模拟推演，那些开始只出现于梦境里的东西逐渐清晰，最后梦境与现实的界限消失，难以想象的事情发生了：既无知识和技巧，又缺乏经验和设备的稻盛和夫，却搞出了世界领先的发明，给快要倒闭的工厂带来了生机。自1959年创立京瓷公司，稻盛和夫几十年一直是京瓷研发带头人。他发现，一旦发疯的投入工作之中，对某个目标有强烈的渴望，就会在脑海里形成一个意象，身边的任何一个新发生都会坚定地指向那个意向，这时，神灵就会给你一把照亮前途的火炬，智慧之井就会向你洞开。在他看来，这些通常让人们引以为傲的东西，恰恰是专注做事的障碍。如果不能调动全身的感觉和能量潜身于细节之中，就不会有持久的热情和到位的思维。他一再强调：“我希望人们铭记这个‘神秘预言’，人生与心意一致，强烈的意念将以一定的现象表现出来。”人非工具，每个员工都是有血有肉的个体，只有尊重他们的价值，共情他们的遭遇，改善他们的生活，才会收获一群死心塌地的同路者。人活着，就要感恩；积善行，利思他。
+From <https://www.163.com/dy/article/HC3A9T1C055339TF.html> 
+
+成年人的人脉和资源是建立在利益交换的基础上，这话听上去残酷，但这却是现实。无能的人在浪费时间上特别“大方”，把有限的时间花在很多低价值，甚至可以说无意义的事情上(我花费那么多的时间看国际新闻，不良信息，中国局势新闻，看各种无良的自媒体发表的质量低劣的文章，看国内数量极其庞大的脑残们的留言)。这样的习惯，只能注定了自己永远碌碌无为，平庸地生活着。而最后成功的人，却坚持“时间就是金钱”，对自己的时间精打细算。在这些人眼里，时间就是他们的核心资产。只有把时间投注在有价值，有意义的事情上，才会让自己的人生不断增值。我们不能说我们把时间的价值最大化就一定可以成为如稻盛和夫这样的成功人士，但是对于时间的合理规划和有效利用，是对我们自己的人生一种负责任的态度——能够让我们更加专注于自己的目标，能让我们更好地实现人生价值。毕竟，最后为人生负责的不是我们的父母，不是我们的领导，也不是我们的朋友，只能是我们自己。当一个人的生活被债务压得喘不过气来，他哪里有时间和精力去提升自己，去实现自己的理想呢？这样的人最终不得不越发平庸和无能，因为他有限的时间都被“还债”给填满了。稻盛和夫一生简朴，粗茶淡饭，正是靠自己日积月累地节约才有了创业的本钱。现在我们的生活条件好了，笔者也认为没有必要搞所谓的粗茶淡饭。笔者强调的是我们要把钱花在真正的刀刃上，而不是无意义的超前消费上。在吹牛这件事上“大方”，越是无能的人，越爱吹牛。他们很热衷于讨论娱乐八卦，国际局势等高大上的话题，而真正的成功人士，大部分时候讨论的都是自己业务上的事情。不是说娱乐八卦，国际局势不能聊，而是说我们更应该聊些和自己密切相关的事情。娱乐明星的绯闻，大国之间的纵横博弈，其实都是超出我们能力之外的事情，平常当做谈资闲聊一二即可，而如果整天把自己的注意力和时间都花在这个上面，就得不偿失了。就如段子里说的，饭都吃不饱的人，却在操心那些亿万富豪的家务事！而真正的成功人士，却把自己大部分时间和注意力都放在自己的事业上，今天的业绩如何？今天取得了哪些成就？今天有哪些事情没做好？这两者的区别在哪里？如稻盛和夫这样的成功人士更专注，脚踏实地地做好自己的事；而无能的人则喜欢夸夸其谈，好高骛远，把注意力浪费在和自己关系不大的事情之上。ZY: 我活到如今五十多岁，浪费了太多的时间，一直没有醒悟过来，搞得自己一个失败接着一个失败，人生非常被动和消沉。必须下定决心，每天与这个恶习做顽强的斗争，已经非常落后了，再不奋起就要退休了，就这样过庸碌无为的一生，那是太失败了，我会死不瞑目的。当务之急就是要戒除恶习，规定只能在周末看新闻和youtube, 并且周末还要节制自己。自己的余生已经很短了，要是遇上倒霉的大病，估计死得更早，根本来不及好好做出一点业绩来了。我突然发现稻盛和夫是如此地睿智和高尚。这些天一定要努力读一本稻盛和夫的书，学习他认真专注做事的方法。训练自己每天多想一些工作相关的问题，设置一个与目前工作任务最相关的思考主题，那就是如何把工作做得好一点，高质量按期完成自己承接的任务，需要什么资源，找什么人帮忙，如何改进做事方法，实践过程中有那些感悟收获和教训，要形成为文字。每日早晚在手机的Note上写一天的工作计划，当天工作过程中产生的一些有关提高工作效率和质量的。
+
+SAS出现问题时如何关闭SAS:
+Phase 1 trials are conducted to assess the tolerability and pharmacologic properties of a new product; they are often called human pharmacology studies. Beginning with a single dose in a small number of subjects, additional trials will be conducted if the compound is judged to be adequately safe. Phase 1 is normally completed in 6–12 months and typically involves less than 100 participants, normally healthy volunteers. As Phase 1 progresses, more individuals are included and doses are increased to define the maximum tolerated dose. Researchers must pay special attention to the pharmacokinetic properties of the compound (ADME). Except when toxic compounds are being tested in patients with the indication under study (e.g., anti-cancer agents), Phase 1 trials do not attempt to assess the efficacy of the investigational product.
+Phase 2 is conducted in patients with the condition being treated. It is used to assess the therapeutic benefit of the compound and to establish dose and trial design that will be used during Phase 3; it is often called the therapeutic exploratory phase. Generally, 100–200 participants will be included in multiple trials during a 1–2 year period. The number of participants studied during Phase 2 is not large enough to statistically verify the compound’s efficacy. The purpose of a Phase 2 trial is to balance the safety profile with the most effective dose in a target population. The results of this trial will determine the final dose to be tested in Phase 3 safety and efficacy trials.
+
+
+
+Phases 3 and 4 are the longest phases to conduct. They are primarily interested in statistically confirming the efficacy of the treatment while continuing to assess its safety and tolerability. Phase 3 often compares current treatments to the new compound and is called the therapeutic confirmatory phase. Hundreds to thousands of subjects will be enrolled over a 2–3 year period. A marketing application is submitted at the end of Phase 3. 
+
+Phase 4 clinical trials are conducted to identify and evaluate the long-term efficacy and safety of new drugs and treatments over a long period of time for a greater number of patients. Phase 4 research takes place after regulatory agency approval of a drug or device.
+
+
+
+
+The sponsor must implement and maintain quality assurance and quality control systems with written standard operating procedures (SOPs) to ensure that clinical trials are conducted, documented, and reported in compliance with the protocol, GCP, and the applicable regulatory requirements reviewed by an Institutional Review Board (IRB)/Independent Ethics Committee (IEC). SOPs should be written for every aspect of new product development (e.g., selecting investigators, monitoring, product accountability, inspections). 
+
+Quality control should be applied to each step of the data handling to ensure that all data are reliable and have been processed correctly. In addition, quality management should be part of every step of clinical trials, from design through conduct, recording, evaluation, reporting, and archiving.
+
+Protocol Design
+
+The sponsor must develop a sound investigational plan and a protocol to test a hypothesis while ensuring the rights, safety, and welfare of human subjects who volunteer to participate in the clinical trial. A protocol details the trial objectives, design, and organization. The protocol should also contain a clear description of investigators’ GCP responsibilities. 
+
+The sponsor should utilize qualified individuals (e.g., biostatisticians, clinical pharmacologists, and physicians) as appropriate, throughout all stages of the clinical trial process including the protocol design. The protocol must be finalized and approved by an IRB/IEC prior to any human subject enrollment and/or informed consent.
+
+Discontinuation of Trial
+
+In the US, ClinicalTrials.gov must be updated to reflect the status of the trial. In the European Union, the sponsor is required to notify the competent authorities and ethics committees that the trial has ended. This information is sent through the EU portal. If a trial is terminated because of repeated noncompliance or fraud/misconduct by an investigator, sponsors are obligated to end the investigator’s participation and notify the applicable regulatory authorities. It is also appropriate for the sponsor to directly notify the governing IRB/IEC immediately.
+
+Sponsor/CRO Collaboration 
+
+A sponsor may transfer any or all trial-related duties and functions to a Contract Research Organization (CRO). However, the ultimate responsibility for the quality and integrity of the trial data remains with the sponsor. Any sponsor obligation transferred to a CRO must be documented in writing. It is acceptable to simply state that all responsibilities have been transferred or specify the responsibilities that have been transferred to a CRO, if this is the case. Most sponsors and CROs have standard “Transfer-of-Regulatory-Obligations” templates. Remember, if it is not documented, the responsibility has not been transferred. 
+
+The sponsor and the CRO must document what SOPs are being followed.
+Sponsors design case report forms (CRFs) to capture all safety and efficacy data required by the protocol. CRFs are paper or electronic documents designed to record all protocol-required information reported to the sponsor on each trial subject.
+
+Sponsors should provide guidance to investigators and/or the investigators’ designated representatives on making corrections to CRFs. Sponsors should also have written procedures to ensure that changes or corrections in CRFs made by sponsors and sponsors’ designated representatives are documented, are necessary, and are endorsed by the principal investigator.
+
+The sponsor is responsible for developing and updating an investigator’s brochure (IB). An IB is a compilation of the nonclinical and clinical data on the investigational product. The IB provides investigators and others involved in the clinical trial with the information needed for understanding and compliance with the protocol.  
+
+The IB should present information in a concise, simple, objective, balanced, and nonpromotional form. The IB should be reviewed at least annually and revised as necessary in compliance with a sponsor’s written procedures. More frequent revisions may be appropriate depending on the state of development and the generation of relevant new information. It must enable a potential investigator to understand and make an assessment of the appropriateness to administer the product in the proposed trial.
+
+The IB should be updated in accordance with GCP. Relevant new information may be so important that it should be communicated to the investigators, and possibly to the IRB/IEC and/or regulatory authorities before it is included in a revised IB.
+
+E6 (R2) describes the content of the IB under section 7 with an example provided [7.3, 7.4]. 21 CFR 312.23 describes specific FDA IB requirements.
+
+Sponsors must select appropriately qualified individuals to supervise the overall conduct of the trial. Monitors must be qualified by training and experience and possess the scientific and/or clinical knowledge required to monitor the trial adequately. Sponsors should document the qualifications of a monitor.
+
+Sponsors should ensure that monitors are thoroughly familiar with the investigational product and have a complete understanding of the IB, protocol, CRF, and the informed consent form. Sponsors should confirm that monitors understand and will follow SOPs, have in-depth knowledge of GCP and applicable regulatory requirements, and are able to ensure that investigators and their staff follow GCP.
+
+A clinical trial is any investigation in research subjects intended to discover or verify the clinical, pharmacological, and/or other pharmacodynamic effects of an investigational product, and/or to identify any adverse reactions to an investigational product(s), and/or to absorption, distribution, metabolism, and excretion of an investigational product(s) with the object of ascertaining its safety and/or efficacy. The terms clinical trial and clinical study are synonymous.
+
+CROs: Many of the sponsor’s duties and functions may be transferred to a Contract Research Organization (CRO); however, the ultimate responsibility for the quality and integrity of trial data remains with the sponsor.
+
+Responsibilities of a sponsor include: 
+
+ensuring a proper IRB/IEC is identified.
+ensuring sufficient data is available to support human experimentation.
+implementing and maintaining QA and QC systems.
+
+Responsibilities of a monitor include: 
+
+• conducting frequent visits of investigational sites. 
+• verifying that investigators have adequate resources to conduct a trial and are qualified.
+• asking questions diplomatically to clarify information.
+
+Responsibilities of an investigator include: 
+
+submitting reports and conduct follow-ups on adverse events.
+complying with all requirements for obtaining informed consent.
+ensuring the research subjects have adequate medical care.
+On 2025-05-27 
+	1. In Section 7.6.2 of the SAP, could you please clarify the phrase “missing values following ICE5” in this sentence? Specifically, does it mean that:
+The worst-case imputation is applied only to the missing data arising from ICE5, or
+The worst-case imputation is applied after ICE5 (meaning all ICEs) have been implemented? and all missing data will be imputed
+we currently create the ADaM based on the option 2 and would like to confirm.  
+
+Martin: 
+@Mandy Su 1. Only the missing data arising from ICE5. Thanks!
+
+	
+	2. Because SAS cannot calculate percent change with a zero denominator, we need your advice on how to manage these cases. Note that in the HAQ, a score of zero means no difficulty, and in the WOMAC, zero signifies no pain.
+
+Martin: @Mandy Su Here is the guidance for handling percent calculation for zero or missing baseline:
+When no baseline value is available (i.e. missing baseline), the percentage from baseline can’t be calculated, and therefore, the percent change value will be set to missing. 
+When the baseline value is 0, the percent change from baseline will be calculated based on the post-baseline value using the following general rules:
+If the post-baseline value is 0, the percent change value will be set to 0. Otherwise, the percent change value will be set to missing. 
+Please feel free to let me know if there are any further questions.
+Thank you!
+Martin
+
+	3. Could you please confirm:
+	The randomization stratification factors (SEX and KLGBL) will be included in the PROC MI procedure.
+	We attempted to specify minimum and maximum imputed values (e.g., MIN=0 and MAX=100 for VAS), but since TRT01PN, SEX, and KLGBL are specified in the CLASS statement, SAS issues this warning:
+	“The specified nonmissing MINIMUM= 0 option for the CLASS variable TRT01PN is not allowed. This option will be ignored.”
+	That happens because MINIMUM and MAXIMUM only apply to continuous variables. Converting these factors to numeric codes would allow bounds, but could yield fractional values (e.g., TRT01PN=0.4), which complicates interpretation.  To avoid the warning, we’ve dropped the MIN/MAX options for now—however, this means imputations could fall outside [0,100] (even negative). Do you have any suggestions for enforcing valid bounds on VAS while still treating treatment group, SEX, and KLGBL as categorical?
+	
+	Martin: 
+	@Mandy Su For Question 1, yes, SEX and KLGBL should be included in PROC MI. For the MAX and MIN issue, since I don’t know how you write the code so here is the general rule:
+	
+	/* STEP1: IMPUTE NON-MONOTONE PATTERN*/
+	
+	PROC MI DATA=INDATA OUT=OUTDATA1 NIMPUTE=10 SEED=12345
+	
+	ROUND=. . . X1 X2 X3 /* VALUE ROUND TO RAW DATA VALUE*/
+	
+	MIN=. . . Y1 Y2 Y3 /* MIN VALUE of Endpoint, i.e. 0 for VAS*/
+	
+	MAX=. . .Z1 Z2 Z3; /* MAX VALUE of Endpoint, i.e. 100 for VAS*/
+	
+	MCMC IMPUTE=MONOTONE; 
+	
+	VAR TRT01PN SEX KLGBL BASE M3 M12; /* USE BASE M3, and M12 as an example, please include all visits*/
+	
+	RUN;
+	
+	/* STEP 2: IMPUTE MONOTONE PATTERN*/
+	
+	PROC MI DATA=OUTDATA1 OUT=OUTDATA2 NIMPUTE=1 SEED=12345
+	
+	ROUND=. . . X1 X2 X3
+	
+	MIN=. . . Y1 Y2 Y3
+	
+	MAX=. . . Z1 Z2 Z3
+	
+	MINMAXITER=1000;
+	
+	CLASS TRT01PN SEX KLGBL;
+	
+	VAR TRT01PN SEX KLGBL BASE M3 M12;
+	
+	MONOTONE REG (M3 = TRT01PN SEX KLGBL BASE);
+	
+	MONOTONE REG (M12 = TRT01PN SEX KLGBL BASE M3);
+	
+	BY _IMPUTATION_;
+	
+	RUN;
+	
+	By specifying MIN and MAX to “.”, I think this will take care of the issue you have, and by specifying MIN and MAX ranges, there shouldn’t be out of range values, but if it does happen, please add a data step to set the value within the ranges (i.e. 0 for values small than 0 as MIN, and 100 as the max value if the value is larger than 0). 
+	
+	For the analysis step, and here is the sample code:
+	
+	PROC MIXED DATA=OUTDATA2;
+	
+	BY _IMPUTATION_;
+	
+	CLASS TRT01PN SEX KLGBL
+	
+	MODEL CHG12 = TRT01PN SEX KLGBL BASE M3 M12 / SOLUTION;
+	
+	LSMEANS TRT / CL PDIFF DIFF;
+	
+	ODS OUTPUT LSMEANS=LSMEAN DIFFS=LSDIFF;
+	
+	RUN;
+	
+	PROC MIANALYZE DATA=LSDIFF;
+	
+	MODELEFFECTS ESTIMATE;
+	
+	STDERR STDERR;
+	
+	RUN;
+	
+	Please include all the covariates in the model. Please feel free to let me know if there are any questions. Thank you!
+	4. 
+	
